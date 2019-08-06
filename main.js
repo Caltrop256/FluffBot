@@ -143,8 +143,6 @@ const embedYellow = 0xD8C100
 const embedBright_Yellow = 0xFFE400
 
 
-fs.writeFileSync('./commands/json/dar.json',`{\n"exit": false\n}`);
-
 function avatarFunc() {
     if(client.cfg.autoAvatar == "true") {
         changeAvatar()

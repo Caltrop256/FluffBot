@@ -1,0 +1,18 @@
+{
+  "token": "",
+
+  "mySQLHost": "",
+  "mySQLPort": "",
+  "mySQLuser": "",
+  "mySQLPassword": "",
+  "mySQLdb": "",
+
+  "ytApiToken" : "",
+  "gToken1" : "",
+  "gToken2" : "",
+
+  "pName" : "",
+  "pToken" : "",
+
+  "maintenance": false
+}
