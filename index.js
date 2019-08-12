@@ -1,5 +1,4 @@
 var forever = require('forever-monitor');
-
 var main = new (forever.Monitor)('main.js', {
     logFile: './logs/main.txt',
     max: 999,

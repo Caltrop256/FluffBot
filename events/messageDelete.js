@@ -7,7 +7,7 @@ const Discord = require('discord.js');
 const config = require(`../commands/json/config.json`);
 
 module.exports = async (client, message) => {
-    
+    if (message.channel.type != 'text') return;
     const entry = await message.guild.fetchAuditLogs({type: 'MESSAGE_DELETE'}).then(audit => audit.entries.first())
     let user = {}
       if (entry.extra.channel.id === message.channel.id

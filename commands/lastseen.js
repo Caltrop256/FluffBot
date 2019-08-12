@@ -40,7 +40,7 @@ module.exports = {
         maxUsers: 10
     },
     permLevel: 0, //0 = none, 1 = MANAGE_MESSAGES, 2 = MANAGE_GUILD, 3 = ADMINISTRATOR, 4 = guild.ownerID, 5 = Caltrop
-    Enabled: false,
+    Enabled: true,
 
 
    execute(client, arguments, receivedMessage) {

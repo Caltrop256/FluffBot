@@ -18,14 +18,20 @@ module.exports = {
     execute(client, arguments, receivedMessage) {
         var user = client.getMemberFromArg(receivedMessage, arguments, 0)
         if(!user) return receivedMessage.reply("Couldn't find User.")
-
+        var name = user.user.tag+'s';
+        if(user.id == client.user.id)
+            name = 'My';
         var avatarEmbed = new Discord.RichEmbed()
-        .setAuthor(`${user.user.tag}'s Avatar`, user.user.displayAvatarURL, user.user.displayAvatarURL)
+        .setAuthor(`${name} Avatar`, user.user.displayAvatarURL, user.user.displayAvatarURL)
         .setImage(user.user.displayAvatarURL)
         .setTimestamp()
         .setColor(embedNeon_Green)
 
-        receivedMessage.channel.send(`Link => <${user.user.displayAvatarURL}>`, {embed: avatarEmbed})
+        receivedMessage.channel.send(`Link => <${user.user.displayAvatarURL}>`, {embed: avatarEmbed}).then(msg =>{
+            if(user.id == client.user.id)
+                receivedMessage.channel.send(`If you would like to be notified every time I change my avatar, you can use \`${client.cfg.prefix}notify avatar\``);
+        })
+        
    }
 }
 
