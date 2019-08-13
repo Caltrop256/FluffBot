@@ -1,3 +1,3 @@
-# Caltrop's TropBot
+# TropBot
 
-With modifications that probably don't work!
+*currently doing a re-work*
