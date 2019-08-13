@@ -19,11 +19,13 @@ module.exports = {
 		var user = client.getMemberFromArg(receivedMessage, arguments, 0)
 		if (!user) return receivedMessage.reply("Couldn't find User.")
 		var graveEmbed = new Discord.RichEmbed()
-        .setAuthor(`⚰️ Here lies ${name}`)
-        .setImage('https://northcoastcourier.co.za/wp-content/uploads/sites/73/2013/09/grave.jpg')
-        .setTimestamp()
-        .setColor(embedPerfect_Orange)
-	}
-}
+        	.setAuthor(`⚰️ Here lies ${receivedMessage.member.displayName}`)
+        	.setImage('https://northcoastcourier.co.za/wp-content/uploads/sites/73/2013/09/grave.jpg')
+        	.setTimestamp()
+        	.setColor(embedPerfect_Orange)
+		
+		receivedMessage.channel.send({embed: graveEmbed})
+	};
+};
 
 const embedPerfect_Orange = 0xFF7D00
