@@ -1,3 +1,3 @@
-# TropBot
+# Caltrop's TropBot
 
-Don't use this bot if you like consistency lol
+With modifications that probably don't work!
