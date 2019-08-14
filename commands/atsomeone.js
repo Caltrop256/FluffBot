@@ -16,9 +16,6 @@ module.exports = {
     },
     permLevel: 0, //0 = none, 1 = MANAGE_MESSAGES, 2 = MANAGE_GUILD, 3 = ADMINISTRATOR, 4 = guild.ownerID, 5 = Caltrop
     Enabled: false,
-    cheeseisCool: function() {
-
-    },
    
    execute(client, arguments, receivedMessage) {
     receivedMessage.react("✅");
