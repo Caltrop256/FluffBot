@@ -34,6 +34,7 @@ const embedRed = 0xFC4B4B
 
 
 module.exports = (client, reaction, user) => {
+
     let channel_id_color = "562328013371605012"; 
     let message_id_color = client.cfg.color1;
 
@@ -47,7 +48,6 @@ module.exports = (client, reaction, user) => {
     let message_id = client.cfg.ruleAccept;
     
     if (user.bot) return;
-    if (reaction.message.channel.type != 'text') return;
     // Temporarily store guild.
     let guild = reaction.message.guild;
     guild.fetchMember(user)
@@ -646,11 +646,12 @@ module.exports = (client, reaction, user) => {
 
     
 
+
     const RoleMajArray = [MajBlack, MajGrey, MajMoss, MajBright_Green, MajNeon_Green, MajGreen, MajTurquoise, MajAqua, MajCyan, MajTeal, MajSky_Blue, MajBlue, MajOcean_Blue, MajUltramarine, MajDark_Purple, MajPeriwinkle, MajMagenta, MajLight_Magenta, MajViolet, MajBeige, MajPeach, MajPink, MajHot_Pink, MajNeon_Pink, MajRed, MajReder, MajDark_Orange, MajPerfect_Orange, MajBright_Orange, MajOrange, MajYellow, MajBright_Yellow]
+
     for (var i = 0; i < RoleMajArray.length; i++) {
         if(reaction.message.id == message_id_color || reaction.message.id == message_id_color2 || reaction.message.id == message_id_other) {
             if(reaction.emoji == RoleMajArray[i].Name) {
-                
                 var currentMaj = RoleMajArray[i]
                 var detectedRole = reaction.message.guild.roles.get(RoleMajArray[i].RoleID);
                 reaction.message.guild.fetchMember(user).then(async (member) => {
@@ -691,6 +692,7 @@ module.exports = (client, reaction, user) => {
             }
         }
     }
+
     if(reaction.emoji.name === "🗄" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) 
     {
         guild.fetchMember(user)
@@ -728,7 +730,7 @@ module.exports = (client, reaction, user) => {
                 member.addRole(role)
                 .then(() => 
                 {
-	            	console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
+                    console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
                 }
                 );
             });

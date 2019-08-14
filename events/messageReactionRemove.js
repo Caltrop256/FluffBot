@@ -16,8 +16,6 @@ var pluralize = require('pluralize');
 
 
 module.exports = (client, reaction, user) => {
-    if (user.bot) return;
-    if (reaction.message.channel.type != 'text') return;
     reaction.message.guild.fetchMember(user)
         .then((addedByMember) => 
         { client.lastSeen(addedByMember, `Removing a reaction from a message in #${reaction.message.channel.name}`)

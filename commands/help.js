@@ -20,8 +20,7 @@ module.exports = {
 
     async execute(client, arguments, receivedMessage) {
         const data = [];
-        const  commands = client.modules.commands;
-        //const { commands } = receivedMessage.client;
+        const { commands } = receivedMessage.client;
 
         if (!arguments.length) {
 

@@ -80,7 +80,7 @@ module.exports = (client, member) => {
                         var joinPos = i
 
                         var members = Array.from(mainGuild.members.filter(m => !m.user.bot))
-                        var neon_pink_heart = client.emojis.get("608779835090927661");
+                        var neon_pink_heart = client.emojis.get("567312233923870751");
                         if(LeaveMember.lastMessageID !== null) {var messageLink = `https://discordapp.com/channels/${LeaveMember.guild.id}/${LeaveMember.lastMessage.channel.id}/${LeaveMember.lastMessageID}`}
 
                         if(gotBanned == false) {

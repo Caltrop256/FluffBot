@@ -17,8 +17,8 @@ module.exports = {
         duration: 60,
         maxUsers: 3
     },
-    permLevel: 5, //0 = none, 1 = MANAGE_MESSAGES, 2 = MANAGE_GUILD, 3 = ADMINISTRATOR, 4 = guild.ownerID, 5 = Caltrop
-    Enabled: true,
+    permLevel: 3, //0 = none, 1 = MANAGE_MESSAGES, 2 = MANAGE_GUILD, 3 = ADMINISTRATOR, 4 = guild.ownerID, 5 = Caltrop
+    Enabled: false,
 
 execute(client, arguments, receivedMessage) {
 
@@ -26,10 +26,8 @@ execute(client, arguments, receivedMessage) {
             const command = fs.readdirSync('./commands').filter(file => file == `${arguments[0]}.js`);
             if(!command[0]) return receivedMessage.reply(`Command \`${arguments[0]}\` not found.`)
             const commandfile = require(`./${command[0]}`);
-            client.modules.commands.delete(commandfile.name)
-            client.modules.commands.set(commandfile.name, commandfile);
-            delete require.cache[require.resolve(`./${command[0]}`)];
-            receivedMessage.reply(`Command \`${arguments[0]}\` reloaded.`)
+            client.commands.delete(commandfile.name)
+            client.commands.set(commandfile.name, commandfile);
         }
     }
 }

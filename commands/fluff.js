@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 const https = require('https');
-const config = require("./json/config.json");
 
 
 
@@ -22,7 +21,6 @@ module.exports = {
    
    async execute(client, arguments, receivedMessage) {
 
-    //if(receivedMessage.member.id != 152041181704880128) {
         function Get(URL) {
             return new Promise ((resolve, reject) => {
                 var Done = false;
@@ -95,7 +93,7 @@ module.exports = {
                 .setTimestamp()
                 msg.edit("", LikePlusEmbed)
                 
-                var SuccessObj = await Get(`https://fluffyart.cheeseboye.com/like.php?password=${config.fluffToken}&filename=${ResultObj.file.Filename}&count=${collection.count -1}`)
+                var SuccessObj = await Get(`https://fluffyart.cheeseboye.com/like.php?password=77f91dac5b1b042137e7ca65712b69cf&filename=${ResultObj.file.Filename}&count=${collection.count -1}`)
 
 
                 
@@ -144,7 +142,7 @@ module.exports = {
                 .setTimestamp()
                 msg.edit("", ReportPlusEmbed)
 
-                var SuccessObj = await Get(`https://fluffyart.cheeseboye.com/report.php?password=${config.fluffToken}&filename=${ResultObj.file.Filename}&count=${collection.count -1}`)
+                var SuccessObj = await Get(`https://fluffyart.cheeseboye.com/report.php?password=77f91dac5b1b042137e7ca65712b69cf&filename=${ResultObj.file.Filename}&count=${collection.count -1}`)
 
                 var otherCount = collection.count - 2
 
@@ -217,8 +215,8 @@ module.exports = {
                     if(reportCountuserRemove > 0) {sucesstext += `\n${reportUsersClean.join(", ").replace(/, ([^,]*)$/, ' and $1')} reported the Image!`}
                     if(duplicateUsers.length > 0) {sucesstext += `\n\nHey ${duplicateUsersClean}, you can't Like **and** report. Your vote was defaulted to just **Like**.`}
 
-                    if(LikeCountuserRemove > 0){var likeSuccessOBJ = await Get(`https://fluffyart.cheeseboye.com/like.php?password=${config.fluffToken}&filename=${ResultObj.file.Filename}&count=${LikeCountuserRemove}`)}
-                    if(reportCountuserRemove > 0) {var reportSuccessOBJ = await Get(`https://fluffyart.cheeseboye.com/report.php?password=${config.fluffToken}&filename=${ResultObj.file.Filename}&count=${reportCountuserRemove}`)}
+                    if(LikeCountuserRemove > 0){var likeSuccessOBJ = await Get(`https://fluffyart.cheeseboye.com/like.php?password=77f91dac5b1b042137e7ca65712b69cf&filename=${ResultObj.file.Filename}&count=${LikeCountuserRemove}`)}
+                    if(reportCountuserRemove > 0) {var reportSuccessOBJ = await Get(`https://fluffyart.cheeseboye.com/report.php?password=77f91dac5b1b042137e7ca65712b69cf&filename=${ResultObj.file.Filename}&count=${reportCountuserRemove}`)}
 
 
                     var ReportPlusEmbed = new Discord.RichEmbed()

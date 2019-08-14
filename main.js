@@ -3,6 +3,7 @@
     person reading this mad cute
 
 */
+
 console.clear()
 const Discord = require('discord.js');
 const {Util} = require('discord.js');
@@ -38,10 +39,9 @@ if(config.maintenance == false) {
 console.color = require('colors')
 
 client.polls = new Discord.Collection()
-client.subscriptions = require('./subscriptions.json');
-console.log(client.subscriptions);
+
 client.invites = {};
-client.modules = {events:new Discord.Collection(),commands:new Discord.Collection()};
+
 client.spam = {};
 client.spam.lreceivedMessageChannel = {};
 client.spam.lreceivedMessageUser = {};
@@ -84,7 +84,7 @@ client.cmd.permissions = [
         group: "Guild Owners"
     }, {
         position: 5,
-        name: "seanieb",
+        name: "Caltrop",
         perm: "",
         group: "Bot Owners"
     }
@@ -142,7 +142,7 @@ const embedOrange = 0xFFDFAB
 const embedYellow = 0xD8C100
 const embedBright_Yellow = 0xFFE400
 
-console.log("uwu");
+
 fs.writeFileSync('./commands/json/dar.json',`{\n"exit": false\n}`);
 
 function avatarFunc() {
@@ -178,25 +178,7 @@ function avatarFunc() {
                         break;
                     }
                 }
-            var newUrl = `https://fluffyart.cheeseboye.com/Images/${ResultObj.file.Filename}.${ResultObj.file.Extension}`;
-            client.user.setAvatar(newUrl).then(user =>
-            {
-                client.subscriptions.avatar.forEach(userID =>{
-                    var avatarEmbed = new Discord.RichEmbed()
-                    .setAuthor(`My New Avatar`, newUrl, newUrl)
-                    .setImage(newUrl)
-                    .setTimestamp()
-                    .setFooter(`${ResultObj.file.ID} | Powered by fluffyart.cheeseboye.com`)
-                    .setColor(embedNeon_Green);
-                    client.fetchUser(userID).then(User => 
-                        {
-                            User.send(`Link => <${newUrl}>`, {embed: avatarEmbed}).then(msg =>{
-                                User.send(`If you would like to stop being notified every time I change my avatar, you can use \`${client.cfg.prefix}notify avatar\` again`);
-                            });
-                        });
-                    
-                });
-            }).catch(err => console.log(err));
+            client.user.setAvatar(`https://fluffyart.cheeseboye.com/Images/${ResultObj.file.Filename}.${ResultObj.file.Extension}`).catch(err => console.log(err));
             }
 
             
@@ -210,7 +192,7 @@ function avatarFunc() {
     })
 }
 setInterval(avatarFunc, 900000);
-//client.test = avatarFunc;
+
 client.starboard = new Discord.Collection()
 
 /*
@@ -305,7 +287,6 @@ client.swearDetect = function(str) {
     str = str.replace(/go{2,}(c|k)/gi, function(token){map += 256;replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`;});
     str = str.replace(/\bho{1,}nc?ky{1,}\b/gi, function(token){map += 512;replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`;});
     str = str.replace(/(re+)(t|d)a+r+(t|d)\b/gi, function(token){map += 1024;replaced = true;return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`});
-    //if((str !== 'CheeseBoye is retarded') && !((str == 'I am retarded') && (userID == 152041181704880128)))
     str = str.replace(/(re+)(t|d)a+r+(t|d)(e+)?(t|d)?/gi, function(token){map += 1024;replaced = true;return `${friendlyAdj[Math.floor(Math.random() * friendlyAdj.length)]}`});
     return {string: str, replaced: replaced, bitmap: map}
 }
@@ -325,16 +306,16 @@ fs.readdir("./events/", (err, files) => {
 
 const cooldowns = new Discord.Collection();
 
+client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const EventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    client.modules.commands.set(command.name, command);
-    delete require.cache[require.resolve(`./commands/${file}`)];
+	const command = require(`./commands/${file}`);
+	client.commands.set(command.name, command);
 }
 
-console.table(client.modules.commands)
+console.table(client.commands)
 console.table(EventFiles)
 
 client.queue = new Map();
@@ -486,8 +467,6 @@ Additional Parameters:
     "--r" => selects a random user
 */
 client.getMemberFromArg = function(receivedMessage, arguments, pos, join, nomention) {
-    if(receivedMessage.channel.type != 'text')
-        return receivedMessage.author;
     var itteration = 0
     var fromString = null
     var allUserNames = [];
@@ -667,8 +646,8 @@ async function processCommand(receivedMessage, cleaned) {
     var cmdTableObj = {Command: `${client.cfg.prefix}${primaryCommand}`, Arguments: receivedMessage.cleanContent.slice(client.cfg.prefix.length + primaryCommand.length + 1), User: receivedMessage.author.tag}
     
 
-    var command = client.modules.commands.get(primaryCommand)
-    || client.modules.commands.find(cmd => cmd.aliases && cmd.aliases.includes(primaryCommand));
+    var command = client.commands.get(primaryCommand)
+    || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(primaryCommand));
 
     /*var reg = fullCommand.match(new RegExp("\n", "g"));
     if(reg !== null) {var newlinesAmt = reg.length.toString()}
@@ -687,7 +666,7 @@ async function processCommand(receivedMessage, cleaned) {
         
         var similarCommandsArray = [];
 
-        await client.modules.commands.forEach(cmd => {
+        await client.commands.forEach(cmd => {
             if(similarity(primaryCommand, cmd.name) >= 0.60) {
                 var command = {cmd: cmd, similarity: similarity(primaryCommand, cmd.name), name: cmd.name}
                 similarCommandsArray.push(command)
@@ -752,42 +731,33 @@ async function processCommand(receivedMessage, cleaned) {
         console.table(cmdTableObj)
         return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle("Invalid Guild").setDescription(`\`${command.name}\` is disabled in DMs.`).setColor(embedReder))
     }
-    if((receivedMessage.author.id != 152041181704880128) && (receivedMessage.author.id !=  214298654863917059)) {
-        if(receivedMessage.channel.type == 'text')
-        {
-            if(command.permLevel !== 0) {
-                var perm = client.cmd.permissions.find(perm => {
-                    return perm.position == command.permLevel
-                })
-                if(!perm) return receivedMessage.reply(`Failed to verify if you have the correct permissions to use this Command. Please message **Caltrop#0001** if this error persists.`)
-                if(perm.perm !== "") {
-                    if(!receivedMessage.member.hasPermission(perm.perm)) {
-                        receivedMessage.delete(5000)
-                        receivedMessage.react("⛔")
-                        cmdTableObj.Failed = `Below permission level ${perm.position} (${perm.name})`
-                        console.table(cmdTableObj)
-                        return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle(`Below required Permission Level`).setDescription(`You need to be have the \`${perm.name}\` permission to use the \`${command.name}\` command.`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)})
-                    }
-                } else if(perm.position == 5 && receivedMessage.member.id.toString() !== client.cfg.ownerID) {
-                    receivedMessage.delete(5000)
-                    receivedMessage.react("⛔")
-                    cmdTableObj.Failed = `Below permission level ${perm.position} (${perm.name})`
-                    console.table(cmdTableObj)
-                    return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle(`Below required Permission Level`).setDescription(`You need to be **Caltrop#0001** to use the \`${command.name}\` command.`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)})
-                } else if(perm.position == 4 && receivedMessage.member.id.toString() !== receivedMessage.guild.owner.id.toString()) {
-                    receivedMessage.delete(5000)
-                    receivedMessage.react("⛔")
-                    cmdTableObj.Failed = `Below permission level ${perm.position} (${perm.name})`
-                    console.table(cmdTableObj)
-                    return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle(`Below required Permission Level`).setDescription(`You need to be the Guild Owner to use the \`${command.name}\` command.`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)})
-                }
+    
+    if(command.permLevel !== 0) {
+        var perm = client.cmd.permissions.find(perm => {
+            return perm.position == command.permLevel
+        })
+        if(!perm) return receivedMessage.reply(`Failed to verify if you have the correct permissions to use this Command. Please message **Caltrop#0001** if this error persists.`)
+        if(perm.perm !== "") {
+            if(!receivedMessage.member.hasPermission(perm.perm)) {
+                receivedMessage.delete(5000)
+                receivedMessage.react("⛔")
+                cmdTableObj.Failed = `Below permission level ${perm.position} (${perm.name})`
+                console.table(cmdTableObj)
+                return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle(`Below required Permission Level`).setDescription(`You need to be have the \`${perm.name}\` permission to use the \`${command.name}\` command.`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)})
             }
+        } else if(perm.position == 5 && receivedMessage.member.id.toString() !== client.cfg.ownerID) {
+            receivedMessage.delete(5000)
+            receivedMessage.react("⛔")
+            cmdTableObj.Failed = `Below permission level ${perm.position} (${perm.name})`
+            console.table(cmdTableObj)
+            return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle(`Below required Permission Level`).setDescription(`You need to be **Caltrop#0001** to use the \`${command.name}\` command.`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)})
+        } else if(perm.position == 4 && receivedMessage.member.id.toString() !== receivedMessage.guild.owner.id.toString()) {
+            receivedMessage.delete(5000)
+            receivedMessage.react("⛔")
+            cmdTableObj.Failed = `Below permission level ${perm.position} (${perm.name})`
+            console.table(cmdTableObj)
+            return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle(`Below required Permission Level`).setDescription(`You need to be the Guild Owner to use the \`${command.name}\` command.`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)})
         }
-        else
-            if(command.permLevel !== 0) 
-            {
-                return receivedMessage.reply(`Unable to verify if you have the correct permissions to use this Command. Please try using it in a Server`);
-            }
     }
 
     if (!cooldowns.has(command.name)) {
@@ -800,15 +770,13 @@ async function processCommand(receivedMessage, cleaned) {
 
     var cmdDuration = receivedMessage.channel.id == "562328185728008204" ? cooldownAmount / 2 : cooldownAmount * 1.5
 
-	if(receivedMessage.author.id != 152041181704880128) {
-		if(timestamps.size >= command.rateLimit.maxUsers) {
-			receivedMessage.delete(5000)
-			receivedMessage.react("⛔")
-			cmdTableObj.Failed = `Too many users using command`
-			console.table(cmdTableObj)
-			return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle("Rate Limited").setDescription(`Woah, slow down there Cowboy! The \`${command.name}\` command is limited to \`${command.rateLimit.maxUsers}\` Users per ${(cmdDuration / 1000).toFixed(1)} second(s).`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)});
-		}
-	}
+    if(timestamps.size >= command.rateLimit.maxUsers) {
+        receivedMessage.delete(5000)
+        receivedMessage.react("⛔")
+        cmdTableObj.Failed = `Too many users using command`
+        console.table(cmdTableObj)
+        return receivedMessage.channel.send(new Discord.RichEmbed().setAuthor("Command Rejected:").setTitle("Rate Limited").setDescription(`Woah, slow down there Cowboy! The \`${command.name}\` command is limited to \`${command.rateLimit.maxUsers}\` Users per ${(cmdDuration / 1000).toFixed(1)} second(s).`).setColor(embedReder)).then(errormessage => {errormessage.delete(5000)});
+    }
     
     var collectionUser = timestamps.get(receivedMessage.author.id)
     if (collectionUser) {
@@ -818,7 +786,7 @@ async function processCommand(receivedMessage, cleaned) {
         var usages = collectionUser.uses + 1
         timestamps.set(receivedMessage.author.id, {start: startTime, uses: usages});
 
-        if ((receivedMessage.author.id != 152041181704880128) && (now < expirationTime && usages > command.rateLimit.usages)) {
+        if (now < expirationTime && usages > command.rateLimit.usages) {
             const timeLeft = (expirationTime - now) / 1000;
             receivedMessage.delete(5000)
             receivedMessage.react("⛔")
@@ -996,6 +964,7 @@ client.login(config.token);
 process.on("uncaughtException", (err) => {
     const errorMsg = err.stack.replace(new RegExp(`${__dirname}/`, "g"), "./");
     console.error(console.color.red(`[META]`), console.color.red(`[Uncaught Exception]`), errorMsg);
+
     console.color.red(`[META]`, `Shutting down...`);
     if(!config.maintenance) {
         logger.setLevel('fatal');
@@ -1005,8 +974,6 @@ process.on("uncaughtException", (err) => {
             process.exit(1);
         }, 1000);
   });
-client.lastErr = [];
   process.on("unhandledRejection", err => {
     console.log(console.color.red(`[META]`), console.color.red(`[Uncaught Promise Error]`), err.message);
-    client.lastErr.push(err);
   });

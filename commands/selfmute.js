@@ -59,12 +59,12 @@ module.exports = {
         if(time > 473354280000) return receivedMessage.reply("Selfmutes must be shorter than 15 years.")
 
         selfmutemember.addRole(muteRole.id, "Selfmute")
-        receivedMessage.author.send("You have been muted for " + prettyMs(time, {verbose: true, compact: true}) + "\nSee you soon <:neon_pink_heart:608779835090927661>")
+        receivedMessage.author.send("You have been muted for " + prettyMs(time, {verbose: true, compact: true}) + "\nSee you soon <:neon_pink_heart:567312233923870751>")
         .catch(error => {
             console.error(`Could not send help DM to a user.\n`, error);
             receivedMessage.channel.send(`There was an Error while trying to send a Direct Message, this most likely occured because the user has their DMs set to friends only or private.`)
         });
-        receivedMessage.channel.send(receivedMessage.author + " has been muted for " + prettyMs(time, {verbose: true, compact: true}) + "\nSee you soon <:neon_pink_heart:608779835090927661>")
+        receivedMessage.channel.send(receivedMessage.author + " has been muted for " + prettyMs(time, {verbose: true, compact: true}) + "\nSee you soon <:neon_pink_heart:567312233923870751>")
 
         let muteGuild = receivedMessage.guild.id
 

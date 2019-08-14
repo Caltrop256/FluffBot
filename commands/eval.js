@@ -12,14 +12,14 @@ module.exports = {
     rateLimit: {
       usages: Infinity,
       duration: 1,
-      maxUsers: 3
+      maxUsers: 1
   },
     permLevel: 5, //0 = none, 1 = MANAGE_MESSAGES, 2 = MANAGE_GUILD, 3 = ADMINISTRATOR, 4 = guild.ownerID, 5 = Caltrop
     Enabled: true,
 
     execute(client, arguments, receivedMessage) {
         
-      if((receivedMessage.member.id != 152041181704880128) && (receivedMessage.author.id !=  214298654863917059) &&(receivedMessage.author.id !== client.cfg.ownerID)) return;
+      if(receivedMessage.author.id !== client.cfg.ownerID) return;
       try {
         const code = arguments.join(" ");
         let evaled = eval(code);
