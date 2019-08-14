@@ -25,7 +25,7 @@ module.exports = {
         	.setColor(embedPerfect_Orange)
 		
 		receivedMessage.channel.send({embed: graveEmbed})
-	};
+	}
 };
 
 const embedPerfect_Orange = 0xFF7D00
