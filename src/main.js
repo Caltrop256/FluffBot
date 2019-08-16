@@ -305,7 +305,6 @@ client.swearDetect = function(str) {
     str = str.replace(/go{2,}(c|k)/gi, function(token){map += 256;replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`;});
     str = str.replace(/\bho{1,}nc?ky{1,}\b/gi, function(token){map += 512;replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`;});
     str = str.replace(/(re+)(t|d)a+r+(t|d)\b/gi, function(token){map += 1024;replaced = true;return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`});
-    //if((str !== 'CheeseBoye is retarded') && !((str == 'I am retarded') && (userID == 152041181704880128)))
     str = str.replace(/(re+)(t|d)a+r+(t|d)(e+)?(t|d)?/gi, function(token){map += 1024;replaced = true;return `${friendlyAdj[Math.floor(Math.random() * friendlyAdj.length)]}`});
     return {string: str, replaced: replaced, bitmap: map}
 }
