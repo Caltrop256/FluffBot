@@ -32,7 +32,7 @@ module.exports = (client, receivedMessage) => {
     client.lastSeen(receivedMessage.member, `Sent a message in #${receivedMessage.channel.name}`)
 
     var noMarkDown = receivedMessage.content.toLowerCase().replace(/(?![a-zA-Z])./gi, "")
-    if(noMarkDown == "k") return receivedMessage.delete(1);
+    if((noMarkDown == "k") || (/^([. ]+)$/.test(receivedMessage.content))) return receivedMessage.delete(1);
 
     if(client.cfg.spamFilter == "true") {
         var messageInformation = messageSpamCheck(receivedMessage)
