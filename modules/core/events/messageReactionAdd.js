@@ -13,17 +13,21 @@ module.exports = {
         reaction.remove();
         var member = reaction.message.guild.member(user);
 
-        if(client.scrips.isSuspect(user) && member.joinedTimestamp > Date.now() - 600000) {
+        if(client.scripts.isSuspect(user) && member.joinedTimestamp > Date.now() - 600000) {
             let embed = client.scripts.getEmbed()
                 .setAuthor(`Please wait ${client.time(member.joinedTimestamp - (Date.now() - 600000))}`)
                 .setColor(client.constants.red.hex)
-                setTimestamp();
+                .setTimestamp();
             return user.send({embed});
         } else {
             let role = (member.guild.roles.find(role => role.name === "Welcome")) 
             member.removeRole(role)
             .then(() => {
                 console.log(`Removed role ${role} from ${member.displayName}`);
+                member.addRole(member.guild.roles.get("658298114184052739"));
+                setTimeout(() => {
+                    member.removeRole(member.guild.roles.get("658298114184052739"));
+                }, (client.scripts.isSuspect(user) ? 600000 * 3 : 600000))
             });
         }
     }
