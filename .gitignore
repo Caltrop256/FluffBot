@@ -5,8 +5,9 @@
 .vsls.json
 TropBot.code-workspace
 
-node_modules/
 config.json
+node_modules/
 
 SSH
 SSH.lnk
+
