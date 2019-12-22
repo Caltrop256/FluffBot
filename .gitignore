@@ -1,2 +1,12 @@
+.git/
+.github/
+
+.vscode/
+.vsls.json
+TropBot.code-workspace
+
 node_modules/
 config.json
+
+SSH
+SSH.lnk
