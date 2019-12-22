@@ -1,0 +1,20 @@
+{
+    "stableToken": "Token",
+    "betaToken": "Token2",
+
+    "mySQLHost": "URL",
+    "mySQLPort": "Port",
+    "mySQLuser": "Userame",
+    "mySQLPassword": "Password",
+    "mySQLdb": "tropbot",
+
+    "ytApiToken": "Currently Unused",
+    "gToken1": "Currently Unused",
+    "gToken2": "Currently Unused",
+    "fluffToken": "DontEvenThinkAboutItLol",
+    "pName": "PlotlyName",
+    "pToken": "PlotlyToken",
+
+    "useLocal": true,
+    "useBeta": true
+}
