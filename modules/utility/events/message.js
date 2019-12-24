@@ -34,7 +34,7 @@ module.exports = {
             
         }*/
         var spaceless = msg.replace(/( )/g, '')
-        if(spaceless.match(/^h{1,}$/gi)) {
+        if(spaceless.match(/^(h|н){1,}$/gi)) {
             if(spaceless.length < 10) {
                 message.react("🗜") // he hacc, he reacc, but most importantly, he cute. he's caltrop
             }

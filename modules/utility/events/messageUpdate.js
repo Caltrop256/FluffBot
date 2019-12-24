@@ -8,7 +8,7 @@ module.exports = {
     execute(client, oldMessage, newMessage) {
         var msg = newMessage.content
         var spaceless = msg.replace(/( )/g, '')
-        if(spaceless.match(/^h{1,}$/gi)) {
+        if(spaceless.match(/^(h|н){1,}$/gi)) {
             if(spaceless.length < 10) {
                 newMessage.react("🗜") // reacc box
             }
@@ -22,5 +22,8 @@ module.exports = {
         if(msg.match(/compress/gi)) {newMessage.react("🗜")}
         if(msg.match(/[e∑]gg/gi) || (['eg','∑g'].includes(newMessage.content))) {newMessage.react("🥚")}
         if(msg.match(/\bbr+([au]+)(h+)?(\b|$)/gi)) {newMessage.react("🗿")}
+        if(msg.match(/society/gi)) newMessage.react("🤡");
+        if(msg.match(/undefined/gi)) newMessage.react(":RalSweat:592826306027061259");
+        if(msg.match(/bo(o+)ped/)  || msg.match(/bo(o+)ping/) || msg.match(/\*bo(o+)ps/) || msg.toLowerCase().includes('uwu'))  newMessage.react(":uwu:562330233446072321");
     }
 }
