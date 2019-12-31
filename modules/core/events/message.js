@@ -95,13 +95,13 @@ module.exports = {
 
 
     checkValidity(client, message, cmd, mod, args, usedPrefix) {
-        var isDev = client.scripts.getPerms(client, message.member).includes('DEV');
+        
         if(message.channel.type !== 'text') {
             message.react('⛔');
             message.channel.send(new Discord.RichEmbed().setAuthor('Command Rejected:').setTitle('DMs are unsupported').setDescription(`We have ended support for executing commands in DMs, please try again in a Guild instead`).setColor(client.constants.redder.hex));
             return false;
         };
-
+        var isDev = client.scripts.getPerms(client, message.member).includes('DEV');
         if(!cmd.enabled) {
             message.delete(5000);
             message.react('⛔');

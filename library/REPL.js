@@ -94,10 +94,7 @@ module.exports = {
                                     result = args;
                                     this.send(ws, 'log', stringify(args, stringifyReplace, 2, stringifyCircular));
                                 }.bind(this);
-                                var setCommandMessage = function(channelID, userID) {
-                                    /*var channelID, messageID;
-
-                                    client.channels.get('562328185728008204').messages.fetchMessage('639821701743640598')*/
+                                var setCommandMessage = function(url) {
                                     client.scripts.getMessageFromLink(client, url).then(msg => {
                                         log(msg);
                                         msg.delete = () => { log('Tried to delete command message') };
