@@ -78,7 +78,9 @@ module.exports = {
                                         modValue.parent = !!value.parent;
                                         modValue.children = value.children.length;
                                         return modValue;
-                                    } else
+                                    } else if (value.constructor == BigInt) //Screw you BigInt for not working with instanceof lmao
+                                        return `${value}n`;
+                                    else
                                         return value;
                                 }.bind(this);
                                 var checkParent = function(key, value) {
