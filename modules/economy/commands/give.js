@@ -33,8 +33,10 @@ module.exports = {
 
             console.log(console.color.green(`[Economy]`), `${message.author.username} gave ${giveNumber}${client.cfg.curName} to ${receivingUser.user.username}`);
 
-            var giveUnicode = '💸'; 
-            if(giveNumber === 420)
+            var giveUnicode = '💸';
+            if(giveNumber === 413)
+                giveUnicode = '<:howHigh:663360611782230016>';
+            else if(giveNumber === 420)
                 giveUnicode= '<:ralGasp:654014647460036619>';
             else if(giveNumber === 69)
                 giveUnicode= '😏';

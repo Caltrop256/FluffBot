@@ -17,8 +17,28 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
     execute(client, args, message) {
-        return new Promise((resolve,reject) =>{
+        var user = message.member;
+        if(args.join(" ").toLowerCase().match(/beautiful/gi)) {
+            var temp = client.getMember(args[1], message.guild,null);
+            if(temp){
+                user = temp;
+                message.delete();
+            } 
+            var avatarAttachment = client.scripts.getAttachment(user.user.displayAvatarURL,'avatar.png')
+            var DefinitionEmbed = client.scripts.getEmbed()
+            .setAuthor(`Definition for "Beautiful"`, user.user.avatarURL)
+            .setDescription(`**Definition**: ${user === message.member ? 'You!' : user}
             
+**Example**:You're the definition of beautiful! <:neon_pink_heart:608779835090927661>`)
+            .attachFile(avatarAttachment)
+            .setImage('attachment://avatar.png')
+            .setFooter(`${temp ? '120' : '110'}% of people agreed with this Definition.`)
+            .setColor(0x007CFF);
+            
+            return message.channel.send({embed: DefinitionEmbed});
+        }
+        return new Promise((resolve,reject) =>{
+             
                 urban(encodeURI(args.join(" "))).then(definition => {
                     if(!definition) return message.reply("couldn't find a definition for your word.")
 
