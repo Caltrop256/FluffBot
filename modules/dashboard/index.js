@@ -11,7 +11,7 @@ var scripts, cfg;
 //const typeArr = ['totalMoney','karmaInfo','pgsType'];
 const pgsArr = ['platinum', 'gold', 'silver'];
 const sqlSelectArr = ['*', 'upvotes, downvotes', pgsArr.join(',')]
-    //const sqlTableArr = ['coins','karma','karma']; type ? karma : coins
+//const sqlTableArr = ['coins','karma','karma']; type ? karma : coins
 const sqlOrderArr = ['coins', 'upvotes-downvotes', '{0}'];
 class CustomEmoji {
     constructor(id, name, url) {
@@ -100,12 +100,12 @@ class Entry {
         else if (this.type == 1)
             toDisplay = `${this.entryObj.upvotes - this.entryObj.downvotes} Karma`;
         else
-        if (pgsType === 0)
-            toDisplay = `${scripts.numComma(this.entryObj.platinum)} ${emojis.platinum}`;
-        else if (pgsType === 1)
-            toDisplay = `${scripts.numComma(this.entryObj.gold)} ${emojis.gold}`;
-        else
-            toDisplay = `${scripts.numComma(this.entryObj.silver)} ${emojis.silver}`;
+            if (pgsType === 0)
+                toDisplay = `${scripts.numComma(this.entryObj.platinum)} ${emojis.platinum}`;
+            else if (pgsType === 1)
+                toDisplay = `${scripts.numComma(this.entryObj.gold)} ${emojis.gold}`;
+            else
+                toDisplay = `${scripts.numComma(this.entryObj.silver)} ${emojis.silver}`;
         //toReturn +=  // ${upvote}**${client.scripts.numComma(row.up - row.down)}**\n`.replace(rowMember.displayName, rowMember ? rowMember.toString() : 'Unknown User')
         return `\`${scripts.ordinalSuffix(this.index + 1)}\` ${user} : **${toDisplay}**`;
     }
@@ -117,7 +117,7 @@ module.exports.Info({
     name: 'dashboard',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function(client) {
+module.exports.ModuleSpecificCode = function (client) {
     scripts = client.scripts;
     cfg = client.cfg;
     async function getBoard(type, guild, pgsType) {

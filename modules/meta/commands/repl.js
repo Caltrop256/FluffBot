@@ -11,11 +11,11 @@ module.exports = {
         duration: 100,
         maxUsers: 1
     },
-    perms: ['DEV'], 
-   
+    perms: ['DEV'],
+
     execute(client, args, message) {
-        if(!client.repl) client.repl = repl;
-        if(client.replEnabled)
+        if (!client.repl) client.repl = repl;
+        if (client.replEnabled)
             return message.channel.send('REPL session already started.');
         client.replEnabled = true;
         client.replServer = repl.start({
@@ -27,6 +27,6 @@ module.exports = {
             message.channel.send('REPL session ended.');
         });
         message.channel.send('REPL session started.');
-   }
+    }
 }
 

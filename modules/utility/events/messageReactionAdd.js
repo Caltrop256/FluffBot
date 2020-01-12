@@ -8,7 +8,11 @@ user                   User                   The user that applied the emoji or
 
 module.exports = {
     async execute(client, reaction, user) {
-        let roleSelectChannel = client.channels.get("562328013371605012");
+        var guild = reaction.message.guild;
+        if (!guild || user.bot)
+            return;
+        var member = guild.member(user);
+        let roleSelectChannel = client.channels.get('562328013371605012');
         let message_id_color = client.cfg.color1;
         let message_id_color2 = client.cfg.color2;
         let message_id_other = client.cfg.other1;
@@ -26,104 +30,40 @@ module.exports = {
                 resolve(e);
             });
         };
-        if ((reaction.message.id == message_id_color || reaction.message.id == message_id_color2) && !user.bot) {
+        if ([message_id_color, message_id_color2].includes(reaction.message.id)) {
             for (var i = 0; i < client.constants.Colors.length; i++) {
-                let colorEmote = client.constants.Colors[i].getEmoji(client);
+                var color = client.constants.Colors[i];
+                if (!color.isEmoji)
+                    continue;
+                let colorEmote = color.getEmoji(client);
                 if (!colorEmote) return console.error(`Unable to resolve emoji for ${client.constants.Colors[i].name}`);
                 if (colorEmote.id == reaction.emoji.id) {
-                    let Color = client.constants.Colors[i];
-                    let role = reaction.message.guild.roles.find(r => r.name.toLowerCase() == Color.name.toLowerCase());
-                    if (!role) return console.error(`Couldn't resolve role for ${Color.name}`);
-
-                    console.log(`adding ${Color.name}`);
-
-                    let member = reaction.message.guild.member(user);
-
-                    var removeArr = [];
-                    client.constants.Colors.forEach(clr => {
-                        let role = reaction.message.guild.roles.find(r => r.name.toLowerCase() == clr.name.toLowerCase());
-                        if (clr != Color && member.roles.has(role.id)) {
-                            removeArr.push(role);
-                            console.log(console.color.magenta(`[Role-Selection]`), `Pushed "${role.name}" to removeArray`);
-                        };
-                    });
-                    member.removeRoles(removeArr, "Role Selection: Removed other / unselected Roles from user");
-                    member.addRole(role, "Role Selection: Automatically added selected Role to user");
+                    let role = reaction.message.guild.roles.find(r => r.name.toLowerCase() == color.name.toLowerCase());
+                    if (!role) return console.error(`Couldn't resolve role for ${color.name}`);
+                    return member.addRole(role)
+                        .then(() => {
+                            console.log(console.color.magenta(`[Role-Selection]`), `Added color role ${color.name} to ${member.displayName}`);
+                        });
                 }
             };
         };
+        if (reaction.message.id === message_id_other) {
+            const announcementEmoji = client.emojis.find(emoji => emoji.name === 'Announcement_notif');
+            const roleIDArr = ['562923728862707734', '562923928935464961', '562924019704135710', '607203938520793098', '562924554666770432', '579552918479437834', '562923651679125504'];
+            const roleNameArr = ['🗄🎮🎵🖊🌟🍔', announcementEmoji.id]
+            var roleIndex = roleNameArr[0].indexOf(reaction.emoji.name);
 
-        var guild = reaction.message.guild;
-        const announcementEmoji = client.emojis.find(emoji => emoji.name === "Announcement_notif");
-        if (reaction.emoji.name === "🗄" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Archivist"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
+            if (roleIndex === -1)
+                roleIndex = roleNameArr[0].length + roleNameArr.indexOf(reaction.emoji.id) - 1;
+            if (roleIndex === 4)
+                return reaction.remove().then(() => console.error('Removed invalid reaction'));
+
+            var role = guild.roles.get(roleIDArr[roleIndex]);
+            member.addRole(role)
+                .then(() => {
+                    console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role.name} to ${user.tag}`);
                 });
         }
-        if (reaction.emoji.name === "🎮" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Gamer"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🎵" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Music"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🖊" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.id == "607203938520793098"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🌟" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Starboard_access"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🍔" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Foodie"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.id == announcementEmoji.id && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Announcements"));
-                    member.addRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Added role ${role} to ${member.displayName}`);
-                        });
-                });
-        }
+
     }
 };

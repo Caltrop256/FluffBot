@@ -6,7 +6,6 @@ module.exports = {
     description: 'Changes the Name of the Bot',
     args: true,
     usage: '<new name>',
-    guildOnly: false,
     rateLimit: {
         usages: 2,
         duration: 500,
@@ -17,16 +16,17 @@ module.exports = {
     execute(client, args, message) {
 
         var newname = args.join(" ")
-        if(newname.length < 2 || newname.length > 32) {return message.reply("Usernames must be between 2 and 32 characters long.")}
+        if (newname.length < 2 || newname.length > 32) { return message.reply("Usernames must be between 2 and 32 characters long.") }
 
-        try {client.user.setUsername(`${newname}`)
+        try {
+            client.user.setUsername(`${newname}`)
 
-        var nameUpdateEmbed = new Discord.RichEmbed()
-        .setAuthor("Successfully updated Name")
-        .setTitle("new name: `" + newname + "`")
-        .setColor(message.guild.me.displayHexColor)
+            var nameUpdateEmbed = new Discord.RichEmbed()
+                .setAuthor("Successfully updated Name")
+                .setTitle("new name: `" + newname + "`")
+                .setColor(message.guild.me.displayHexColor)
 
-        message.channel.send({embed: nameUpdateEmbed})
+            message.channel.send({ embed: nameUpdateEmbed })
 
         } catch (error) {
             console.error(error);

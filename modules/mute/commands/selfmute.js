@@ -20,7 +20,7 @@ module.exports = {
         let time = client.time.fromString(args[0]).ms;
         if (!time) return message.reply("No time args received.")
         if (time < 600000 * 3) return message.reply("Selfmutes must at least be 30 minutes long.")
-        if(time > 2628028800) return message.reply("Selfmutes must not be longer than 1 month.")
+        if (time > 2628028800) return message.reply("Selfmutes must not be longer than 1 month.")
         var channel = client.getChannel(args[1], null) || null;
         var channelId = channel ? channel.id : null
 

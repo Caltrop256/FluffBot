@@ -8,25 +8,23 @@ module.exports = {
     description: 'Forcefully shuts down the bot',
     args: false,
     usage: '',
-    guildOnly: false,
     rateLimit: {
         usages: 5,
         duration: 120,
         maxUsers: 2
     },
-    permLevel: ['DEV'],
-    enabled: true,
+    perms: ['DEV'],
 
-    execute(client, arguments, receivedMessage) {
+    execute(client, args, message) {
 
-        receivedMessage.channel.send('Shutting down...')
-        .then(function (message){
-            message.react(":ralsleep:562354429093740544")
-        }).then(msg => client.destroy ())
+        message.channel.send('Shutting down...')
+            .then(function (message) {
+                message.react(":ralsleep:562354429093740544")
+            }).then(msg => client.destroy())
         setTimeout(() => {
             console.log("--------------------\n[!] Shutting down TropBot (force shutdown) [!]")
             process.exit(1)
         }, 1000)
-        
+
     }
 }

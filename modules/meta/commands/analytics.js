@@ -26,7 +26,7 @@ module.exports = {
 
         var connection = client.scripts.getSQL()
 
-        connection.query(`SELECT * FROM cmdanal`, async(err, rows) => {
+        connection.query(`SELECT * FROM cmdanal`, async (err, rows) => {
             if (err) return message.reply(`Error: ${err}`)
             cmds.forEach((cmd, index) => {
                 var foundcmd = rows.find(r => r.cmdname == cmd.name)
@@ -57,16 +57,16 @@ module.exports = {
                 step++
             }
             if (reqPage > chunkArray.length) reqPage = chunkArray.length
-            leaderboardEmbed.addField(`Page ${reqPage}`, `\`\`\`${chunkArray[reqPage-1].content.join("\n")}\`\`\``)
+            leaderboardEmbed.addField(`Page ${reqPage}`, `\`\`\`${chunkArray[reqPage - 1].content.join("\n")}\`\`\``)
             leaderboardEmbed.setFooter(`Page ${reqPage}/${chunkArray.length}`)
 
             client.embedSelect(leaderboardEmbed, client.embedConfig(message.channel, message, 0, chunkArray.length - 1), (reqPage) => {
 
                 leaderboardEmbed.fields[0] = {
-                    name: `Page ${reqPage+1}`,
+                    name: `Page ${reqPage + 1}`,
                     value: `\`\`\`${chunkArray[reqPage].content.join("\n")}\`\`\``
                 }
-                leaderboardEmbed.setFooter(`Page ${reqPage+1}/${chunkArray.length}`)
+                leaderboardEmbed.setFooter(`Page ${reqPage + 1}/${chunkArray.length}`)
             })
 
 

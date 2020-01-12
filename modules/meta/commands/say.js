@@ -6,41 +6,39 @@ module.exports = {
     description: 'Echoes the input',
     args: true,
     usage: '<message>',
-    guildOnly: true,
     rateLimit: {
         usages: Infinity,
         duration: 1,
         maxUsers: 10
     },
     perms: ['MANAGE_MESSAGES'],
-    enabled: true, 
-   
-   execute(client, args, receivedMessage) {
-        const embeds = receivedMessage.embeds;
-        const attachments = receivedMessage.attachments; 
+
+    execute(client, args, message) {
+        const embeds = message.embeds;
+        const attachments = message.attachments;
 
         let eURL = ''
 
         if (embeds.length > 0) {
 
-        if(embeds[0].thumbnail && embeds[0].thumbnail.url)
-            eURL = embeds[0].thumbnail.url;
-        else if(embeds[0].image && embeds[0].image.url)
-            eURL = embeds[0].image.url;
-        else
-            eURL = embeds[0].url;
+            if (embeds[0].thumbnail && embeds[0].thumbnail.url)
+                eURL = embeds[0].thumbnail.url;
+            else if (embeds[0].image && embeds[0].image.url)
+                eURL = embeds[0].image.url;
+            else
+                eURL = embeds[0].url;
 
         } else if (attachments.array().length > 0) {
-        const attARR = attachments.array();
-        eURL = attARR[0].url;
+            const attARR = attachments.array();
+            eURL = attARR[0].url;
         }
-        try{
-        receivedMessage.delete(100);
+        try {
+            message.delete(100);
         }
         catch
         {
             console.log('unable to delete message');
         }
-        receivedMessage.channel.send(args.join(" "), {file: eURL, split: true})
+        message.channel.send(args.join(" "), { file: eURL, split: true })
     }
 };

@@ -5,7 +5,7 @@ module.exports.Info({
     name: 'info',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function(client) {
+module.exports.ModuleSpecificCode = function (client) {
     /**
      * @param  {User} user
      * @param  {String} activity

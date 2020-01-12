@@ -15,13 +15,13 @@ module.exports = {
 
     execute(client, args, message) {
         var channel = client.getChannel(args[0], message.channel)
-        if(!channel) channel = message.channel
+        if (!channel) channel = message.channel
 
         var topicEmbed = client.scripts.getEmbed()
-        .setAuthor(`Topic of #${channel.name}`)
-        .setDescription(`${channel.topic}`)
-        .setColor(0x76FF7B)
+            .setAuthor(`Topic of #${channel.name}`)
+            .setDescription(`${channel.topic}`)
+            .setColor(0x76FF7B)
 
-        message.channel.send({embed: topicEmbed})
+        message.channel.send({ embed: topicEmbed })
     }
 }

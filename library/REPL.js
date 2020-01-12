@@ -32,7 +32,7 @@ module.exports = {
 
                                 var objList = client.scripts.getCollection();
                                 console.log('test2');
-                                var stringifyReplace = function(key, value) {
+                                var stringifyReplace = function (key, value) {
                                     if (value === null)
                                         return value;
                                     else if (value === undefined)
@@ -42,11 +42,11 @@ module.exports = {
                                         if (this.hideParent && checkParent(key, value))
                                             return '[{parent}]'
                                         else if (this.hideClient && ['_client', 'client'].includes(key))
-                                        return '[(client)]'
-                                    else if ((objList.get(key) === fixedVal) || (objList.get('_' + key) === fixedVal))
-                                        return `[${key.startsWith('_') ? key.substring(1,key.length) : key}]`;
-                                    else
-                                        objList.set('_' + key, value);
+                                            return '[(client)]'
+                                        else if ((objList.get(key) === fixedVal) || (objList.get('_' + key) === fixedVal))
+                                            return `[${key.startsWith('_') ? key.substring(1, key.length) : key}]`;
+                                        else
+                                            objList.set('_' + key, value);
 
                                     if (typeof value === 'function')
                                         return (value.name || key || result.name) ? `[Function: ${value.name || key || result.name}]` : '[Anonymous Function]';
@@ -61,7 +61,7 @@ module.exports = {
                                     }
                                     return value;
                                 }.bind(this);
-                                var replaceSpecial = function(value) {
+                                var replaceSpecial = function (value) {
                                     if (value instanceof Map)
                                         if ((result === value) || (Object.values(result).includes(value) && (value.size <= this.maxCollection)))
                                             return Array.from(value).reduce((acc, [key, val]) => Object.assign(acc, {
@@ -74,7 +74,7 @@ module.exports = {
                                     else if (value instanceof Set)
                                         return Array.from(value);
                                     else if (value instanceof Module) {
-                                        var modValue = {...value };
+                                        var modValue = { ...value };
                                         modValue.parent = !!value.parent;
                                         modValue.children = value.children.length;
                                         return modValue;
@@ -83,20 +83,20 @@ module.exports = {
                                     else
                                         return value;
                                 }.bind(this);
-                                var checkParent = function(key, value) {
+                                var checkParent = function (key, value) {
                                     if (!Object.entries(result).some(arr => ((arr[0] == key) && (arr[1] == value)))) return false;
                                     return Object.values(value).includes(result)
-                                        //return Object.values(value).some(val => ((val !== null) && (typeof val == 'object')) && Object.values(val).includes(result))
+                                    //return Object.values(value).some(val => ((val !== null) && (typeof val == 'object')) && Object.values(val).includes(result))
                                 }
-                                var stringifyCircular = function(key, value) {
+                                var stringifyCircular = function (key, value) {
                                     return `[(${key})]`;
                                 };
-                                var log = function() {
+                                var log = function () {
                                     var args = arguments.length ? ((arguments.length === 1) ? arguments[0] : arguments) : undefined
                                     result = args;
                                     this.send(ws, 'log', stringify(args, stringifyReplace, 2, stringifyCircular));
                                 }.bind(this);
-                                var setCommandMessage = function(url) {
+                                var setCommandMessage = function (url) {
                                     client.scripts.getMessageFromLink(client, url).then(msg => {
                                         log(msg);
                                         msg.delete = () => { log('Tried to delete command message') };
@@ -105,16 +105,16 @@ module.exports = {
                                         log(err)
                                     );
                                 }
-                                var runCommand = function(commandName, args) {
+                                var runCommand = function (commandName, args) {
                                     if (!client.commandMessage) return false;
                                     if (typeof commandName !== 'string') return false;
                                     if (!(args instanceof Array))
                                         if (typeof args === 'string')
                                             args = [args];
                                         else if ((args === null) || (args === undefined))
-                                        args = [];
-                                    else
-                                        return false
+                                            args = [];
+                                        else
+                                            return false
 
                                     for ([name, mod] of client.modules) {
                                         if ((command = mod.GetComOrEv(commandName)) && command.name)
@@ -190,15 +190,15 @@ module.exports = {
                             break;
                     }
                 } catch (err) {
-                    if(err)
-                        console.error(err.stack ||  err);
+                    if (err)
+                        console.error(err.stack || err);
                     this.send(ws, 'error', JSON.stringify(err.toString()));
                 }
             }.bind(this));
 
         }.bind(this));
     },
-    stop(cb = (err) => {}) {
+    stop(cb = (err) => { }) {
         this.wss.clients.forEach((client) => {
             client.close(1012);
         })

@@ -37,13 +37,13 @@ module.exports = {
 
 
         let receivingUser = client.getMember(args[0], message.guild, message.member);
-        if(!receivingUser) return message.reply("Couldn't find specified user");
-        if(!args[1] || isNaN(args[1])) return message.reply("You didn't specify an amount of coins.")
+        if (!receivingUser) return message.reply("Couldn't find specified user");
+        if (!args[1] || isNaN(args[1])) return message.reply("You didn't specify an amount of coins.")
         var giveNumber = parseInt(args[1])
         var addMoney = false;
-        if(args.length > 2)
+        if (args.length > 2)
             addMoney = args[2].toLowerCase() === 'true';
-        client.updateMoney(receivingUser.id,giveNumber,!addMoney).then(() => message.react('✅')).catch((err) => { message.react('⛔');message.send(err)});
-        
+        client.updateMoney(receivingUser.id, giveNumber, !addMoney).then(() => message.react('✅')).catch((err) => { message.react('⛔'); message.send(err) });
+
     }
 }

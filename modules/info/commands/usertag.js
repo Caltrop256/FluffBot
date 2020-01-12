@@ -14,8 +14,8 @@ module.exports = {
 
     execute(client, args, message) {
         var user = client.getMember(args.join(" "), message.guild, null)
-        if(!user) return message.reply("Couldn't find User.")
+        if (!user) return message.reply("Couldn't find User.")
         message.channel.send(user.user.tag);
-        
-   }
+
+    }
 }

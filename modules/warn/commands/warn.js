@@ -14,13 +14,13 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_GUILD'],
 
 
-   execute(client, args, message) {
+    execute(client, args, message) {
         var member = client.getMember(args[0], message.guild, null);
-        if(!member) return message.reply(`Couldn't locate that member!`);
+        if (!member) return message.reply(`Couldn't locate that member!`);
 
         var reason = args.join(" ").slice(args[0].length);
-        if(!reason) reason = 'no reason provided';
+        if (!reason) reason = 'no reason provided';
 
         client.warnUser(member.id, message.member.id, message.guild.id, reason);
-   }
+    }
 };

@@ -7,7 +7,6 @@ module.exports = {
     description: 'Mutes a selected user for a specific amount of time',
     args: true,
     usage: '<@user> <time> <#channel>',
-    guildOnly: true,
     rateLimit: {
         usages: 5,
         duration: 20,

@@ -21,14 +21,14 @@ module.exports = {
             .setColor(client.constants.neonGreen.hex)
             .setDescription("Click on the colored emoticons to get the corresponding color-role. Please avoid rapidly selecting  / unselecting roles. \nIn case you are having trouble getting your desired Role, try asking a Moderator instead.");
         message.channel.send({ embed: rsColorEmbed })
-            .then(async function(message) {
+            .then(async function (message) {
                 for (let i = 0; i < 18; i++) {
                     await message.react(client.constants.Colors[i].getEmoji(client));
                 }
             })
         setTimeout(() => {
             message.channel.send("󠀡")
-                .then(async function(message) {
+                .then(async function (message) {
                     for (let i = 18; i < client.constants.Colors.length; i++) {
                         await message.react(client.constants.Colors[i].getEmoji(client));
                     }
@@ -50,7 +50,7 @@ module.exports = {
 
 
             message.channel.send({ embed: rsOtherEmbed })
-                .then(async function(message) {
+                .then(async function (message) {
                     await message.react(announcementEmoji.id);
                     await message.react("🗄");
                     await message.react("🌟");

@@ -18,9 +18,9 @@ module.exports = {
             return client.removeReact(reaction, user.id);
 
         client.handleAwards(reaction, user).then(result => {
-            if (result === false) return client.removeReact(reaction,user.id);
-                client.handleReactUpdate(user, reaction, true);
-            
+            if (result === false) return client.removeReact(reaction, user.id);
+            client.handleReactUpdate(user, reaction, true);
+
         })
 
     }

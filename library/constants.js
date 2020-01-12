@@ -10,7 +10,7 @@ class Color {
         this.hex = hex;
         this.rgb = [parseInt(this.hex, 16) >> 16, (parseInt(this.hex, 16) >> 8) & 255, parseInt(this.hex, 16) & 255];
 
-        this.emojify = function(client) {
+        this.emojify = function (client) {
             const canvas = Canvas.createCanvas(50, 50);
             var ctx = canvas.getContext("2d");
             ctx.fillStyle = "#" + this.hex;
@@ -21,11 +21,11 @@ class Color {
                 "color_" + this.name.toLowerCase().replace(/ /g, "_")
             );
         };
-        this.getEmoji = function(client) {
+        this.getEmoji = function (client) {
             if (this.isEmoji)
                 return client.guilds.get(client.constants.emoteGuild).emojis.find(e => e.name == "color_" + this.name.toLowerCase().replace(/ /g, "_"));
         };
-        this.toString = function() {
+        this.toString = function () {
             return this.hex;
         };
         if (this.isEmoji)

@@ -6,7 +6,6 @@ module.exports = {
     description: 'Converts currencies',
     args: true,
     usage: '<amount> <currency 1> <currency 2>',
-    guildOnly: false,
     rateLimit: {
         usages: 2,
         duration: 10,
@@ -27,7 +26,7 @@ module.exports = {
             var cur2 = (args[1]) ? toCurrency(args[1]) : void 0;
         }
         var regexTest = /[^a-zA-Z]/gi;
-        if (regexTest.test(cur1) || regexTest.test(cur2)) return message.reply('Invalid characters'); 
+        if (regexTest.test(cur1) || regexTest.test(cur2)) return message.reply('Invalid characters');
 
         if (!cur1 || !cur2) return message.reply('Missing arguments');
 

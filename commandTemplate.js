@@ -9,10 +9,10 @@ module.exports = {
         duration: 0,
         maxUsers: 0
     },
-    perms: [], 
-   
+    perms: [],
+
     execute(client, args, message) {
         message.channel.send("uwu"); //uwu
-   }
+    }
 }
 

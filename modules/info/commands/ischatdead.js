@@ -4,7 +4,6 @@ module.exports = {
     description: 'Displays when the last Message was sent',
     args: false,
     usage: '<#channel>',
-    guildOnly: false,
     rateLimit: {
         usages: 1,
         duration: 20,

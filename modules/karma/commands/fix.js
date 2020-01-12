@@ -37,7 +37,7 @@ module.exports = {
             previousKarma.upvotes = parseInt(urlMatch[1]);
             previousKarma.downvotes = parseInt(urlMatch[2]);
 
-            function extractPGS(str, pgsType){
+            function extractPGS(str, pgsType) {
                 var match = str.match(new RegExp(`<:${pgsNames[pgsType]}:([0-9]+?)>x([0-9]+?)$`));
                 if (match.length == 3) return parseInt(match[2]);
                 return '0';
@@ -52,18 +52,18 @@ module.exports = {
             karmaDifference = currentKarma.subtract(previousKarma);
             client.setUserKarma(argMSG.id, userKarma.add(karmaDifference));
         }
-        client.starboardArrayQueue.push(async() =>{
+        client.starboardArrayQueue.push(async () => {
             var action = msg ? (currentKarma >= client.cfg.minStarboardScore ? 'edit' : 'delet') : client.starboardCollection.get(argMSG.id) ? 'add' : '';
-            try{
-                 await client.handleStarboard(argMSG, currentKarma,msg)
-                 if(action.length)
+            try {
+                await client.handleStarboard(argMSG, currentKarma, msg)
+                if (action.length)
                     return message.reply(`Successfully ${action}ed the starboard message`)
                 message.reply('Message has insufficient karma to be added to starboard');
-                }catch(err){
-                    console.log(err)
-                    message.reply(`Error occurred while ${action}ing starboard message`);
-                }
-            });
+            } catch (err) {
+                console.log(err)
+                message.reply(`Error occurred while ${action}ing starboard message`);
+            }
+        });
 
     }
 }

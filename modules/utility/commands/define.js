@@ -18,46 +18,47 @@ module.exports = {
 
     execute(client, args, message) {
         var user = message.member;
-        if(args.join(" ").toLowerCase().match(/beautiful/gi)) {
-            var temp = client.getMember(args[1], message.guild,null);
-            if(temp){
+        if (args.join(" ").toLowerCase().match(/beautiful/gi)) {
+            var temp = client.getMember(args[1], message.guild, message.member);
+            if (temp)
                 user = temp;
+            if (args[1])
                 message.delete();
-            } 
-            var avatarAttachment = client.scripts.getAttachment(user.user.displayAvatarURL,'avatar.png')
+
+            var avatarAttachment = client.scripts.getAttachment(user.user.displayAvatarURL, 'avatar.png')
             var DefinitionEmbed = client.scripts.getEmbed()
-            .setAuthor(`Definition for "Beautiful"`, user.user.avatarURL)
-            .setDescription(`**Definition**: ${user === message.member ? 'You!' : user}
+                .setAuthor(`Definition for "Beautiful"`, user.user.avatarURL)
+                .setDescription(`**Definition**: ${user === message.member ? 'You!' : user}
             
 **Example**:You're the definition of beautiful! <:neon_pink_heart:608779835090927661>`)
-            .attachFile(avatarAttachment)
-            .setImage('attachment://avatar.png')
-            .setFooter(`${temp ? '120' : '110'}% of people agreed with this Definition.`)
-            .setColor(0x007CFF);
-            
-            return message.channel.send({embed: DefinitionEmbed});
+                .attachFile(avatarAttachment)
+                .setImage('attachment://avatar.png')
+                .setFooter(`${temp ? '120' : '110'}% of people agreed with this Definition.`)
+                .setColor(0x007CFF);
+
+            return message.channel.send({ embed: DefinitionEmbed });
         }
-        return new Promise((resolve,reject) =>{
-             
-                urban(encodeURI(args.join(" "))).then(definition => {
-                    if(!definition) return message.reply("couldn't find a definition for your word.")
+        return new Promise((resolve, reject) => {
 
-                    var LikeRatio = Math.round(definition.thumbsUp / (definition.thumbsUp + definition.thumbsDown) * 100)
-                    if(isNaN(LikeRatio)) LikeRatio = 0
+            urban(encodeURI(args.join(" "))).then(definition => {
+                if (!definition) return message.reply("couldn't find a definition for your word.")
 
-                    var DefinitionEmbed = client.scripts.getEmbed()
+                var LikeRatio = Math.round(definition.thumbsUp / (definition.thumbsUp + definition.thumbsDown) * 100)
+                if (isNaN(LikeRatio)) LikeRatio = 0
+
+                var DefinitionEmbed = client.scripts.getEmbed()
                     .setAuthor(`Definition for "${definition.word}"`, message.author.avatarURL, definition.urbanURL)
                     .setDescription(`**Definition**: ${smartTruncate(definition.definition.replace(/[\[\]]/gi, ""), 1000)}\n\n**Example**: ${smartTruncate(definition.example.replace(/[\[\]]/gi, ""), 1000)}`)
                     .setFooter(`${LikeRatio}% of people agreed with this Definition.`)
                     .setColor(0x007CFF)
-                    
-                    message.channel.send({embed: DefinitionEmbed}).then(() => resolve(true)).catch((err) => 
-                        reject(err));
-                    
-                }).catch(error => {
-                    return message.channel.send("couldn't find a definition for your word.").then(() => resolve(true));
-                })
+
+                message.channel.send({ embed: DefinitionEmbed }).then(() => resolve(true)).catch((err) =>
+                    reject(err));
+
+            }).catch(error => {
+                return message.channel.send("couldn't find a definition for your word.").then(() => resolve(true));
+            })
         });
     }
-    
+
 }

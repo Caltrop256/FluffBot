@@ -10,10 +10,13 @@ user                   User                   The user that removed the emoji or
 
 module.exports = {
     execute(client, reaction, user) {
+        var guild = reaction.message.guild;
+        if (!guild || user.bot)
+            return;
         var Poll = client.polls.get(reaction.message.id)
         if (Poll) {
             reaction.message.channel.fetchMessage(reaction.message.id)
-                .then(async function(message) {
+                .then(async function (message) {
 
                     const optionsList = Poll.Options
                     const emojiList = Poll.Emotes
@@ -61,77 +64,43 @@ module.exports = {
                     message.edit("", embed);
                 })
         }
-        var guild = reaction.message.guild;
+
+        var member = guild.member(user);
         let message_id_other = client.cfg.other1;
-        const announcementEmoji = client.emojis.find(emoji => emoji.name === "Announcement_notif");
-        if (reaction.emoji.name === "🗄" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Archivist"));
-                    member.removeRole(role)
+        let message_id_color = client.cfg.color1;
+        let message_id_color2 = client.cfg.color2;
+        if ([message_id_color, message_id_color2].includes(reaction.message.id)) {
+            for (var i = 0; i < client.constants.Colors.length; i++) {
+                var color = client.constants.Colors[i];
+                if (!color.isEmoji)
+                    continue;
+                let colorEmote = color.getEmoji(client);
+                if (!colorEmote) return console.error(`Unable to resolve emoji for ${client.constants.Colors[i].name}`);
+                if (colorEmote.id == reaction.emoji.id) {
+                    let role = reaction.message.guild.roles.find(r => r.name.toLowerCase() == color.name.toLowerCase());
+                    if (!role) return console.error(`Couldn't resolve role for ${color.name}`);
+                    return member.removeRole(role)
                         .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
+                            console.log(console.color.magenta(`[Role-Selection]`), `Removed color role ${color.name} from ${member.displayName}`);
                         });
-                });
-        }
-        if (reaction.emoji.name === "🎮" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Gamer"));
-                    member.removeRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🎵" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Music"));
-                    member.removeRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🖊" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.id == "607203938520793098"));
-                    member.removeRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🌟" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Starboard_access"));
-                    member.removeRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.name === "🍔" && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Foodie"));
-                    member.removeRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
-                        });
-                });
-        }
-        if (reaction.emoji.id == announcementEmoji.id && guild !== null && guild !== undefined && reaction.message.id === message_id_other) {
-            guild.fetchMember(user)
-                .then((member) => {
-                    let role = (member.guild.roles.find(role => role.name === "Announcements"));
-                    member.removeRole(role)
-                        .then(() => {
-                            console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role} from ${member.displayName}`);
-                        });
+                }
+            };
+        };
+        if (reaction.message.id === message_id_other) {
+            const announcementEmoji = client.emojis.find(emoji => emoji.name === 'Announcement_notif');
+            const roleIDArr = ['562923728862707734', '562923928935464961', '562924019704135710', '607203938520793098', '562924554666770432', '579552918479437834', '562923651679125504'];
+            const roleNameArr = ['🗄🎮🎵🖊🌟🍔', announcementEmoji.id]
+            var roleIndex = roleNameArr[0].indexOf(reaction.emoji.name);
+
+            if (roleIndex === -1)
+                roleIndex = roleNameArr[0].length + roleNameArr.indexOf(reaction.emoji.id) - 1;
+            if (roleIndex === 4)
+                return reaction.remove().then(() => console.error('Removed invalid reaction'));
+
+            var role = guild.roles.get(roleIDArr[roleIndex]);
+            member.removeRole(role)
+                .then(() => {
+                    console.log(console.color.magenta(`[Role-Selection]`), `Removed role ${role.name} from ${user.tag}`);
                 });
         }
     }

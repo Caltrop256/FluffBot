@@ -6,7 +6,7 @@ module.exports.Info({
     desc: 'module utilizing <@152041181704880128>\'s fluffart site'
 });
 const https = require('https')
-module.exports.ModuleSpecificCode = function(client) {
+module.exports.ModuleSpecificCode = function (client) {
     async function avatarFunc() {
         function Get(URL) {
             return new Promise((resolve, reject) => {
@@ -69,7 +69,7 @@ module.exports.ModuleSpecificCode = function(client) {
             });
         });
     }
-    (async() =>
+    (async () =>
         client.subscriptions = {
             avatar: (await getSubscriptions('avatar')).map(x => x.avatar.toString())
         }

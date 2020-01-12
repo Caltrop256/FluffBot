@@ -13,7 +13,6 @@ module.exports = {
     args: false,
     usage: '<hex | rgb>',
     advUsage: '**For String Input**: Wrap the Name of the color in quotes:\nFor example \`--prefcmd "green"\` will output the color green!\n\n**For Hex Input**: Just provide any hex code, including the hashtag at the beginning is optional. The bot will automatically trim uneeded Letters and add Fs in place of missing ones.\nExample: \`--prefcmd #FF7D00\`\n\n**For RGB Input**: Make sure to seperate RGB values with commas. Values can range from 0 to 255.\nExample: \`--prefcmd 255, 125, 0\`\n\nIf you don\'t provide any args the bot will chose a random one.',
-    guildOnly: false,
     rateLimit: {
         usages: 2,
         duration: 15,
@@ -75,7 +74,7 @@ module.exports = {
             } else {
                 var input = args[0];
             }
-        } else input = '#' +client.scripts.randomColor();
+        } else input = '#' + client.scripts.randomColor();
         var preparedCode = input;
         while (preparedCode.length < 7) {
             preparedCode += `f`

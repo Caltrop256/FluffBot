@@ -20,7 +20,7 @@ class HTTPSHelper {
                 res.on('data', (d) => {
                     data += d;
                 })
-                res.on('end',() =>{
+                res.on('end', () => {
                     resolve(data)
                 })
             }).on('error', (err) => {
@@ -52,7 +52,7 @@ class HTTPSHelper {
                 res.on('data', (d) => {
                     data += d;
                 })
-                res.on('end',() =>{
+                res.on('end', () => {
                     resolve(data)
                 })
             })
@@ -66,7 +66,7 @@ class HTTPSHelper {
         });
     }
     async POSTJson(path, body) {
-        return JSON.parse(await this.POST(path,body));
+        return JSON.parse(await this.POST(path, body));
     }
 }
 HTTPSHelper.getPath = (fullURI) => {
@@ -82,10 +82,10 @@ HTTPSHelper.GET = (URL, token = null) => {
     var [host, path] = [HTTPSHelper.getHost(URL), HTTPSHelper.getPath(URL)]
     return new HTTPSHelper(host, token).GET(path)
 }
-HTTPSHelper.GETJson = async (URL, token = null) => JSON.parse(await HTTPSHelper.GET(URL,token));
+HTTPSHelper.GETJson = async (URL, token = null) => JSON.parse(await HTTPSHelper.GET(URL, token));
 HTTPSHelper.POST = (URL, body, token = null) => {
     var [host, path] = [HTTPSHelper.getHost(URL), HTTPSHelper.getPath(URL)]
     return new HTTPSHelper(host, token).POST(path, body)
 }
-HTTPSHelper.POSTJson = async (URL, body, token = null) => JSON.parse(await HTTPSHelper.POST(URL,body,token))
+HTTPSHelper.POSTJson = async (URL, body, token = null) => JSON.parse(await HTTPSHelper.POST(URL, body, token))
 module.exports = HTTPSHelper;

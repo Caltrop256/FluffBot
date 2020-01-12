@@ -4,7 +4,7 @@ var fs = require('fs');
 const connect = require('connect');
 const serveStatic = require('serve-static');
 class TropBot extends Discord.Client {
-    constructor(useLocal,useBeta) {
+    constructor(useLocal, useBeta) {
         super({
             disableEveryone: true,
             fetchAllMembers: true,
@@ -43,7 +43,7 @@ class TropBot extends Discord.Client {
 
         this.root = process.env.tropbot;
         if (this.useBeta) {
-            this.replClient = connect().use(serveStatic('./library/html')).listen(9187, function() {
+            this.replClient = connect().use(serveStatic('./library/html')).listen(9187, function () {
                 console.log('REPL Client running on 9187...');
             });
             this.startREPLServer();

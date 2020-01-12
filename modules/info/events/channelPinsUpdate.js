@@ -12,7 +12,7 @@ module.exports = {
             `#${channel.name}`,
             `Someone removed or added a Pin to ${channel.toString()}`,
             null,
-            channel.id, 
+            channel.id,
             client.constants.neonPink.hex,
             true
         );

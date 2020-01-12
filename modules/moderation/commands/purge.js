@@ -15,13 +15,13 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_MESSAGES'],
 
     execute(client, args, message) {
-        if(!args.length) 
+        if (!args.length)
             return message.channel.send(
                 client.scripts.getEmbed()
-                .setColor(client.scripts.randomColor())
-                .setAuthor('Purge Command Info')
-                .setTitle("**Parameters**:")
-                .setDescription('`-h` - only human messages\n`-b` - only bot messages\n`-a` - only messages including one or more attachments (for example images or audio files)\n`-e` - only messages including one or more embeds (for example auto-embeded links or RichEmbeds)\n`-t` - only messages including text (ignores all attachments and embeds)\n`-l` - only messages including one or more links\n\n**Additionally you can also wrap a phrase in quotes to target only messages including that phrase.**\nExample `'+client.cfg.prefix[0]+'purge "free porn lol" -l` will delete all messages which contain the phrase "free porn lol" and also contain one or more link\nIt will target regardless of capitalisation\n\n**To target individual Users mention them anywhere in the message**:\n`'+client.cfg.prefix[0]+'purge 20 @Caltrop#0001 @Clod#0705` will delete all messages sent by either Caltrop or Clod in the latest 20 messages of a channel.')
+                    .setColor(client.scripts.randomColor())
+                    .setAuthor('Purge Command Info')
+                    .setTitle("**Parameters**:")
+                    .setDescription('`-h` - only human messages\n`-b` - only bot messages\n`-a` - only messages including one or more attachments (for example images or audio files)\n`-e` - only messages including one or more embeds (for example auto-embeded links or RichEmbeds)\n`-t` - only messages including text (ignores all attachments and embeds)\n`-l` - only messages including one or more links\n\n**Additionally you can also wrap a phrase in quotes to target only messages including that phrase.**\nExample `' + client.cfg.prefix[0] + 'purge "free porn lol" -l` will delete all messages which contain the phrase "free porn lol" and also contain one or more link\nIt will target regardless of capitalisation\n\n**To target individual Users mention them anywhere in the message**:\n`' + client.cfg.prefix[0] + 'purge 20 @Caltrop#0001 @Clod#0705` will delete all messages sent by either Caltrop or Clod in the latest 20 messages of a channel.')
             )
         var limit = parseInt(args[0])
         if (!limit || isNaN(limit) || limit > 10000 || limit < 2) return message.reply("The limit must be a Number between 2 and 10000.")
@@ -72,7 +72,7 @@ module.exports = {
                 mentionIndex++
             })
             if (message.mentions.users.size > 0) eval(`toBeFiltered = toBeFiltered.filter(msg => ${mentionFilterInput})`)
-                //if(message.mentions.users.size >= 1) {toBeFiltered = toBeFiltered.filter(msg => msg.author.id == message.mentions.users.first().id); params = params + `Only messages sent by ${message.mentions.users.first()}\n`}
+            //if(message.mentions.users.size >= 1) {toBeFiltered = toBeFiltered.filter(msg => msg.author.id == message.mentions.users.first().id); params = params + `Only messages sent by ${message.mentions.users.first()}\n`}
             if (message.content.includes("-h")) {
                 toBeFiltered = toBeFiltered.filter(msg => !msg.author.bot);
                 params = params + `Only Human messages\n`

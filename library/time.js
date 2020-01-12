@@ -49,10 +49,10 @@ class Time {
 
         this.ms = isFinite(tMS) ? tMS : Number.MAX_VALUE;
         this.str = str.replace(/, ([^,]*)$/, '').replace(/, ([^,]*)$/, ' and $1');
-        this.toString = function() {
+        this.toString = function () {
             return this.str;
         };
-        this.valueOf = function() {
+        this.valueOf = function () {
             return this.ms;
         }
     };
@@ -141,7 +141,7 @@ function convertStringToMs(str = '', verb = true, cl = null, strictMode = false)
  * 
  * @return {Time} the time object, read the .str property for a string
  */
-var time = function(ms, verb = true, cl) {
+var time = function (ms, verb = true, cl) {
     let verbose = !!verb
     let relevant = cl || 2;
     var opts = {

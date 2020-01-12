@@ -11,7 +11,7 @@ module.exports = {
         let message_id_other = client.cfg.other1;
 
         let message_id = client.cfg.ruleAccept;
-        
+
         ruleChannel.fetchMessage(message_id).then(() => {
             console.log(console.color.magenta(`[Rule-Selection]`), "Cached rules reaction message.");
         }).catch(e => {

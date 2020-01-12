@@ -13,14 +13,14 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-execute(client, args, message) {
+    execute(client, args, message) {
 
         var specifiedChannel = client.getChannel(args[0], message.channel)
-        if(!specifiedChannel) return message.reply("Couldn't locate that channel.")
+        if (!specifiedChannel) return message.reply("Couldn't locate that channel.")
 
         var limit = args[1]
-        if(!limit) {var limit = Infinity}
-        if(isNaN(limit)) {return message.reply("The limit must be a number.")}
+        if (!limit) { var limit = Infinity }
+        if (isNaN(limit)) { return message.reply("The limit must be a number.") }
 
         messageFetcher3000(specifiedChannel, limit)
 
@@ -28,30 +28,30 @@ execute(client, args, message) {
             var hrstart = process.hrtime()
 
             var waitpls = client.scripts.getEmbed()
-            .setAuthor("Collecting Data")
-            .setDescription("Please be patient...")
-            .setColor(client.constants.perfectOrange.hex)
-            .setTimestamp();
-                
-            message.channel.send({embed: waitpls})
+                .setAuthor("Collecting Data")
+                .setDescription("Please be patient...")
+                .setColor(client.constants.perfectOrange.hex)
+                .setTimestamp();
+
+            message.channel.send({ embed: waitpls })
 
             const sum_messages = [];
             let last_id;
-        
+
             while (true) {
-                const options = { limit: 100, before: message.id};
+                const options = { limit: 100, before: message.id };
                 if (last_id) {
                     options.before = last_id;
                 }
-        
+
                 const messages = await specifiedChannel.fetchMessages(options);
                 sum_messages.push(...messages.array());
                 last_id = messages.last().id;
-        
+
                 if (messages.size != 100) {
                     break;
                 }
-                if(sum_messages.length > limit) {
+                if (sum_messages.length > limit) {
                     break;
                 }
             }
@@ -75,57 +75,57 @@ execute(client, args, message) {
 
                 LengthArray.push(m.content.length)
 
-                if(m.member !== null) {
-                MemberArray.push(m.member)
-                memberAccountAgeArray.push(m.member.user.createdTimestamp)
-                memberjoinedDateArray.push(m.member.joinedTimestamp)
+                if (m.member !== null) {
+                    MemberArray.push(m.member)
+                    memberAccountAgeArray.push(m.member.user.createdTimestamp)
+                    memberjoinedDateArray.push(m.member.joinedTimestamp)
 
 
-                const embeds = m.embeds;
-                const attachments = m.attachments; 
+                    const embeds = m.embeds;
+                    const attachments = m.attachments;
 
-                let eURL = ''
+                    let eURL = ''
 
-                if (embeds.length > 0) {
+                    if (embeds.length > 0) {
 
-                if(embeds[0].thumbnail && embeds[0].thumbnail.url)
-                    eURL = embeds[0].thumbnail.url;
-                else if(embeds[0].image && embeds[0].image.url)
-                    eURL = embeds[0].image.url;
-                else
-                    eURL = embeds[0].url;
+                        if (embeds[0].thumbnail && embeds[0].thumbnail.url)
+                            eURL = embeds[0].thumbnail.url;
+                        else if (embeds[0].image && embeds[0].image.url)
+                            eURL = embeds[0].image.url;
+                        else
+                            eURL = embeds[0].url;
 
-                } else if (attachments.array().length > 0) {
-                const attARR = attachments.array();
-                eURL = attARR[0].url;
-                }
+                    } else if (attachments.array().length > 0) {
+                        const attARR = attachments.array();
+                        eURL = attARR[0].url;
+                    }
 
-                uncleanImagesArray.push(eURL)
+                    uncleanImagesArray.push(eURL)
                 }
             })
 
-            var UniqueMemberArray = MemberArray.filter(function(item, pos, self) {
+            var UniqueMemberArray = MemberArray.filter(function (item, pos, self) {
                 return self.indexOf(item) == pos;
             })
 
-            var ImagesArray = uncleanImagesArray.filter(function(item, pos, self) {
+            var ImagesArray = uncleanImagesArray.filter(function (item, pos, self) {
                 return self.indexOf(item) == pos;
             })
-                
+
             timestampArrayB.shift()
             var timestampArrayReduced = []
 
-            for(var i = 0;i<=timestampArrayB.length-1;i++) {
-            timestampArrayReduced.push(timestampArray[i] - timestampArrayB[i]);
+            for (var i = 0; i <= timestampArrayB.length - 1; i++) {
+                timestampArrayReduced.push(timestampArray[i] - timestampArrayB[i]);
             }
-    
+
             const averagemessageDelay = client.scripts.average(timestampArrayReduced);
 
             var firstMessage = sum_messages[0]
 
             var NoActivitySince = message.createdTimestamp - firstMessage.createdTimestamp
 
-            if(NoActivitySince < 0) {var NoActivitySince = 1}
+            if (NoActivitySince < 0) { var NoActivitySince = 1 }
 
             const evaluationNumber = 60000
 
@@ -140,12 +140,12 @@ execute(client, args, message) {
             var r = Math.round(verdictNumMultiplier / 2 * 255)
             var g = Math.round(2 / verdictNumMultiplier * 255)
 
-            if(r > 255) {var r = 255}
-            if(g > 255) {var g = 255}
+            if (r > 255) { var r = 255 }
+            if (g > 255) { var g = 255 }
 
             var verdict;
-            var verdictColor = client.scripts.rgbToHex([r,g,0])
-            
+            var verdictColor = client.scripts.rgbToHex([r, g, 0])
+
             var averageLength = client.scripts.average(LengthArray)
 
             var accountAgeAverage = client.scripts.average(memberAccountAgeArray)
@@ -162,20 +162,20 @@ execute(client, args, message) {
             }
 
             var DataEmbed = client.scripts.getEmbed()
-            .setAuthor(`Requested by ${message.member.displayName}`, message.author.avatarURL, message.author.avatarURL)
-            .setTitle(`#${specifiedChannel.name} statistics`)
-            .setDescription(`Below you will find a bunch of Information and statistics regarding the ${specifiedChannel} channel.\n[Latest Message from ${specifiedChannel.name}](https://discordapp.com/channels/${specifiedChannel.guild.id}/${specifiedChannel.id}/${specifiedChannel.lastMessageID})\n[Random Image from ${specifiedChannel.name}](${ImagesArray[Math.floor(Math.random() * ImagesArray.length)]})\n\n**Enjoy!**`)
-            .setColor(verdictColor)
-            .setThumbnail(specifiedChannel.guild.iconURL)
-            .setTimestamp()
-            .setFooter(`Searched through ${sum_messages.length} messages in ${hrend[0]} seconds and ${client.time(hrend[1] / 1000000, true)}`)
-            .addField(`General Information`,`ID: \`${specifiedChannel.id}\`\n Position: \`${specifiedChannel.calculatedPosition + 1}\`\nEligible to View: \`${numComma(specifiedChannel.members.size)} members\`\nNSFW: \`${specifiedChannel.nsfw}\`\nCategory: \`${specifiedChannel.parent.name.toString().replace(/[^A-Za-z0-9]+/g, '')}\`\nPeople typing: \`${specifiedChannel.typingCount}\` `,true)
-            .addField(`Activity Statistics`, `Total Messages: \`${numComma(sum_messages.length)}\`\n Human Messages: \`${numComma(HumanMessages.length)}\`\nBot Messages: \`${numComma(sum_messages.length - HumanMessages.length)}\`\nLast Message sent: \`${client.time(NoActivitySince,true)} ago\`\nAverage Delay: \`${client.time(averagemessageDelay, true)}\`\nDeathliness: \`${numComma(verdictNumFinal.toFixed(2))}\` `,true)
-            .addField(`Message Statistics`, `Average Length: \`${numComma(averageLength.toFixed(1))} chars\`\nUnique Participants: \`${numComma(UniqueMemberArray.length)}\`\nAmount of Images: \`${numComma(ImagesArray.length - 1)}\` `,true)
-            .addField(`User Statistics`, `Average Join Date: \`${client.time(message.createdTimestamp - accountJoinaverage, true)} ago\`\nAverage User Age: \`${accountAgeString.match(/.+?(?=(days \d))/gi)} days\` `,true)
+                .setAuthor(`Requested by ${message.member.displayName}`, message.author.avatarURL, message.author.avatarURL)
+                .setTitle(`#${specifiedChannel.name} statistics`)
+                .setDescription(`Below you will find a bunch of Information and statistics regarding the ${specifiedChannel} channel.\n[Latest Message from ${specifiedChannel.name}](https://discordapp.com/channels/${specifiedChannel.guild.id}/${specifiedChannel.id}/${specifiedChannel.lastMessageID})\n[Random Image from ${specifiedChannel.name}](${ImagesArray[Math.floor(Math.random() * ImagesArray.length)]})\n\n**Enjoy!**`)
+                .setColor(verdictColor)
+                .setThumbnail(specifiedChannel.guild.iconURL)
+                .setTimestamp()
+                .setFooter(`Searched through ${sum_messages.length} messages in ${hrend[0]} seconds and ${client.time(hrend[1] / 1000000, true)}`)
+                .addField(`General Information`, `ID: \`${specifiedChannel.id}\`\n Position: \`${specifiedChannel.calculatedPosition + 1}\`\nEligible to View: \`${numComma(specifiedChannel.members.size)} members\`\nNSFW: \`${specifiedChannel.nsfw}\`\nCategory: \`${specifiedChannel.parent.name.toString().replace(/[^A-Za-z0-9]+/g, '')}\`\nPeople typing: \`${specifiedChannel.typingCount}\` `, true)
+                .addField(`Activity Statistics`, `Total Messages: \`${numComma(sum_messages.length)}\`\n Human Messages: \`${numComma(HumanMessages.length)}\`\nBot Messages: \`${numComma(sum_messages.length - HumanMessages.length)}\`\nLast Message sent: \`${client.time(NoActivitySince, true)} ago\`\nAverage Delay: \`${client.time(averagemessageDelay, true)}\`\nDeathliness: \`${numComma(verdictNumFinal.toFixed(2))}\` `, true)
+                .addField(`Message Statistics`, `Average Length: \`${numComma(averageLength.toFixed(1))} chars\`\nUnique Participants: \`${numComma(UniqueMemberArray.length)}\`\nAmount of Images: \`${numComma(ImagesArray.length - 1)}\` `, true)
+                .addField(`User Statistics`, `Average Join Date: \`${client.time(message.createdTimestamp - accountJoinaverage, true)} ago\`\nAverage User Age: \`${accountAgeString.match(/.+?(?=(days \d))/gi)} days\` `, true)
 
-            message.channel.send({embed: DataEmbed})
+            message.channel.send({ embed: DataEmbed })
         }
-        
+
     }
 }

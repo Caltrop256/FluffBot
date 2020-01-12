@@ -11,10 +11,10 @@ module.exports = {
 
         messages.forEach(m => {
             var u = users.get(m.author.id);
-            if(u) {
-                users.set(m.author.id, {u: m.author, count: u.count + 1})
+            if (u) {
+                users.set(m.author.id, { u: m.author, count: u.count + 1 })
             } else {
-                users.set(m.author.id, {u: m.author, count: 1})
+                users.set(m.author.id, { u: m.author, count: 1 })
             };
         });
 
@@ -27,7 +27,7 @@ module.exports = {
             `#${channel.name}`,
             `Bulk deleted ${messages.size} messages in ${channel.toString()}`,
             arr,
-            channel.id, 
+            channel.id,
             client.constants.red.hex,
             true
         );

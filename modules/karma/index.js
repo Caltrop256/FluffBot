@@ -16,7 +16,7 @@ class KarmaInfo {
         this.platinum = isNaN(platinum) ? 0 : parseInt(platinum);
         this.gold = isNaN(gold) ? 0 : parseInt(gold);
         this.silver = isNaN(silver) ? 0 : parseInt(silver);
-        this.valueOf = function() {
+        this.valueOf = function () {
             return this.karma;
         }
     };
@@ -77,7 +77,7 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
                 Authorization: 'BE9FC10F395D5973D54D707D9CD5FA1801172108C31D2FF09BEFDC3A70AB868619082A06975EACDA1D259622510881B7CCE464B5C743F4CE12666AB9EE7CDB81'
             }
         };
-        request(options, function(err, resp, json) {
+        request(options, function (err, resp, json) {
             if (err)
                 return reject(err);
             if (JSON.parse(json))
@@ -93,7 +93,7 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
                 }
             };
             console.log(options);
-            request(options, function(error, response, json) {
+            request(options, function (error, response, json) {
                 if (error)
                     return reject(error);
                 try {
@@ -108,7 +108,7 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
         });
     });
 }
-module.exports.ModuleSpecificCode = function(client) {
+module.exports.ModuleSpecificCode = function (client) {
 
     async function getVoteBuffer(upvotes, downvotes) {
         //return new Promise((resolve, reject) => {
@@ -327,7 +327,7 @@ module.exports.ModuleSpecificCode = function(client) {
             await setUserKarma(author.id, karmaInfo.update(reaction.emoji.id, added));
 
         var msgKarma = new KarmaInfo(upvotes, downvotes, platinum, gold, silver);
-        starboardArrayQueue.push(async() => await handleStarboard(message, msgKarma));
+        starboardArrayQueue.push(async () => await handleStarboard(message, msgKarma));
         //if(msgKarma.up >= client.cfg.minStarboardScore) client.starboardMessage(client, reaction.message);
     };
 
@@ -610,8 +610,7 @@ module.exports.ModuleSpecificCode = function(client) {
             return true;
         }
     }
-    async function getMessageKarma(message)
-    {
+    async function getMessageKarma(message) {
         if (!message.reactions.some(reaction => emojiIDs.includes(reaction.emoji.id))) return new KarmaInfo(0, 0, 0, 0, 0);
 
 

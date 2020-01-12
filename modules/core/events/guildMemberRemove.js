@@ -12,7 +12,7 @@ module.exports = {
             bans.forEach(ban => {
                 if (ban.user.id == member.id) gotBanned = true
             })
-            
+
             const LeaveMember = member
             const leaveChannel = client.channels.get(client.constants.joinChannel);
 
@@ -63,9 +63,9 @@ module.exports = {
                                 .setFooter(member.id)
                                 .setColor(member.displayHexColor)
                             if (!LeaveMember.lastMessageID || LeaveMember.lastMessage.channel.id == "575985149368467466") {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, {verbose: true, compact: true})}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n**Take good care** ${neon_pink_heart}`)
+                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n**Take good care** ${neon_pink_heart}`)
                             } else {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, {verbose: true, compact: true})}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n**Take good care** ${neon_pink_heart}`)
+                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n**Take good care** ${neon_pink_heart}`)
                             }
                         } else {
                             var leaveMemberinfo = client.scripts.getEmbed()
@@ -76,9 +76,9 @@ module.exports = {
                                 .setFooter(member.id)
                                 .setColor(member.displayHexColor)
                             if (!LeaveMember.lastMessageID || LeaveMember.lastMessage.channel.id == "575985149368467466") {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, {verbose: true, compact: true})}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n(User was Banned)`)
+                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n(User was Banned)`)
                             } else {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, {verbose: true, compact: true})}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n(User was Banned)`)
+                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n(User was Banned)`)
                             }
                         }
 
@@ -98,7 +98,7 @@ module.exports = {
 
                         try {
                             member.user.send("goodbye :(")
-                        } catch (e) {}
+                        } catch (e) { }
                     }
                 }
 

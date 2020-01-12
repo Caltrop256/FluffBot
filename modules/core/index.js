@@ -36,7 +36,7 @@ module.exports.Info({
     priority: 9,
     required: true
 });
-module.exports.ModuleSpecificCode = function(client) {
+module.exports.ModuleSpecificCode = function (client) {
     function getCommand(primaryCommand) {
         var mostSimilar = null;
 
@@ -74,7 +74,7 @@ module.exports.ModuleSpecificCode = function(client) {
         return new Promise((resolve, reject) => {
             if (leaderboardArray.length == 0) {
                 return channel.send('it empty lol')
-                    //TODO add stuff here
+                //TODO add stuff here
             }
             var chunkArray = []
             var step = 1
@@ -88,10 +88,10 @@ module.exports.ModuleSpecificCode = function(client) {
 
             client.embedSelect(leaderboardEmbed, new Config(channel, message, 0, chunkArray.length - 1), (reqPage) => {
                 leaderboardEmbed.fields[0] = {
-                    name: `Page ${reqPage+1}`,
+                    name: `Page ${reqPage + 1}`,
                     value: chunkArray[reqPage].content.join("\n")
                 }
-                leaderboardEmbed.setFooter(`Page ${reqPage+1}/${chunkArray.length}`)
+                leaderboardEmbed.setFooter(`Page ${reqPage + 1}/${chunkArray.length}`)
             }).then(() => resolve()).catch(() => reject());
         });
     }
@@ -107,7 +107,7 @@ module.exports.ModuleSpecificCode = function(client) {
             var def = config.def;
             var deleteOnEnd = config.del;
 
-            channel.send({ embed: embed }).then(async(message) => {
+            channel.send({ embed: embed }).then(async (message) => {
                 resolve();
                 await message.react("⏪")
                 await message.react("⬅")
@@ -173,7 +173,7 @@ module.exports.ModuleSpecificCode = function(client) {
      * @param  {Channel} self
      * @return {Channel}
      */
-    var getChannel = function(str, self) { //NEED TO BE FIXED TO DEAL WITH DM CHANNELS 
+    var getChannel = function (str, self) { //NEED TO BE FIXED TO DEAL WITH DM CHANNELS 
         if (!str) return self;
         let mention = str.match(/^<#!?(\d+)>$/);
         var names = [];
@@ -201,7 +201,7 @@ module.exports.ModuleSpecificCode = function(client) {
      * @param  {Guild} guild
      * @param  {GuildMember} self
      */
-    var getMember = function(str, guild, self) {
+    var getMember = function (str, guild, self) {
         if (!str) return self;
         let mention = str.match(/<@!?(\d+)>/);
         var names = [];
@@ -234,7 +234,7 @@ module.exports.ModuleSpecificCode = function(client) {
      * @param  {String} str
      * @param  {Guild} guild
      */
-    var getRole = function(client, str, guild) {
+    var getRole = function (client, str, guild) {
         if (!str) return undefined;
         let mention = str.match(/^<@!?(\d+)>$/);
         var names = [];

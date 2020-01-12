@@ -168,7 +168,7 @@ module.exports = {
      * @param  {Boolean} preventClose whether to prevent automatically closing connection, defaults to false. ONLY USE WHEN ABSOLUTELY NECESSARY!!
      * @return {Object} the mySQL connection
      */
-    getSQL(multiStatements,preventClose = false) {
+    getSQL(multiStatements, preventClose = false) {
         if (this.sqlConnections >= 100) throw new Error('Too many connections');
         var connection = mysql.createConnection({
             host: config.useLocal ? `localhost` : config.mySQLHost,
@@ -185,10 +185,10 @@ module.exports = {
             if (err.code !== 'PROTOCOL_CONNECTION_LOST')
                 console.log('[SQL] ', err)
         });
-        if(!preventClose){
+        if (!preventClose) {
             this.sqlConnections++;
             setTimeout(() => {
-                if(connection.state !== 'disconnected')
+                if (connection.state !== 'disconnected')
                     connection.end();
             }, 20000)
         }
