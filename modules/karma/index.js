@@ -651,7 +651,13 @@ module.exports.ModuleSpecificCode = function (client) {
     client.isStarboardReady = false;
     (async function starboardQueue() {
         if (client.isStarboardReady && starboardArrayQueue.length)
+            try{
             await starboardArrayQueue.shift()();
+            }
+            catch(e){
+                console.error('[Starboard Queue Handler] An Error has Occurred, look at client.lastErr for more info');
+                client.lastErr.push(e);
+            }
         setTimeout(starboardQueue, 30);
     })();
 }

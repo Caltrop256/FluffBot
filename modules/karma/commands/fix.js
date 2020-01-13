@@ -50,7 +50,7 @@ module.exports = {
                 previousKarma.silver = parseInt(extractPGS(pgs[2], 2));
             }
             karmaDifference = currentKarma.subtract(previousKarma);
-            client.setUserKarma(argMSG.id, userKarma.add(karmaDifference));
+            await client.setUserKarma(argMSG.id, userKarma.add(karmaDifference));
         }
         client.starboardArrayQueue.push(async () => {
             var action = msg ? (currentKarma >= client.cfg.minStarboardScore ? 'edit' : 'delet') : client.starboardCollection.get(argMSG.id) ? 'add' : '';
@@ -64,6 +64,5 @@ module.exports = {
                 message.reply(`Error occurred while ${action}ing starboard message`);
             }
         });
-
     }
 }
