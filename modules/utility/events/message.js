@@ -10,7 +10,7 @@ module.exports = {
         //if((msg === '💙') && (message.author.id === '188347819449384960')) :(
         //return message.react(':darxheart:562330227158548492'); :(
         //maybe add custom wave thing
-        var forbiddenChannels = ['562328246683697154', '562328446445944872', '575985149368467466', '562338340918001684', '562328726738567168', '562338454395027469', '571770555343175719']
+        var forbiddenChannels = ['562328246683697154', '562328446445944872', '575985149368467466', '562338340918001684', '562328726738567168', '562338454395027469', '571770555343175719','592484818311446528']
         let curChannel = message.channel.id
         for (var i = 0; i < forbiddenChannels.length; i++) {
             if (curChannel.includes(forbiddenChannels[i])) {

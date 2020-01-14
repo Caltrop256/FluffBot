@@ -43,7 +43,7 @@ module.exports = {
         if (!args.length) {
             message.channel.fetchMessages({ limit: 20 }).then(messages => {
 
-                let filteredMessage = messages.filter(msg => !msg.content.toLowerCase().includes("uwufy")).filter(msg => !msg.author.bot).filter(msg => !msg.content.toLowerCase().includes("owofy"))
+                let filteredMessage = messages.filter(msg => !msg.author.bot && !msg.content.toLowerCase().match(/(owo|uwu)fy/))
                 var firstMessage = filteredMessage.first()
 
                 if (!firstMessage) { return message.reply("I could not locate any human activity") }
@@ -51,7 +51,7 @@ module.exports = {
                 let uwu = owofy(firstMessage.content)
                 let uwuName = owofy(firstMessage.member.displayName)
 
-                var UwUEmbed = client.ScriptProcessorNode.getEmbed()
+                var UwUEmbed = client.scripts.getEmbed()
                     .setColor(client.constants.neonPink.hex)
                     .setAuthor(owofy(uwuName), firstMessage.member.user.avatarURL)
                     .setDescription(uwu)
