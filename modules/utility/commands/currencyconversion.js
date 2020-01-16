@@ -25,7 +25,7 @@ module.exports = {
             var cur1 = (sepArg1 && sepArg1[1]) ? toCurrency(sepArg1[1]) : void 0;
             var cur2 = (args[1]) ? toCurrency(args[1]) : void 0;
         }
-        var regexTest = /[^a-zA-Z]/gi;
+        var regexTest = /[^a-zA-Z$]/gi;
         if (regexTest.test(cur1) || regexTest.test(cur2)) return message.reply('Invalid characters');
 
         if (!cur1 || !cur2) return message.reply('Missing arguments');
@@ -64,22 +64,39 @@ module.exports = {
                 .replace(/^(Złoty)$/i, 'PLN')
                 .toUpperCase();
         }
+        if (![cur1, cur2].includes('D$')) {
+            client.https.GETJson(`https://api.exchangeratesapi.io/latest?base=${cur1}&symbols=${cur2}`).then((c) => {
+                if (c.error) return message.reply('You used an invalid currency type, apologies.')
 
-        client.https.GETJson(`https://api.exchangeratesapi.io/latest?base=${cur1}&symbols=${cur2}`).then((c) => {
-            if (c.error) return message.reply('You used an invalid currency type, apologies.')
+                var embed = client.scripts.getEmbed()
+                    .setAuthor('Currency Conversion')
+                    .setColor(client.constants.green.hex)
+                    .setFooter('Last updated')
+                    .addField('Input', `\`${amt} ${cur1}\``, true)
+                    .addField('Output', `\`${c.rates[cur2] * amt} ${cur2}\``, true)
+                    .setTimestamp(c.date);
 
+                message.channel.send({ embed })
+            }).catch((err) => {
+                console.log(err);
+                message.reply(`An Error occured while trying to fetch currency data.`);
+            })
+        }
+        else
+        {
+            var worth;
+            if(cur1 == 'D$')
+                worth = 0;
+            else
+                worth = Infinity
             var embed = client.scripts.getEmbed()
-                .setAuthor('Currency Conversion')
-                .setColor(client.constants.green.hex)
-                .setFooter('Last updated')
-                .addField('Input', `\`${amt} ${cur1}\``, true)
-                .addField('Output', `\`${c.rates[cur2] * amt} ${cur2}\``, true)
-                .setTimestamp(c.date);
-
+                    .setAuthor('Currency Conversion')
+                    .setColor(client.constants.green.hex)
+                    .setFooter('Last updated')
+                    .addField('Input', `\`${amt} ${cur1}\``, true)
+                    .addField('Output', `\`${worth} ${cur2}\``, true)
+                    .setTimestamp();
             message.channel.send({ embed })
-        }).catch((err) => {
-            console.log(err);
-            message.reply(`An Error occured while trying to fetch currency data.`);
-        })
+        }
     }
 }

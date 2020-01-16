@@ -31,7 +31,8 @@ module.exports = {
             if (err) throw err;
             let sql;
             if (rows.length <= 10) {
-                sql = `INSERT INTO remindme (channelid, userid, reminder, expiry, start, ID) VALUES ('${message.channel.id}', '${message.author.id}', ?, ${Date.now() + time}, ${Date.now()}, ${Math.floor(Math.random() * 10000)});`
+                var  id = Math.floor(Math.random() * 10000);
+                sql = `INSERT INTO remindme (channelid, userid, reminder, expiry, start, ID) VALUES ('${message.channel.id}', '${message.author.id}', ?, ${Date.now() + time}, ${Date.now()}, ${id});`
                 connection.query(sql, [reminder], console.log)
 
                 var ReminderEmbed = client.scripts.getEmbed()
@@ -40,6 +41,7 @@ module.exports = {
                     .setTimestamp()
                     .setDescription(`I will remind you in \`${client.time(time, true)}\` of the following.`)
                     .addField(`Reminder`, reminder)
+                    .setFooter(id)
 
                 message.channel.send({ embed: ReminderEmbed })
             } else {

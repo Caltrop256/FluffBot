@@ -89,14 +89,16 @@ module.exports = {
         if (reaction.message.id === message_id_other) {
             const announcementEmoji = client.emojis.find(emoji => emoji.name === 'Announcement_notif');
             const roleIDArr = ['562923728862707734', '562923928935464961', '562924019704135710', '607203938520793098', '562924554666770432', '579552918479437834', '562923651679125504'];
-            const roleNameArr = ['🗄🎮🎵🖊🌟🍔', announcementEmoji.id]
-            var roleIndex = roleNameArr[0].indexOf(reaction.emoji.name);
+            const roleNameArr = ['🗄🎮🎵🖊🌟🍔', announcementEmoji.id] 
+            var roleIndex = roleNameArr[0].indexOf(reaction.emoji.name) / 2;
 
-            if (roleIndex === -1)
-                roleIndex = roleNameArr[0].length + roleNameArr.indexOf(reaction.emoji.id) - 1;
+            if (roleIndex === -0.5){
+                console.log(reaction.emoji.id)
+                roleIndex = (roleNameArr[0].length / 2) + roleNameArr.indexOf(reaction.emoji.id) - 1;
             if (roleIndex === 4)
-                return reaction.remove().then(() => console.error('Removed invalid reaction'));
-
+                    return reaction.remove().then(() => console.error('Removed invalid reaction'));
+            }
+            console.log(roleIndex,roleIDArr[roleIndex]);
             var role = guild.roles.get(roleIDArr[roleIndex]);
             member.removeRole(role)
                 .then(() => {

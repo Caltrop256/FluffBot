@@ -24,6 +24,7 @@ module.exports.ModuleSpecificCode = function (client) {
         var replaced = false
         const friendlyWords = ['Fettuccine Alfredo', 'Mango Yogurt', 'amigo', 'cuddlebuddy', 'fella', 'neighbour', 'friendo', 'buddy', 'companion', 'partner', 'acquaintance', 'ally', 'associate', 'colleague', 'chum', 'cohort', 'compatriot', 'comrade', 'consort', 'mate', 'pal', 'fellow Ralsei-enthusiast', 'cutie'];
         const friendlyAdj = ['cute', 'affectionate', 'ambitious', 'amiable', 'compassionate', 'considerate', 'courageous', 'courteous', 'diligent', 'empathetic', 'generous', 'passionate', 'reliable', 'sensible', 'sympathetic', 'witty']
+        str = str.replace(/neigbour/gi, function (token) { replaced = true; return 'neighbour'; });
         str = str.replace(/\b(?:sand)?(?:n)[aeiou1]{1,}[g6b]{1,}[aeiou16]{1,}r?s?\b/gim, function (token) { replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`; });
         str = str.replace(/\bf[a|e]{1,}g{1,}(o{1,})?(t{1,})?/gi, function (token) { replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`; });
         str = str.replace(/tra{1,}n{1,}(!?s)?((y{1,})|(ie{1,}))/gi, function (token) { replaced = true; return `${friendlyWords[Math.floor(Math.random() * friendlyWords.length)]}`; });
