@@ -56,13 +56,14 @@ module.exports = {
                             .setDescription(`You've been banned from ${message.guild.name} by ${message.member.toString()}`)
                             .setColor(client.constants.redder.hex)
                             .setTimestamp();
-                        message.guild.fetchInvites().then(invites => {
-                            for (var [code, invite] of invites)
-                                if (invite.inviter.id == banUser.user.id)
-                                    invite.delete('Banned User');
-                        });
-                        banUser.send({ embed: DmEmbed }).then(() => {
-                            banUser.ban({ reason })
+                        banUser.send({ embed: DmEmbed }).finally(() => {
+                            banUser.ban({ reason }).then(() =>{
+                                message.guild.fetchInvites().then(invites => {
+                                    for (var [code, invite] of invites)
+                                        if (invite.inviter.id == banUser.user.id)
+                                            invite.delete('Banned User');
+                                });
+                            })
                         });
                     } else {
                         return

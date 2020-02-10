@@ -5,6 +5,14 @@ const emojiIDs = ['562330233315917843', '562330227322388485', '58616182133804237
 module.exports = {
     execute(client) {
         (async () => {
+            setTimeout(() => {
+                if(!client.isStarboardReady && client.lastErr.length != 0){
+                    client.users.get('152041181704880128').author.createDM().then(dm => dm.send('Error loading starboard in time,may be due to api error, restarting')).finally(() =>{
+                    console.log("--------------------\n[!] Restarting down TropBot (failed to load starboard in time) [!]")
+                    process.exit(0);
+                    });
+                }
+            },30000)
             var starboardChannel = client.channels.get(client.cfg.starboardChannel);
             var options = { limit: 100 };
             var before, messages;

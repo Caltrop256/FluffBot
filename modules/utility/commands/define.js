@@ -41,6 +41,10 @@ module.exports = {
         return new Promise((resolve, reject) => {
 
             urban(encodeURI(args.join(" "))).then(definition => {
+                var blacklist = ['black','penis','vagina','sex','breast','boob','titties','titty','black','nigga','nigger,','faggot','retard','anal','anus','cum','jizz','masturbat'];
+
+                if(blacklist.some((str) => definition.definition.includes(str) || definition.example.includes(str)))
+                    return message.react('🛑');
                 if (!definition) return message.reply("couldn't find a definition for your word.")
 
                 var LikeRatio = Math.round(definition.thumbsUp / (definition.thumbsUp + definition.thumbsDown) * 100)
@@ -56,7 +60,8 @@ module.exports = {
                     reject(err));
 
             }).catch(error => {
-                return message.channel.send("couldn't find a definition for your word.").then(() => resolve(true));
+                client.lastErr.push(error);
+                return message.channel.send("an error has occured while attempting to find a definition. please try again later.") 
             })
         });
     }

@@ -31,7 +31,7 @@ module.exports = {
         if (msg) {
 
             var embed = msg.embeds[0];
-            var urlMatch = embed.thumbnail.url.match(/https:\/\/tropbot\.cheeseboye\.com\/images\/([0-9]+?)_([0-9]+?).png/i); //will be
+            var urlMatch = embed.thumbnail.url.match(/https?:\/\/tropbot\.cheeseboye\.com\/images\/([0-9]+?)_([0-9]+?).png/i); //will be
             if (urlMatch === null) //commented in        
                 return message.reply('Unfortunately, the specified message uses a v2 starboard message which is not compatible with the v3 system as it cannot be edited'); //a few weeks
             previousKarma.upvotes = parseInt(urlMatch[1]);

@@ -89,8 +89,9 @@ module.exports = Object.assign(new EventEmitter(), {
     },
     async LoadFiles(client) //Should not be used directly
     {
-        var commandFiles = fs.readdirSync(root + `/modules/${this.name}/commands`) //Get all command files
-        var eventFiles = fs.readdirSync(root + `/modules/${this.name}/events`) //Get all event files
+        var moduleFolder = root + `/modules/${this.name}`;
+        var commandFiles = fs.existsSync(moduleFolder  + '/commands') ? fs.readdirSync(moduleFolder  + '/commands') : []//Get all command files
+        var eventFiles = fs.existsSync(moduleFolder  + '/events') ? fs.readdirSync(moduleFolder  + '/events') : [] //Get all event files
         //var results = [] //Stores result of file loading
         var toLoad = []
         var commandSQL = await this.SQLGet(client, 'commands');

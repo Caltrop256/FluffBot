@@ -38,7 +38,7 @@ module.exports = {
             .setColor(client.constants.redder.hex)
             .setTimestamp();
 
-        kickUser.send({ embed: DmEmbed }).then(() => {
+        kickUser.send({ embed: DmEmbed }).finally(() => {
             kickUser.kick({ reason })
         });
     }
