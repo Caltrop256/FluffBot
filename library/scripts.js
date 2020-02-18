@@ -125,7 +125,9 @@ module.exports = {
     containsAllElements(a, t, r) {
         if (r) {
             let missing = [];
-            t.forEach(e => { if (!a.includes(e)) missing.push(e) });
+            t.forEach(e => {
+                if (!a.includes(e)) missing.push(e)
+            });
             return missing;
         } else return t.every(e => a.includes(e));
     },
@@ -264,8 +266,11 @@ module.exports = {
      * @param  {Message} msg The message to get the image from
      * @return {String} The URL
      */
-    isSuspect(user) {
-        return (!user.avatarURL || user.createdTimestamp > Date.now() - 259200000)
+    isSuspect(user, client) {
+        let member = client.guilds.get('562324876330008576').member(user);
+        if (member && member.nickname && client.swearDetect(member.nickname).replaced) return true;
+        if (client.swearDetect(user.username).replaced) return true;
+        return (!user.avatarURL || user.createdTimestamp > Date.now() - 259200000);
     },
     getImage(msg) {
         let eURL = '';

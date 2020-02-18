@@ -52,38 +52,43 @@ module.exports = {
 
                         var members = Array.from(mainGuild.members.filter(m => !m.user.bot))
                         var neon_pink_heart = client.emojis.get("608779835090927661");
-                        if (LeaveMember.lastMessageID) { var messageLink = `https://discordapp.com/channels/${LeaveMember.guild.id}/${LeaveMember.lastMessage.channel.id}/${LeaveMember.lastMessageID}` }
+                        var name = client.scripts.isSuspect(member.user, client) ? '[Account under review]' : member.user.username;
+                        if (LeaveMember.lastMessageID) {
+                            var messageLink = `https://discordapp.com/channels/${LeaveMember.guild.id}/${LeaveMember.lastMessage.channel.id}/${LeaveMember.lastMessageID}`
+                        }
 
                         if (gotBanned == false) {
                             var leaveMemberinfo = client.scripts.getEmbed()
                                 //.setTitle("🦀")
-                                .setAuthor(`${member.user.username} is gone`, member.user.avatarURL, member.user.avatarURL)
+                                .setAuthor(`${name} is gone`, member.user.avatarURL, member.user.avatarURL)
                                 .setThumbnail(member.user.avatarURL)
                                 .setTimestamp()
                                 .setFooter(member.id)
                                 .setColor(member.displayHexColor)
                             if (!LeaveMember.lastMessageID || LeaveMember.lastMessage.channel.id == "575985149368467466") {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n**Take good care** ${neon_pink_heart}`)
+                                leaveMemberinfo.setDescription(`${name} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n**Take good care** ${neon_pink_heart}`)
                             } else {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n**Take good care** ${neon_pink_heart}`)
+                                leaveMemberinfo.setDescription(`${name} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n**Take good care** ${neon_pink_heart}`)
                             }
                         } else {
                             var leaveMemberinfo = client.scripts.getEmbed()
                                 //.setTitle("🦀")
-                                .setAuthor(`${member.user.username} is gone for good`, member.user.avatarURL, member.user.avatarURL)
+                                .setAuthor(`${name} is gone for good`, member.user.avatarURL, member.user.avatarURL)
                                 .setThumbnail(member.user.avatarURL)
                                 .setTimestamp()
                                 .setFooter(member.id)
                                 .setColor(member.displayHexColor)
                             if (!LeaveMember.lastMessageID || LeaveMember.lastMessage.channel.id == "575985149368467466") {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n(User was Banned)`)
+                                leaveMemberinfo.setDescription(`${name} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n\n(User was Banned)`)
                             } else {
-                                leaveMemberinfo.setDescription(`${member.user.username} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n(User was Banned)`)
+                                leaveMemberinfo.setDescription(`${name} was part of the community for \`${client.time(new Date() - LeaveMember.joinedTimestamp, { verbose: true, compact: true })}\` and was the \`${client.scripts.ordinalSuffix(joinPos + 1)}\` member to join.\n[Here](${messageLink}) is their last message.\n\n(User was Banned)`)
                             }
                         }
 
 
-                        leaveChannel.send({ embed: leaveMemberinfo })
+                        leaveChannel.send({
+                            embed: leaveMemberinfo
+                        })
 
 
 
@@ -98,7 +103,7 @@ module.exports = {
 
                         try {
                             member.user.send("goodbye :(")
-                        } catch (e) { }
+                        } catch (e) {}
                     }
                 }
 
