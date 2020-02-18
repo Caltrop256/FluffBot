@@ -262,16 +262,19 @@ module.exports = {
 
         return perms;
     },
+    isSuspect(user, client) {
+        let member = client.guilds.get('562324876330008576').member(user);
+        if (member && member.nickname && (client.swearDetect(member.nickname).replaced) || this.containsQuestionableWords(member.nickname)) return true;
+        if (client.swearDetect(user.username).replaced || this.containsQuestionableWords(user.username)) return true;
+        return (!user.avatarURL || user.createdTimestamp > Date.now() - 259200000);
+    },
+    containsQuestionableWords(str) {
+        return /(\bcum+)|(\bqueef\b)|(fuc(c|k)er)/gim.test(str || '');
+    },
     /**Gets any image attachments or image urls in embeds from a message
      * @param  {Message} msg The message to get the image from
      * @return {String} The URL
      */
-    isSuspect(user, client) {
-        let member = client.guilds.get('562324876330008576').member(user);
-        if (member && member.nickname && client.swearDetect(member.nickname).replaced) return true;
-        if (client.swearDetect(user.username).replaced) return true;
-        return (!user.avatarURL || user.createdTimestamp > Date.now() - 259200000);
-    },
     getImage(msg) {
         let eURL = '';
         const attArr = msg.attachments.array();
