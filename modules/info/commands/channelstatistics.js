@@ -172,7 +172,7 @@ module.exports = {
                 .addField(`General Information`, `ID: \`${specifiedChannel.id}\`\n Position: \`${specifiedChannel.calculatedPosition + 1}\`\nEligible to View: \`${numComma(specifiedChannel.members.size)} members\`\nNSFW: \`${specifiedChannel.nsfw}\`\nCategory: \`${specifiedChannel.parent.name.toString().replace(/[^A-Za-z0-9]+/g, '')}\`\nPeople typing: \`${specifiedChannel.typingCount}\` `, true)
                 .addField(`Activity Statistics`, `Total Messages: \`${numComma(sum_messages.length)}\`\n Human Messages: \`${numComma(HumanMessages.length)}\`\nBot Messages: \`${numComma(sum_messages.length - HumanMessages.length)}\`\nLast Message sent: \`${client.time(NoActivitySince, true)} ago\`\nAverage Delay: \`${client.time(averagemessageDelay, true)}\`\nDeathliness: \`${numComma(verdictNumFinal.toFixed(2))}\` `, true)
                 .addField(`Message Statistics`, `Average Length: \`${numComma(averageLength.toFixed(1))} chars\`\nUnique Participants: \`${numComma(UniqueMemberArray.length)}\`\nAmount of Images: \`${numComma(ImagesArray.length - 1)}\` `, true)
-                .addField(`User Statistics`, `Average Join Date: \`${client.time(message.createdTimestamp - accountJoinaverage, true)} ago\`\nAverage User Age: \`${accountAgeString.match(/.+?(?=(days \d))/gi)} days\` `, true)
+                .addField(`User Statistics`, `Average Join Date: \`${client.time(message.createdTimestamp - accountJoinaverage, true)} ago\`\nAverage User Age: \`${accountAgeString} days\` `, true)
 
             message.channel.send({ embed: DataEmbed })
         }

@@ -51,7 +51,7 @@ module.exports = {
         };
 
         if (msg.match(/(w(h(a{1,})t?)?)( )?t(h(e{1,}))?( )?f((u{1,})c[c|k])?/gi)) { message.react(":ralsei_angry:562330227947339806") }
-        if (msg.match(/((mods?( )?(are|=)?( )?gay)|((gay)( )?mods?( )?(are|=)?))/gi)) { message.reply("It is known.") }
+        if (msg.match(/((mods?( )?(are|=)?( )?(homo|gay))|((gay)( )?mods?( )?(are|=)?))/gi)) { message.reply("It is known.") }
         if (msg.match(/milk/gi)) { message.react("🥛") }
         if (msg.match(/compress/gi)) { message.react("🗜") }
         if (msg.match(/[e∑]gg/gi) || (['eg', '∑g'].includes(message.content))) { message.react("🥚") }

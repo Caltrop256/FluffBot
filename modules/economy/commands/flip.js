@@ -67,7 +67,7 @@ module.exports = {
                 }
             };
         };
-        var seed = (Date.now() * ((message.author.username.toString().charCodeAt(0) - 97) * Math.random()) * ((message.content.toString().charCodeAt(0) - 97) * Math.random())) / 3;
+        var seed = (Date.now() * (((message.author.username.toString().charCodeAt(0) - 97) || 1) * Math.random()) * ((message.content.toString().charCodeAt(0) - 97) * Math.random())) / 3;
         var generator = new MersenneTwister()
         generator.initSeed(seed);
         var intNumber = generator.randomLong();

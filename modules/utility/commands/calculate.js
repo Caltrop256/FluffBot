@@ -15,7 +15,7 @@ module.exports = {
 
     execute(client, args, message) {
 
-        var Formal = args.join(" ").replace(/pi/gi, "π").match(/([0-9^ +\-*/%()π.e]+)/gi)
+        var Formal = args.join(" ").replace(/÷/g,"/").replace(/pi/gi, "π").match(/([0-9^ +\-*/%()π.e]+)/gi)
         if (!Formal) return message.reply(`Invalid calculation`)
         var str = Formal[0]
         try {

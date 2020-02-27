@@ -3,6 +3,7 @@ const emojiIDs = ['562330233315917843', '562330227322388485', '58616182133804237
 const karmaIDs = emojiIDs.slice(0, 2);
 const pgsIDs = emojiIDs.slice(2, 5);
 const Canvas = require('canvas');
+const config = require(process.env.tropbot + '/config.json');
 
 module.exports = require(process.env.tropbot + '/genericModule.js');
 module.exports.Info({
@@ -74,7 +75,7 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
             method: 'GET',
             url: url + `?upvotes=${upvotes}&downvotes=${downvotes}`,
             headers: {
-                Authorization: 'BE9FC10F395D5973D54D707D9CD5FA1801172108C31D2FF09BEFDC3A70AB868619082A06975EACDA1D259622510881B7CCE464B5C743F4CE12666AB9EE7CDB81'
+                Authorization: config.voteToken
             }
         };
         request(options, function (err, resp, json) {
