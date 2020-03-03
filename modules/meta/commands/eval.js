@@ -1,4 +1,5 @@
-
+const config = require(process.env.tropbot + '/config.json');
+const blacklist = [config.stableToken, config.betaToken,config.mySQLPassword, config.fluffToken, config.voteToken, config.pToken];
 module.exports = {
 	name: 'eval',
 	aliases: ['ev'],
@@ -21,7 +22,8 @@ module.exports = {
 
 			if (typeof evaled !== "string")
 				evaled = require("util").inspect(evaled);
-
+			if(message.channel.id != '684333048694833154')
+				blacklist.forEach(b=>evaled = evaled.replace(RegExp(b,'gi'),'CENSORED')); 
 			message.channel.send(client.clean(evaled), { code: "xl", split: true });
 		} catch (err) {
 			message.channel.send(`\`ERROR\`\n\`\`\`xl\n${client.clean(err)}\n\`\`\``);

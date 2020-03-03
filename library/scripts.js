@@ -264,7 +264,7 @@ module.exports = {
     },
     isSuspect(user, client) {
         let member = client.guilds.get('562324876330008576').member(user);
-        if (member && member.nickname && (client.swearDetect(member.nickname).replaced) || this.containsQuestionableWords(member.nickname)) return true;
+        if (member && member.nickname && (client.swearDetect(member.nickname).replaced || this.containsQuestionableWords(member.nickname))) return true;
         if (client.swearDetect(user.username).replaced || this.containsQuestionableWords(user.username)) return true;
         return (!user.avatarURL || user.createdTimestamp > Date.now() - 259200000);
     },

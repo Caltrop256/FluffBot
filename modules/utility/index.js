@@ -23,16 +23,18 @@ module.exports.ModuleSpecificCode = function (client) {
 
                         var reminderChannel = client.channels.get(row.channelid);
                         var user = client.users.get(row.userid);
+                        if(user && reminderChannel && channel.guild.members.has(user.id))
+                        {
+                            var reminderEmbed = client.scripts.getEmbed()
+                                .setAuthor(`Reminder!`, user.displayAvatarURL, user.displayAvatarURL)
+                                .setColor(0x4AD931)
+                                .setTimestamp()
+                                .setDescription(`You asked me \`${client.time(Date.now() - row.start, true)}\` ago to remind you of the following.`)
+                                .addField(`Reminder`, row.reminder)
 
-                        var reminderEmbed = client.scripts.getEmbed()
-                            .setAuthor(`Reminder!`, user.displayAvatarURL, user.displayAvatarURL)
-                            .setColor(0x4AD931)
-                            .setTimestamp()
-                            .setDescription(`You asked me \`${client.time(Date.now() - row.start, true)}\` ago to remind you of the following.`)
-                            .addField(`Reminder`, row.reminder)
-
-                        reminderChannel.send(user, { embed: reminderEmbed })
-
+                            reminderChannel.send(user, { embed: reminderEmbed })
+                        }
+                        
                         connection.query(sql, console.log)
 
                     }
