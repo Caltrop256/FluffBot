@@ -16,6 +16,7 @@
     "pName": "PlotlyName",
     "pToken": "PlotlyToken",
 
+    "startREPL": true,
     "useLocal": true,
     "useBeta": true
 }
