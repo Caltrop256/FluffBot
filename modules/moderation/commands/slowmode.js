@@ -13,7 +13,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_CHANNELS'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var newRate = parseInt(args[0])
         if ((!newRate && newRate !== 0) || (Math.sign(parseInt(newRate)) < 0 && newRate !== 0) || newRate > 21600) return message.reply(`The Slowmode rate must be an integer number between 0 and 21600`)
         var channel = client.getChannel(args[1], message.channel)

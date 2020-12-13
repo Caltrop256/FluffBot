@@ -14,7 +14,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var issuingUser = message.member;
 
@@ -24,8 +25,10 @@ module.exports = {
         if (strings.length < 2 || strings.length > 3) return message.reply(`Ok no, that's not how things work around this part of town, if you wanna make a poll you gotta go play by my rules, smh.\nHere is an example for an actual poll:\n\n\`${client.cfg.prefix}poll How are you doing?|Good,Bad,Meh|1m\``)
         var question = strings[0]
         var options = strings[1]
-        if (strings[2]) {
-            if (strings[2].match(/[0-9]*(ms|s|m|h|d|w|y)$/gi)) {
+        if (strings[2])
+        {
+            if (strings[2].match(/[0-9]*(ms|s|m|h|d|w|y)$/gi))
+            {
                 var time = client.time.fromString(strings[2]).ms
             } else time = client.time.fromString(strings[2] + "m").ms
         } else time = 60000
@@ -41,12 +44,14 @@ module.exports = {
 
         let findDuplicates = (arr) => arr.filter((item, index) => arr.indexOf(item) != index)
 
-        if (findDuplicates(optionsList).length) {
+        if (findDuplicates(optionsList).length)
+        {
             return message.reply(`Your choices may not contain duplicates. (\`${findDuplicates(optionsList).join("\`, \`").replace(/, ([^,]*)$/, ' and $1')}\`)`)
         }
 
         var optionsText = "";
-        for (var i = 0; i < optionsList.length; i++) {
+        for (var i = 0; i < optionsList.length; i++)
+        {
             optionsText += emojiList[i] + " " + optionsList[i] + "\n";
         }
 
@@ -65,7 +70,8 @@ module.exports = {
 
 
         message.channel.send({ embed })
-            .then(async function (message) {
+            .then(async function (message)
+            {
                 var PollID = message.id
 
                 client.polls.set(PollID, {
@@ -80,31 +86,37 @@ module.exports = {
                 })
 
                 var reactionArray = [];
-                for (var i = 0; i < optionsList.length; i++) {
+                for (var i = 0; i < optionsList.length; i++)
+                {
                     reactionArray[i] = await message.react(emojiList[i]);
                 }
 
-                const filter = (reaction, user) => {
+                const filter = (reaction, user) =>
+                {
                     return user.id !== message.author.id;
                 };
 
                 const collector = message.createReactionCollector(filter, { time: time });
 
-                collector.on('collect', (reaction, reactionCollector) => {
+                collector.on('collect', (reaction, reactionCollector) =>
+                {
                     console.log('collect');
                     message.channel.fetchMessage(message.id)
-                        .then(async function (message) {
+                        .then(async function (message)
+                        {
 
                             var validReaction = false
 
-                            for (var i = 0; i < emojiList.length; i++) {
+                            for (var i = 0; i < emojiList.length; i++)
+                            {
                                 if (reaction.emoji.toString() == emojiList[i]) validReaction = true
                             }
 
                             if (validReaction == false) { reaction.remove(reaction.users.first().id) }
 
                             var reactionCountsArray = [];
-                            for (var i = 0; i < optionsList.length; i++) {
+                            for (var i = 0; i < optionsList.length; i++)
+                            {
                                 reactionCountsArray[i] = message.reactions.get(emojiList[i]).count - 1;
                             }
 
@@ -116,10 +128,13 @@ module.exports = {
                             var leadingEmote = []
 
                             var UpdatedText = "";
-                            if (reactionCountsArray[indexMax[0]] == 0) {
+                            if (reactionCountsArray[indexMax[0]] == 0)
+                            {
                                 UpdatedText = "Nobody has voted yet."
-                            } else {
-                                for (var i = 0; i < indexMax.length; i++) {
+                            } else
+                            {
+                                for (var i = 0; i < indexMax.length; i++)
+                                {
                                     leadingEmote.push(`${emojiList[indexMax[i]]} \`${optionsList[indexMax[i]]}\``)
                                 }
                             }
@@ -134,9 +149,11 @@ module.exports = {
                         });
                 })
                 var intervalVar = 0;
-                function IntervalUpdate() {
+                function IntervalUpdate()
+                {
                     message.channel.fetchMessage(message.id)
-                        .then(async function (message) {
+                        .then(async function (message)
+                        {
 
                             var Poll = client.polls.get(message.id)
 
@@ -150,9 +167,13 @@ module.exports = {
 
                             var reactionCountsArray = [];
 
-                            for (var i = 0; i < optionsList.length; i++) {
+                            for (var i = 0; i < optionsList.length; i++)
+                            {
                                 var tempReact = message.reactions.get(emojiList[i]);
-                                if (!tempReact) {
+                                if (!tempReact)
+                                {
+                                    let tempErr = new Error('Poll React Error');
+                                    client.lastErr.push(tempErr);
                                     message.channel.send('An error has occurred and the poll had to be cancelled to prevent things from breaking. Sorry <:ralsei_sad:562330227775373323>')
                                     clearInterval(intervalVar);
                                     client.polls.delete(message.id)
@@ -170,10 +191,13 @@ module.exports = {
                             var leadingEmote = []
 
                             var UpdatedText = "";
-                            if (reactionCountsArray[indexMax[0]] == 0) {
+                            if (reactionCountsArray[indexMax[0]] == 0)
+                            {
                                 UpdatedText = "Nobody has voted yet."
-                            } else {
-                                for (var i = 0; i < indexMax.length; i++) {
+                            } else
+                            {
+                                for (var i = 0; i < indexMax.length; i++)
+                                {
                                     leadingEmote.push(`${emojiList[indexMax[i]]} \`${optionsList[indexMax[i]]}\``)
                                 }
                             }
@@ -192,16 +216,29 @@ module.exports = {
                             embed.setDescription(`**${UpdatedText}**\n⌛ ${client.time(ExpirationOfPoll - Date.now(), true)} remaining`)
 
                             message.edit("", embed);
+                        }).catch((err) =>
+                        {
+                            let tempErr = new Error('Poll Message Error');
+                            tempErr.original = err;
+                            client.lastErr.push(tempErr);
+                            message.channel.send('An error has occurred and the poll had to be cancelled to prevent things from breaking. Sorry <:ralsei_sad:562330227775373323>')
+                            clearInterval(intervalVar);
+                            client.polls.delete(message.id)
+                            intervalVar = -1;
+                            collector.stop();
                         })
                 }
                 if (time > 30000) intervalVar = setInterval(IntervalUpdate, 30000)
 
-                collector.on('end', collected => {
+                collector.on('end', collected =>
+                {
                     if (intervalVar === -1) return;
                     message.channel.fetchMessage(message.id)
-                        .then(async function (message) {
+                        .then(async function (message)
+                        {
                             var reactionCountsArray = [];
-                            for (var i = 0; i < optionsList.length; i++) {
+                            for (var i = 0; i < optionsList.length; i++)
+                            {
                                 reactionCountsArray[i] = message.reactions.get(emojiList[i]).count - 1;
                             }
 
@@ -212,10 +249,13 @@ module.exports = {
 
                             console.log(reactionCountsArray);
                             var winnersText = "";
-                            if (reactionCountsArray[indexMax[0]] == 0) {
+                            if (reactionCountsArray[indexMax[0]] == 0)
+                            {
                                 winnersText = "No one voted!"
-                            } else {
-                                for (var i = 0; i < indexMax.length; i++) {
+                            } else
+                            {
+                                for (var i = 0; i < indexMax.length; i++)
+                                {
                                     winnersText +=
                                         emojiList[indexMax[i]] + " " + optionsList[indexMax[i]] +
                                         " (" + reactionCountsArray[indexMax[i]] + ` ${reactionCountsArray[indexMax[i]] == 1 ? "vote" : 'votes'})\n`;

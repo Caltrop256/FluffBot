@@ -14,7 +14,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         if (args.length && !client.scripts.getPerms(client, message.member).includes('VIEW_AUDIT_LOG'))
             return message.reply('You need the `View Audit Logs` permission to be able to view other User\'s warns.');
@@ -25,7 +26,8 @@ module.exports = {
 
         if (!warnUser) return message.reply("Couldn't find specified user");
 
-        client.getWarnEntries(warnUser.id, false).then((w) => {
+        client.getWarnEntries(warnUser.id, false).then((w) =>
+        {
 
             var active = client.scripts.getEmbed()
                 .setAuthor(`${warnUser.user.tag}'s active Warns`)
@@ -39,10 +41,13 @@ module.exports = {
                 .setColor(client.constants.red.hex)
                 .setTimestamp();
 
-            w.warns.forEach((warn) => {
-                if (warn.active) {
+            w.warns.forEach((warn) =>
+            {
+                if (warn.active)
+                {
                     active.addField(warn.id, `**Applied by** ${message.guild.members.get(warn.modId).toString()}\n**Level**: \`${warn.level}\`\n**Applied**: \`${client.time(Date.now() - warn.start)} ago\`\**nExpires in** \`${client.time(warn.expiry - Date.now())}\`\n**Reason:** ${warn.reason}`, true)
-                } else {
+                } else
+                {
                     expired.addField(warn.id, `**Applied by** ${message.guild.members.get(warn.modId)}\n**Level**: \`${warn.level}\`\n**Applied**: \`${client.time(Date.now() - warn.start)} ago\`\n**Expired** \`${client.time(Date.now() - warn.expiry)} ago\`\n**Reason:** ${warn.reason}`, true)
                 }
             })

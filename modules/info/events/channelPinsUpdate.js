@@ -5,7 +5,8 @@ channel      Channel      The channel that the pins update occurred in
 time         Date         The time of the pins update    */
 
 module.exports = {
-    async execute(client, channel, time) {
+    async execute(client, channel, time)
+    {
 
         client.createLogEntry(
             client,

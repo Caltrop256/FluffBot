@@ -5,21 +5,26 @@ module.exports.Info({
     name: 'moderation',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function (client) {
-    function removeAccents(str) {
+module.exports.ModuleSpecificCode = function (client)
+{
+    function removeAccents(str)
+    {
         let accents = 'ÀÁÂÃÄÅàáâãäåßÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
         let accentsOut = "AAAAAAaaaaaaBOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
         str = str.split('');
-        str.forEach((letter, index) => {
+        str.forEach((letter, index) =>
+        {
             let i = accents.indexOf(letter);
-            if (i != -1) {
+            if (i != -1)
+            {
                 str[index] = accentsOut[i];
             }
         })
         return str.join('');
     }
 
-    function swearDetect(str) {
+    function swearDetect(str)
+    {
         str = removeAccents(str)
         var replaced = false
         const friendlyWords = ['Fettuccine Alfredo', 'Mango Yogurt', 'amigo', 'cuddlebuddy', 'fella', 'neighbour', 'friendo', 'buddy', 'companion', 'partner', 'acquaintance', 'ally', 'associate', 'colleague', 'chum', 'cohort', 'compatriot', 'comrade', 'consort', 'mate', 'pal', 'fellow Ralsei-enthusiast', 'cutie'];
@@ -40,7 +45,8 @@ module.exports.ModuleSpecificCode = function (client) {
         return { string: str, replaced: replaced }
 
     };
-    function reportFunc(message, user, member = null) {
+    function reportFunc(message, user, member = null)
+    {
         if (message.author.id == user.id) return user.send('Please do not report your own messages!');
 
         var eURL = client.scripts.getImage(message);
@@ -52,12 +58,15 @@ module.exports.ModuleSpecificCode = function (client) {
             .setTimestamp()
             .setColor(member ? member.displayHexColor : client.constants.redder.hex)
             .setFooter("This report will automatically time out after 2 minutes!");
-        user.send({ embed }).then(async (msg) => {
+        user.send({ embed }).then(async (msg) =>
+        {
             const emojis = ['🇦', '🇧', '🇨', '🇩', '❌'];
-            for (let i = 0; i < emojis.length; i++) {
+            for (let i = 0; i < emojis.length; i++)
+            {
                 await msg.react(emojis[i]);
             };
-            const filter = (r, u) => {
+            const filter = (r, u) =>
+            {
                 return !u.bot;
             };
 
@@ -82,8 +91,10 @@ module.exports.ModuleSpecificCode = function (client) {
             let notifRole = '<@&580482521100320793>';//message.guild.roles.get("580482521100320793");
 
             var collector = msg.createReactionCollector(filter, { time: 120000 });
-            collector.on('collect', (reaction) => {
-                switch (reaction.emoji.name) {
+            collector.on('collect', (reaction) =>
+            {
+                switch (reaction.emoji.name)
+                {
                     case emojis[0]:
                         collector.stop();
                         reportEmbed.fields[2].value = "**Rule 1**: Bad Faith Participation and Civility";
@@ -109,14 +120,16 @@ module.exports.ModuleSpecificCode = function (client) {
                         break;
                 };
             });
-            collector.on('end', (collected, reason) => {
+            collector.on('end', (collected, reason) =>
+            {
                 user.send(`${collected.size
                     ? reason == "stop"
                         ? "The report has been cancelled!"
                         : `${message.author} has been reported!`
                     : `The report period of 2 minutes has ended!`
                     }`);
-                msg.reactions.forEach(r => {
+                msg.reactions.forEach(r =>
+                {
                     r.remove(client.user);
                 });
             });
@@ -124,7 +137,8 @@ module.exports.ModuleSpecificCode = function (client) {
     }
     client.reportFunc = reportFunc;
     client.swearDetect = swearDetect;
-    function pleaseForTheLoveOfGodUpdateThis() {
+    function pleaseForTheLoveOfGodUpdateThis()
+    {
         client.guilds.forEach((guild) =>
             guild.fetchWebhooks().then(webhooks =>
                 webhooks.forEach(webhook =>
@@ -133,6 +147,6 @@ module.exports.ModuleSpecificCode = function (client) {
             )
         )
     }
-    this.timedFunctions.set(pleaseForTheLoveOfGodUpdateThis, 120000)
+    //this.timedFunctions.set(pleaseForTheLoveOfGodUpdateThis, 120000)
 
 };

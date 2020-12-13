@@ -16,16 +16,19 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
-        if (!args.length) {
+        if (!args.length)
+        {
             var allUnits = client.scripts.getEmbed()
                 .setAuthor(`Available Units`, message.author.displayAvatarURL)
                 .setTimestamp()
                 .setColor(message.member.displayHexColor)
 
             var categories = convert().measures()
-            categories.forEach(c => {
+            categories.forEach(c =>
+            {
                 var units = convert().possibilities(c)
                 allUnits.addField(c.replace(/([A-Z]+)/g, ' $1').replace(/^./gi, function (token) { return token.toUpperCase() }), "`" + units.join("`, `").replace(/, ([^,]*)$/, ' and $1').replace(/2/gi, "²").replace(/3/gi, "³") + "`")
             })
@@ -36,22 +39,28 @@ module.exports = {
         var allUnitsSingular = [];
         var allUnitsAbbr = convert().possibilities()
 
-        allUnits.forEach(u => {
+        allUnits.forEach(u =>
+        {
             allUnitsSingular.push(u.singular)
         })
         var sepArg1 = args[0].match(/[a-z/²³]+|[^a-z]+/gi)
 
-        const findUnit = function (str) {
+        const findUnit = function (str)
+        {
             var unit = null
             str = str.replace(/²/gi, "2").replace(/³/gi, "3");
             unit = allUnits.find(u => u.abbr.toLowerCase() == str.toLowerCase()) || allUnits.find(u => u.singular.toLowerCase() == str.toLowerCase()) || allUnits.find(u => u.plural.toLowerCase() == str.toLowerCase())
-            if (!unit) {
+            if (!unit)
+            {
                 var singularMatches = matchSorter(allUnitsSingular, str)
-                if (singularMatches[0]) {
+                if (singularMatches[0])
+                {
                     unit = allUnits.find(u => u.singular == singularMatches[0])
-                } else {
+                } else
+                {
                     var abbrMatches = matchSorter(allUnitsAbbr, str)
-                    if (abbrMatches[0]) {
+                    if (abbrMatches[0])
+                    {
                         unit = allUnits.find(u => u.abbr == abbrMatches[0])
                     }
                 }
@@ -59,11 +68,13 @@ module.exports = {
             return unit;
         }
 
-        if (args.length >= 3) {
+        if (args.length >= 3)
+        {
             var convAmt = parseFloat(args[0])
             var convFrom = findUnit(args[1])
             var convTo = findUnit(args[2])
-        } else {
+        } else
+        {
             var failSafe = sepArg1[0] ? findUnit(sepArg1[0]) : null
             var convAmt = sepArg1[0] ? parseFloat(sepArg1[0]) : null
             var convTo = args[1] ? findUnit(args[1]) : null
@@ -75,7 +86,8 @@ module.exports = {
         if (convFrom) failSafe = { abbr: convFrom.abbr }
         if (convTo) failSafe = { abbr: convTo.abbr }
 
-        if ((!convTo || isNaN(convAmt) || (!sepArg1[1] && !convFrom)) && (failSafe || convFrom)) {
+        if ((!convTo || isNaN(convAmt) || (!sepArg1[1] && !convFrom)) && (failSafe || convFrom))
+        {
             conversion = convert().from(failSafe.abbr).possibilities();
             let units = conversion.map(function (e) { return `\`${e}\`` });
             var clean = units.join(", ")

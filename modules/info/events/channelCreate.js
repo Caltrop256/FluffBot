@@ -4,7 +4,8 @@ PARAMETER    TYPE        DESCRIPTION
 channel      Channel     The channel that was created    */
 
 module.exports = {
-    async execute(client, channel) {
+    async execute(client, channel)
+    {
         if (!channel.guild) return;
         const entry = await channel.guild.fetchAuditLogs({ type: 'CHANNEL_CREATE' }).then(audit => audit.entries.first());
 

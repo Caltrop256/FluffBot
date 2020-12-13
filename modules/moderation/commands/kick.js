@@ -14,7 +14,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'KICK_MEMBERS'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var kickUser = client.getMember(args[0], message.guild, null);
         if (!kickUser) return message.reply("Couldn't find specified user");
 
@@ -38,7 +39,8 @@ module.exports = {
             .setColor(client.constants.redder.hex)
             .setTimestamp();
 
-        kickUser.send({ embed: DmEmbed }).finally(() => {
+        kickUser.send({ embed: DmEmbed }).finally(() =>
+        {
             kickUser.kick({ reason })
         });
     }

@@ -11,7 +11,8 @@ module.exports = {
     },
     perms: [],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         message.channel.send("uwu"); //uwu
     }
 }

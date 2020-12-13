@@ -13,18 +13,23 @@ const pgsArr = ['platinum', 'gold', 'silver'];
 const sqlSelectArr = ['*', 'upvotes, downvotes', pgsArr.join(',')]
 //const sqlTableArr = ['coins','karma','karma']; type ? karma : coins
 const sqlOrderArr = ['coins', 'upvotes-downvotes', '{0}'];
-class CustomEmoji {
-    constructor(id, name, url) {
+class CustomEmoji
+{
+    constructor(id, name, url)
+    {
         this.id = id;
         this.name = name;
         this.url = url;
     }
-    toString() {
+    toString()
+    {
         return `<:${this.name}:${this.id}>`
     }
 }
-class CustomUser {
-    constructor(id, displayName, displayHexColor, displayAvatarURL, username, discriminator, bot) {
+class CustomUser
+{
+    constructor(id, displayName, displayHexColor, displayAvatarURL, username, discriminator, bot)
+    {
         this.id = id;
         this.displayName = displayName || 'Unknown User';
         this.displayHexColor = displayHexColor || '#000000';
@@ -33,13 +38,16 @@ class CustomUser {
         this.discriminator = discriminator || '0000';
         this.bot = bot || false;
     }
-    toString() {
+    toString()
+    {
         return `<@${this.id}>`;
     }
 
 }
-class DashBoardInfo {
-    constructor(type, client, pgsType) {
+class DashBoardInfo
+{
+    constructor(type, client, pgsType)
+    {
         this.type = type;
         var emojis = {
             upvote: client.emojis.get('562330233315917843'),
@@ -49,19 +57,23 @@ class DashBoardInfo {
             silver: client.emojis.get('586161821044441088')
         };
         this.emojis = {};
-        for (var emoji in emojis) {
+        for (var emoji in emojis)
+        {
             var emojiObj = emojis[emoji];
             this.emojis[emoji] = new CustomEmoji(emojiObj.id, emojiObj.name, emojiObj.url);
         }
         this.pgsType = pgsType;
     }
-    addEntries(guild, entryArr) {
+    addEntries(guild, entryArr)
+    {
         var entries = [];
         var users = scripts.getCollection();
         this.users = [];
-        for (var entry of entryArr) {
+        for (var entry of entryArr)
+        {
             var user = users.get(entry.id);
-            if (!user) {
+            if (!user)
+            {
                 var member = guild.members.get(entry.id) || {};
                 var mUser = member.user || {};
                 user = new CustomUser(
@@ -83,14 +95,17 @@ class DashBoardInfo {
 
     }
 }
-class Entry {
-    constructor(board, type, index, entryObj) {
+class Entry
+{
+    constructor(board, type, index, entryObj)
+    {
         this.board = board;
         this.type = type;
         this.index = index;
         this.entryObj = entryObj;
     }
-    toString() {
+    toString()
+    {
         var user = this.board.users.find((user) => user.id === this.entryObj.id);
         var emojis = this.board.emojis;
         var pgsType = this.board.pgsType;
@@ -117,10 +132,12 @@ module.exports.Info({
     name: 'dashboard',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function (client) {
+module.exports.ModuleSpecificCode = function (client)
+{
     scripts = client.scripts;
     cfg = client.cfg;
-    async function getBoard(type, guild, pgsType) {
+    async function getBoard(type, guild, pgsType)
+    {
         var moduleRequired = type ? 'karma' : 'economy';
         if (!client.modules.get(moduleRequired).enabled)
             return false;
@@ -132,7 +149,8 @@ module.exports.ModuleSpecificCode = function (client) {
         var connection = client.scripts.getSQL();
         var SQL = 'SELECT {0} FROM {1} ORDER BY {2} DESC'.format((type ? 'id, ' : '') + sqlSelectArr[type], type ? 'karma' : 'coins', sqlOrderArr[type].replace('{0}', pgsArr[pgsType]))
         var rows = await new Promise((resolve, reject) =>
-            connection.query(SQL, (err, rows) => {
+            connection.query(SQL, (err, rows) =>
+            {
                 if (err) return reject(err);
                 resolve(rows);
             }));

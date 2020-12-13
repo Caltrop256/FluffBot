@@ -6,7 +6,8 @@ channel     Channel   The channel that was deleted    */
 
 
 module.exports = {
-    async execute(client, channel) {
+    async execute(client, channel)
+    {
         if (!channel.guild) return;
         const entry = await channel.guild.fetchAuditLogs({ type: 'CHANNEL_DELETE' }).then(audit => audit.entries.first());
 

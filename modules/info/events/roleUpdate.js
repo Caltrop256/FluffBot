@@ -5,7 +5,8 @@ oldRole        Role        The role before the update
 newRole        Role        The role after the update    */
 
 module.exports = {
-    async execute(client, oldRole, newRole) {
+    async execute(client, oldRole, newRole)
+    {
         const entry = await newRole.guild.fetchAuditLogs({ type: 'ROLE_UPDATE' }).then(audit => audit.entries.first());
 
         client.lastSeen(entry.executor, `Updated the ${newRole.name} role`)

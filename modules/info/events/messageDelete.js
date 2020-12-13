@@ -4,29 +4,34 @@ PARAMETER      TYPE           DESCRIPTION
 message        Message        The deleted message    */
 
 module.exports = {
-  async execute(client, message) {
+  async execute(client, message)
+  {
     if (message.channel.type != 'text') return;
     const entry = (await message.guild.fetchAuditLogs({ type: 'MESSAGE_DELETE' })).entries.first()
     let user = {}
     if (entry && (entry.extra.channel.id === message.channel.id
       && (entry.target.id === message.author.id)
       && (entry.createdTimestamp > (Date.now() - 5000))
-      && (entry.extra.count >= 1))) {
+      && (entry.extra.count >= 1)))
+    {
       user = entry.executor
-    } else {
+    } else
+    {
       user = message.author
     }
     const embeds = message.embeds;
     const attachments = message.attachments;
     let eURL = ''
-    if (embeds.length > 0) {
+    if (embeds.length > 0)
+    {
       if (embeds[0].thumbnail && embeds[0].thumbnail.url)
         eURL = embeds[0].thumbnail.url;
       else if (embeds[0].image && embeds[0].image.url)
         eURL = embeds[0].image.url;
       else
         eURL = embeds[0].url;
-    } else if (attachments.array().length > 0) {
+    } else if (attachments.array().length > 0)
+    {
       const attARR = attachments.array();
       eURL = attARR[0].url;
     }

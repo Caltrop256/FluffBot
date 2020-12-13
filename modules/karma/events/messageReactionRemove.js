@@ -8,7 +8,8 @@ user                   User                   The user whose emoji or reaction e
 
 const emojiIDs = ['562330233315917843', '562330227322388485', '586161821338042379', '586161821551951882', '586161821044441088'];
 module.exports = {
-    execute(client, reaction, user) {
+    execute(client, reaction, user)
+    {
         if (user.bot) return;
         if (!emojiIDs.includes(reaction.emoji.id)) return;
         if (client.botRemovedReacts.get(user.id) === reaction.emoji.id) return client.botRemovedReacts.delete(user.id);

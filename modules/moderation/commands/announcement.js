@@ -13,14 +13,16 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_CHANNELS'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         let announcementsRole = message.guild.roles.get("562923651679125504");
         announcementsRole.edit({ mentionable: true }, ["Announcements activated"]);
         message.react(":ralPing:562330233714507776");
 
         var time = parseInt(args[0] * 1000) || 5000
 
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             announcementsRole.edit({ mentionable: false }, ["Announcements deactivated"]);
             message.react("👌");
         }, time);

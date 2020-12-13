@@ -14,27 +14,34 @@ module.exports = {
     perms: ['DEV'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         const announcementEmoji = client.emojis.find(emoji => emoji.name === "Announcement_notif");
         const rsColorEmbed = client.scripts.getEmbed()
             .setAuthor("Role Selection", "https://b.thumbs.redditmedia.com/gdnYkuWjcBr4BkYk89BrtLCpbjGcawg71ZgebIQ4VfQ.png")
             .setColor(client.constants.neonGreen.hex)
             .setDescription("Click on the colored emoticons to get the corresponding color-role. Please avoid rapidly selecting  / unselecting roles. \nIn case you are having trouble getting your desired Role, try asking a Moderator instead.");
         message.channel.send({ embed: rsColorEmbed })
-            .then(async function (message) {
-                for (let i = 0; i < 18; i++) {
+            .then(async function (message)
+            {
+                for (let i = 0; i < 18; i++)
+                {
                     await message.react(client.constants.Colors[i].getEmoji(client));
                 }
             })
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             message.channel.send("󠀡")
-                .then(async function (message) {
-                    for (let i = 18; i < client.constants.Colors.length; i++) {
+                .then(async function (message)
+                {
+                    for (let i = 18; i < client.constants.Colors.length; i++)
+                    {
                         await message.react(client.constants.Colors[i].getEmoji(client));
                     }
                 })
         }, 22000);
-        setTimeout(() => {
+        setTimeout(() =>
+        {
 
             const rsOtherEmbed = client.scripts.getEmbed()
                 .setAuthor("Other Roles", "https://b.thumbs.redditmedia.com/gdnYkuWjcBr4BkYk89BrtLCpbjGcawg71ZgebIQ4VfQ.png")
@@ -46,11 +53,12 @@ module.exports = {
                 .addField("🎵", "Allows access to the [#music](https://discordapp.com/channels/562324876330008576/562337419299389455) channel.")
                 .addField("🖊", "Allows access to the [#original-content](https://discordapp.com/channels/562324876330008576/607203663949070343) channel.")
                 .addField("🌟", "Allows access to the [#starboard](https://discordapp.com/channels/562324876330008576/562337386701520897) channel.")
-                .addField("🍔", "Allows access to the [#food](https://discordapp.com/channels/562324876330008576/579468655973105684) channel")
-
+                .addField("🍔", "Allows access to the [#food](https://discordapp.com/channels/562324876330008576/579468655973105684) channel.")
+                .addField("<:code:706200822718922804>", "Allows access to the [#tech-talk](https://canary.discordapp.com/channels/562324876330008576/676419869490675722) channel.")
 
             message.channel.send({ embed: rsOtherEmbed })
-                .then(async function (message) {
+                .then(async function (message)
+                {
                     await message.react(announcementEmoji.id);
                     await message.react("🗄");
                     await message.react("🌟");

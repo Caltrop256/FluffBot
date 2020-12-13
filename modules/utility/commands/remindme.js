@@ -14,7 +14,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var connection = client.scripts.getSQL(false);
 
@@ -27,11 +28,13 @@ module.exports = {
         if (reminder.length > 512 || reminder.length < 2) return message.reply("Reminders must be between 2 and 512 characters in length.")
 
 
-        connection.query(`SELECT * FROM remindme WHERE userid = '${message.author.id}'`, (err, rows) => {
+        connection.query(`SELECT * FROM remindme WHERE userid = '${message.author.id}'`, (err, rows) =>
+        {
             if (err) throw err;
             let sql;
-            if (rows.length <= 10) {
-                var  id = Math.floor(Math.random() * 10000);
+            if (rows.length <= 10)
+            {
+                var id = Math.floor(Math.random() * 10000);
                 sql = `INSERT INTO remindme (channelid, userid, reminder, expiry, start, ID) VALUES ('${message.channel.id}', '${message.author.id}', ?, ${Date.now() + time}, ${Date.now()}, ${id});`
                 connection.query(sql, [reminder], console.log)
 
@@ -44,7 +47,8 @@ module.exports = {
                     .setFooter(id)
 
                 message.channel.send({ embed: ReminderEmbed })
-            } else {
+            } else
+            {
                 return message.reply(`You may not have more than 10 active reminders at once.`)
             }
         })

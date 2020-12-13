@@ -5,7 +5,8 @@ guild        Guild        The guild that the unban occurred in
 user         User         The user that was unbanned    */
 
 module.exports = {
-    async execute(client, guild, user) {
+    async execute(client, guild, user)
+    {
         const entry = await guild.fetchAuditLogs({ type: 'MEMBER_BAN_REMOVE' }).then(audit => audit.entries.first());
 
         client.lastSeen(entry.executor, `Unbanned ${user.tag}`);

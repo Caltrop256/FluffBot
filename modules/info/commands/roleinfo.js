@@ -14,15 +14,18 @@ module.exports = {
    perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-   execute(client, args, message) {
+   execute(client, args, message)
+   {
       var role = client.getRole(client, args.join(" "), message.guild)
       if (!role) return message.reply("Couldn't find role.")
 
       let arr = message.guild.roles.array()
       arr.sort((a, b) => a.createdTimestamp - b.createdTimestamp);
 
-      for (let i = 0; i < arr.length; i++) {
-         if (arr[i].id == role.id) {
+      for (let i = 0; i < arr.length; i++)
+      {
+         if (arr[i].id == role.id)
+         {
 
             var createdPos = i + 1
 

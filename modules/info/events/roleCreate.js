@@ -4,7 +4,8 @@ PARAMETER    TYPE        DESCRIPTION
 role         Role        The role that was created    */
 
 module.exports = {
-    async execute(client, role) {
+    async execute(client, role)
+    {
         const entry = await role.guild.fetchAuditLogs({ type: 'ROLE_CREATE' }).then(audit => audit.entries.first());
 
         client.lastSeen(entry.executor, `Created the ${role.name} role`)

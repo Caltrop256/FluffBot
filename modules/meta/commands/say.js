@@ -13,13 +13,15 @@ module.exports = {
     },
     perms: ['MANAGE_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         const embeds = message.embeds;
         const attachments = message.attachments;
 
         let eURL = ''
 
-        if (embeds.length > 0) {
+        if (embeds.length > 0)
+        {
 
             if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                 eURL = embeds[0].thumbnail.url;
@@ -28,11 +30,13 @@ module.exports = {
             else
                 eURL = embeds[0].url;
 
-        } else if (attachments.array().length > 0) {
+        } else if (attachments.array().length > 0)
+        {
             const attARR = attachments.array();
             eURL = attARR[0].url;
         }
-        try {
+        try
+        {
             message.delete(100);
         }
         catch

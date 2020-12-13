@@ -6,7 +6,8 @@ role         Role        The role that was deleted    */
 
 
 module.exports = {
-    async execute(client, role) {
+    async execute(client, role)
+    {
         const entry = await role.guild.fetchAuditLogs({ type: 'ROLE_DELETE' }).then(audit => audit.entries.first());
 
         client.lastSeen(entry.executor, `Deleted the ${role.name} role`)

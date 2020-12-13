@@ -5,7 +5,8 @@ guild        Guild         The guild that the ban occurred in
 user         User          The user that was banned    */
 
 module.exports = {
-    async execute(client, guild, user) {
+    async execute(client, guild, user)
+    {
         const entry = await guild.fetchAuditLogs({ type: 'MEMBER_BAN_ADD' }).then(audit => audit.entries.first());
 
         client.lastSeen(entry.executor, `Banned ${user.tag}`);

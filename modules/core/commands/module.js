@@ -13,7 +13,8 @@ module.exports = {
     perms: ['DEV'],
     required: true,
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
         var moduleArgs = args.join(" ").slice(args[0].length + 1).split(/[/#._ ]/);
 
         var embedError = client.scripts.getEmbed()
@@ -27,7 +28,8 @@ module.exports = {
 
         var comOrEvName = null;
         var comOrEv = null;
-        if (moduleArgs[1]) {
+        if (moduleArgs[1])
+        {
             comOrEv = selectedModule.GetComOrEv(moduleArgs[1]);
             if (!comOrEv) return message.channel.send({ embed: embedError.setDescription(`Couldn't locate a command or event with the name \`${moduleArgs[1]}\``) });
             comOrEvName = moduleArgs[1];
@@ -44,7 +46,8 @@ module.exports = {
             type: '',
             emote: ''
         }
-        switch (args[0].toLowerCase()) {
+        switch (args[0].toLowerCase())
+        {
             case 'e':
             case 'enable':
                 result = await selectedModule.Enable(client, comOrEvName);
@@ -71,25 +74,34 @@ module.exports = {
             .setAuthor(result ? `${operation.type.charAt(0).toUpperCase() + operation.type.slice(1)} ${kind == 'event' ? 'an' : 'a'} ${kind}` : 'Invalid Request', message.author.displayAvatarURL)
             .setTimestamp();
 
-        if (result) {
+        if (result)
+        {
             embedResult.setDescription(comOrEvName ?
                 `${operation.emote} Successfully ${operation.type} the \`${comOrEvName}\` ${kind}!` :
                 `${operation.emote} Successfully ${operation.type} ${selectedModule.commands.size ? `**${selectedModule.commands.size}** command${selectedModule.commands.size > 1 ? "s" : ""}` : ''} ${(selectedModule.commands.size && selectedModule.events.size) ? 'and' : ''} ${selectedModule.events.size ? `**${selectedModule.events.size}** event${selectedModule.events.size > 1 ? "s" : ""}` : ''} in the \`${selectedModule.name}\` module`
             );
-        } else { //i really gotta clean this up ralSweat
-            if (operation.type == 'disabled' && selectedModule.required && !comOrEvName) {
+        } else
+        { //i really gotta clean this up ralSweat
+            if (operation.type == 'disabled' && selectedModule.required && !comOrEvName)
+            {
                 embedResult.setDescription(`You may not disable the \`${selectedModule.name}\` module`);
             }
-            else if (!selectedModule.enabled) {
+            else if (!selectedModule.enabled)
+            {
                 embedResult.setDescription(`The ${comOrEvName ? `\`${comOrEvName}\` ${kind}'s parent ` : ''}module \`${selectedModule.name}\` is currently disabled`);
-            } else if (operation.type != "reloaded") {
-                if (selectedModule.enabled == enable) {
+            } else if (operation.type != "reloaded")
+            {
+                if (selectedModule.enabled == enable)
+                {
                     embedResult.setDescription(`The \`${selectedModule.name}\` module is already ${operation.type}`);
                 }
-                if (comOrEvName) {
-                    if (comOrEv.enabled == enable) {
+                if (comOrEvName)
+                {
+                    if (comOrEv.enabled == enable)
+                    {
                         embedResult.setDescription(`The ${comOrEvName} ${kind} is already ${operation.type}`);
-                    } else if (comOrEvName && comOrEv.required) {
+                    } else if (comOrEvName && comOrEv.required)
+                    {
                         embedResult.setDescription(`You may not disable the \`${comOrEvName}\` ${kind}`);
                     } else embedResult.setDescription(`Unknown Error `);
                 }

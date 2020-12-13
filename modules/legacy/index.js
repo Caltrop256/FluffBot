@@ -5,5 +5,6 @@ module.exports.Info({
     name: 'legacy',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function (client) {
+module.exports.ModuleSpecificCode = function (client)
+{
 };

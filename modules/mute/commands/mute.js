@@ -15,7 +15,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MUTE_MEMBERS'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var user = client.getMember(args[0], message.guild, null);
         if (!user) return message.reply(`I couldn't find that user`)
@@ -27,10 +28,12 @@ module.exports = {
         var channelId = channel ? channel.id : null
 
         client.muteUser(client, user.id, message.author.id, Date.now() + time, Date.now(), message.guild, false, channelId)
-            .then(() => {
+            .then(() =>
+            {
                 message.react("✅");
             })
-            .catch(err => {
+            .catch(err =>
+            {
                 message.reply(err);
             });
     }

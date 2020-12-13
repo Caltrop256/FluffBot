@@ -13,12 +13,14 @@ module.exports = {
     },
     perms: [],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         const face = ['《', '「', '『', '【', '￥￥￥', '＄＄＄', '￡＄￥', '〔', '～～', '〈', '《'];
         const face2 = ['》', '」', '』', '】', '￥￥￥', '＄＄＄', '￥＄￡', '〕', '～～', '〉', '》'];
         const face3 = ['絶望', 'じゃがいも', 'てつびし', 'てんねんびし', 'くさぎ-る', 'ツ'];
 
-        const waveString = (string) => {
+        const waveString = (string) =>
+        {
             string = string.replace(/(?:a)/g, 'ａ');
             string = string.replace(/(?:A)/g, 'Ａ');
             string = string.replace(/(?:b)/g, 'ｂ');
@@ -101,7 +103,8 @@ module.exports = {
             return string;
         };
 
-        if (args.length) {
+        if (args.length)
+        {
             let uwu = waveString(args.join(" "));
             let uwuName = waveString(message.member.displayName)
 
@@ -114,8 +117,10 @@ module.exports = {
             message.channel.send(UwUEmbed);
             message.delete(100)
         }
-        if (!args.length) {
-            message.channel.fetchMessages({ limit: 20 }).then(messages => {
+        if (!args.length)
+        {
+            message.channel.fetchMessages({ limit: 20 }).then(messages =>
+            {
 
                 let filteredMessage = messages.filter(msg => !msg.content.toLowerCase().includes("wavefy")).filter(msg => !msg.author.bot).filter(msg => !msg.content.toLowerCase().includes("vapory"))
                 var firstMessage = filteredMessage.first()

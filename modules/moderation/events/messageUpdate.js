@@ -5,10 +5,13 @@ oldMessage    Message        The Message before the update
 newMessage    Message        The Message after the update    */
 
 module.exports = {
-    execute(client, oldMessage, newMessage) {
-        if ((['k', '🇰', '𝓚', 'ᴋ'].includes(newMessage.content.replace(/[^a-zA-Z🇰𝓚ᴋ]/g, '').toLowerCase())) || (/^([. ]+)$/.test(newMessage.content))) return newMessage.delete(1);
+    execute(client, oldMessage, newMessage)
+    {
+        if (oldMessage.channel.id == '730868950665265183')
+            return;
         var editedString = client.swearDetect(newMessage.content)
-        if (editedString.replaced) {
+        if (editedString.replaced)
+        {
             console.log(console.color.yellow(`[Swear Filter] [Text Message (edited)]`), ` "${newMessage.cleanContent}" => "${editedString.string}"`)
 
             if (newMessage.member.displayName.toString().length < 3) { var name = newMessage.author.username }
@@ -19,7 +22,8 @@ module.exports = {
 
             let eURL = ''
 
-            if (embeds.length > 0) {
+            if (embeds.length > 0)
+            {
 
                 if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                     eURL = embeds[0].thumbnail.url;
@@ -28,26 +32,31 @@ module.exports = {
                 else
                     eURL = embeds[0].url;
 
-            } else if (attachments.array().length > 0) {
+            } else if (attachments.array().length > 0)
+            {
                 const attARR = attachments.array();
                 eURL = attARR[0].url;
             }
 
             userImitate(newMessage)
 
-            async function userImitate(newMessage) {
+            async function userImitate(newMessage)
+            {
 
                 await newMessage.channel.createWebhook(name, newMessage.member.user.avatarURL)
                     .then(webhook => webhook.edit(name, newMessage.member.user.avatarURL))
 
-                await newMessage.channel.fetchWebhooks().then((webhooks) => {
-                    if (webhooks.filter(w => w.owner == client.user).array().length > 0) {
+                await newMessage.channel.fetchWebhooks().then((webhooks) =>
+                {
+                    if (webhooks.filter(w => w.owner == client.user).array().length > 0)
+                    {
 
                         var someoneHook = webhooks.filter(w => w.owner == client.user).first();
 
                         webhookSend(someoneHook)
 
-                        async function webhookSend(someoneHook) {
+                        async function webhookSend(someoneHook)
+                        {
                             var someoneHook = webhooks.filter(w => w.owner == client.user).first();
                             await someoneHook.send(editedString.string, { file: eURL, split: true });
                             someoneHook.delete(100)

@@ -14,7 +14,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
 
         var user = client.getMember(args.join(" "), message.guild, message.member);
         if (!user) return message.reply('Couldn\'t find that user.');

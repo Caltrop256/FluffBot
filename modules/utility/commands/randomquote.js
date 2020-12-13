@@ -18,7 +18,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
 
         var randMember = "any"
         var randChannel = client.channels.random()
@@ -27,19 +28,24 @@ module.exports = {
 
         var member = message.mentions.members.first()
 
-        if (!member) {
+        if (!member)
+        {
             var letterMatch = args.join(" ").match(/\b[\-a-zA-Z]+\b/gi)
             if (letterMatch !== null) member = client.getMember(letterMatch.join(), message.guild, message.member)
         }
         var quoteUser = member ? member.user.id : randMember
 
         var numberMatch = args.join(" ").match(/(?<=( |^))[0-9]+/gi)
-        if (numberMatch != null) {
-            if (numberMatch[0]) {
+        if (numberMatch != null)
+        {
+            if (numberMatch[0])
+            {
                 var minimumLength = numberMatch[0] && numberMatch[0] < 1500 ? parseInt(numberMatch[0]) : -1
-                if (numberMatch[1]) {
+                if (numberMatch[1])
+                {
                     var limit = numberMatch[1] && numberMatch[1] <= 50001 ? parseInt(numberMatch[1]) : 7000
-                    if (numberMatch[2]) {
+                    if (numberMatch[2])
+                    {
                         var beforeMessageID = numberMatch[2] ? numberMatch[2] : message.id
                         var beforeMessage = await channel.fetchMessage(beforeMessageId)
                         if (!beforeMessage) return message.reply(`\`${beforeMessageID}\` isn't a valid Message ID.`)
@@ -50,17 +56,19 @@ module.exports = {
 
         console.log(minimumLength, limit, beforeMessageID)
 
-        var forbiddenChannels = ['562328446445944872', '575985149368467466', '562338340918001684', '562328726738567168', '562338454395027469', '571770555343175719','592484818311446528']
-
-        for (var i = 0; i < forbiddenChannels.length; i++) {
-            if (channel.id.includes(forbiddenChannels[i])) {
+        var forbiddenChannels = ['562328246683697154', '562328446445944872', '575985149368467466', '562338340918001684', '562328726738567168', '562338454395027469', '571770555343175719', '592484818311446528']
+        for (var i = 0; i < forbiddenChannels.length; i++)
+        {
+            if (channel.id.includes(forbiddenChannels[i]))
+            {
                 return message.reply("Nice try.")
             }
         }
 
         lots_of_messages_getter(channel, limit)
 
-        async function lots_of_messages_getter(channel, limit) {
+        async function lots_of_messages_getter(channel, limit)
+        {
             var hrstart = process.hrtime()
 
             var updateAmt = 15
@@ -72,13 +80,16 @@ module.exports = {
 
             var updbar = ""
 
-            message.channel.send(client.scripts.getEmbed().setAuthor("Collecting Data\n").setDescription(`Please be patient...\n\`0%\` done\n\`\`\`\n[${updbar.padEnd(updateAmt, ".")}]\`\`\`\nETA: \`calculating\``).setColor(client.constants.perfectOrange.hex)).then(async message => {
+            message.channel.send(client.scripts.getEmbed().setAuthor("Collecting Data\n").setDescription(`Please be patient...\n\`0%\` done\n\`\`\`\n[${updbar.padEnd(updateAmt, ".")}]\`\`\`\nETA: \`calculating\``).setColor(client.constants.perfectOrange.hex)).then(async message =>
+            {
                 const sum_messages = [];
                 let last_id;
                 var start = Date.now()
-                while (true) {
+                while (true)
+                {
                     const options = { limit: 100, before: beforeMessageID };
-                    if (last_id) {
+                    if (last_id)
+                    {
                         options.before = last_id;
                     }
 
@@ -86,16 +97,19 @@ module.exports = {
                     sum_messages.push(...messages.array());
                     last_id = messages.last().id;
 
-                    if (messages.size != 100) {
+                    if (messages.size != 100)
+                    {
                         break;
                     }
-                    if (sum_messages.length >= Factor) {
+                    if (sum_messages.length >= Factor)
+                    {
                         cycles++
                         Factor += ogFactor
                         updbar += "="
                         message.edit(client.scripts.getEmbed().setAuthor(`Collecting Data`).setDescription(`Please be patient...\n\`${Math.round(sum_messages.length / limit * 100, 1)}%\` done\n\`\`\`\n[${updbar.padEnd(updateAmt, ".")}]\`\`\`\nETA: \`${client.time((Date.now() / cycles - start / cycles) * (updateAmt - cycles), true)}\``).setColor(client.constants.perfectOrange.hex))
                     }
-                    if (sum_messages.length >= limit) {
+                    if (sum_messages.length >= limit)
+                    {
                         break;
                     }
                 }
@@ -111,7 +125,8 @@ module.exports = {
 
                 let eURL = ''
 
-                if (embeds.length > 0) {
+                if (embeds.length > 0)
+                {
 
                     if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                         eURL = embeds[0].thumbnail.url;
@@ -120,7 +135,8 @@ module.exports = {
                     else
                         eURL = embeds[0].url;
 
-                } else if (attachments.array().length > 0) {
+                } else if (attachments.array().length > 0)
+                {
                     const attARR = attachments.array();
                     eURL = attARR[0].url;
                 }
@@ -133,7 +149,7 @@ module.exports = {
 
                 var messageinfoEmbed = client.scripts.getEmbed()
                     .setAuthor(randomMessage.author.tag, randomMessage.author.displayAvatarURL)
-                    .setThumbnail(randomMessage.member.user.avatarURL)
+                    .setThumbnail(randomMessage.author.avatarURL)
                     .setDescription(`\[[Jump to message](${messageLink})]`)
                     .addField("Content", `${smartTruncate(randomMessage.content, 2000) || "`No Message`"}`)
                     .setColor(message.member.displayHexColor)

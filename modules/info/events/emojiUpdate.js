@@ -5,7 +5,8 @@ oldEmoji     Emoji      The old emoji
 newEmoji     Emoji      The new emoji    */
 
 module.exports = {
-    async execute(client, oldEmoji, newEmoji) {
+    async execute(client, oldEmoji, newEmoji)
+    {
         const entry = await newEmoji.guild.fetchAuditLogs({ type: 'EMOJI_UPDATE' }).then(audit => audit.entries.first());
 
         var arr = [];

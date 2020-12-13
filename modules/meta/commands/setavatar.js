@@ -13,9 +13,11 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_GUILD'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
-        if (!args.length) {
+        if (!args.length)
+        {
             var ValidURL = client.user.avatarURL
 
             var AvatarCurrentEmbed = client.scripts.getEmbed()
@@ -27,12 +29,14 @@ module.exports = {
         }
 
         var imgURL = args[0]
-        if (imgURL.toString().endsWith(".jpeg") || imgURL.toString().endsWith(".jpg") || imgURL.toString().endsWith(".png") || imgURL.toString().endsWith(".gif") || imgURL.toString().endsWith(".gifv")) {
+        if (imgURL.toString().endsWith(".jpeg") || imgURL.toString().endsWith(".jpg") || imgURL.toString().endsWith(".png") || imgURL.toString().endsWith(".gif") || imgURL.toString().endsWith(".gifv"))
+        {
             var ValidURL = imgURL.toString()
         }
         if (!ValidURL) { return message.channel.send("Not a valid Image URL") }
 
-        if (ValidURL) {
+        if (ValidURL)
+        {
             client.user.setAvatar(`${ValidURL}`).catch(err => console.log(err));
 
             var AvatarUpdateEmbed = client.scripts.getEmbed()

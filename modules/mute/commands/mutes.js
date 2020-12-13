@@ -16,9 +16,11 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MUTE_MEMBERS'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var connection = client.scripts.getSQL();
-        connection.query(`SELECT * FROM mute;`, async (err, rows) => {
+        connection.query(`SELECT * FROM mute;`, async (err, rows) =>
+        {
             if (err) throw err;
 
             var leaderboardEmbed = new Discord.RichEmbed()
@@ -27,18 +29,21 @@ module.exports = {
                 .setColor(client.constants.green.hex)
 
 
-            await rows.forEach(row => {
+            await rows.forEach(row =>
+            {
                 var rowMember = message.guild.members.get(row.id)
                 var invokingMember = message.guild.members.get(row.invokinguser)
 
-                if (rowMember && invokingMember) {
+                if (rowMember && invokingMember)
+                {
                     leaderboardEmbed.addField(rowMember.user.tag, `${row.channel ? `Muted in ${client.channels.get(row.channel).toString()}` : 'Muted globally'}\n${invokingMember.id == rowMember.id ? 'Selfmute' : 'Muted by ' + invokingMember.toString()}\nDuration: \`${client.time(row.expiry - row.start, true)}\`\n Expires in: \`${client.time(row.expiry - Date.now(), true)}\``, true)
                 }
 
             })
 
             var user = message.author;
-            user.createDM().then(DM => {
+            user.createDM().then(DM =>
+            {
                 DM.send({ embed: leaderboardEmbed })
                     .then(() => message.reply("I have sent you a list of all muted members."))
                     .catch(() =>

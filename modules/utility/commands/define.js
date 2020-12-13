@@ -16,9 +16,11 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var user = message.member;
-        if (args.join(" ").toLowerCase().match(/beautiful/gi)) {
+        if (args.join(" ").toLowerCase().match(/beautiful/gi))
+        {
             var temp = client.getMember(args[1], message.guild, message.member);
             if (temp)
                 user = temp;
@@ -38,14 +40,16 @@ module.exports = {
 
             return message.channel.send({ embed: DefinitionEmbed });
         }
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) =>
+        {
 
-            urban(encodeURI(args.join(" "))).then(definition => {
-                var blacklist = ['black','penis','vagina','sex','breast','boob','titties','titty','black','nigga','nigger,','faggot','retard','anal','anus','cum','jizz','masturbat'];
-
-                if(blacklist.some((str) => definition.definition.includes(str) || definition.example.includes(str)))
-                    return message.react('🛑');
+            urban(encodeURI(args.join(" "))).then(definition =>
+            {
+                var blacklist = ['asshole', 'black', 'penis', 'vagina', 'sex', 'breast', 'boob', 'titties', 'titty', 'black', 'nigga', 'nigger', 'faggot', 'retard', 'anal', 'anus', 'cum', 'jizz', 'masturbat'];
                 if (!definition) return message.reply("couldn't find a definition for your word.")
+                if (blacklist.some((str) => definition.definition.toLowerCase().includes(str) || definition.example.toLowerCase().includes(str)))
+                    return message.react('🛑');
+
 
                 var LikeRatio = Math.round(definition.thumbsUp / (definition.thumbsUp + definition.thumbsDown) * 100)
                 if (isNaN(LikeRatio)) LikeRatio = 0
@@ -59,9 +63,10 @@ module.exports = {
                 message.channel.send({ embed: DefinitionEmbed }).then(() => resolve(true)).catch((err) =>
                     reject(err));
 
-            }).catch(error => {
+            }).catch(error =>
+            {
                 client.lastErr.push(error);
-                return message.channel.send("an error has occured while attempting to find a definition. please try again later.") 
+                return message.channel.send("an error has occured while attempting to find a definition. please try again later.")
             })
         });
     }

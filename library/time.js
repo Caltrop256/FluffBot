@@ -1,20 +1,25 @@
 'use strict';
 const matchSorter = require('match-sorter').default;
 
-function plural(str, count) {
+function plural(str, count)
+{
     return `${str}${count == 1 ? '' : 's'}`;
 };
 
-class Unit {
-    constructor(name, definition, aliases) {
+class Unit
+{
+    constructor(name, definition, aliases)
+    {
         this.name = name;
         this.definition = definition;
         this.aliases = aliases;
     };
 };
 
-class Time {
-    constructor(ms, opts) {
+class Time
+{
+    constructor(ms, opts)
+    {
         let tMS = ms;
         const round = ms > 0 ? Math.floor : Math.ceil;
 
@@ -37,10 +42,12 @@ class Time {
         let int = 0;
         let firstRelevant;
 
-        for (const t in this) {
+        for (const t in this)
+        {
             if (!isFinite(this[t])) this[t] = 0;
             let unit = units.find(u => u.name == t)
-            if (this[t] && (!firstRelevant || int < firstRelevant + opts.relevant)) {
+            if (this[t] && (!firstRelevant || int < firstRelevant + opts.relevant))
+            {
                 str += `${this[t]}${opts.verbose ? " " + plural(t, this[t]) : unit.aliases[0]}, `;
                 if (!firstRelevant) firstRelevant = int;
             };
@@ -49,10 +56,12 @@ class Time {
 
         this.ms = isFinite(tMS) ? tMS : Number.MAX_VALUE;
         this.str = str.replace(/, ([^,]*)$/, '').replace(/, ([^,]*)$/, ' and $1');
-        this.toString = function () {
+        this.toString = function ()
+        {
             return this.str;
         };
-        this.valueOf = function () {
+        this.valueOf = function ()
+        {
             return this.ms;
         }
     };
@@ -88,7 +97,8 @@ const units = [
  * 
  * @return {Time}
  */
-function convertStringToMs(str = '', verb = true, cl = null, strictMode = false) {
+function convertStringToMs(str = '', verb = true, cl = null, strictMode = false)
+{
     let verbose = !!verb
     let relevant = cl || 2;
     var opts = {
@@ -98,29 +108,35 @@ function convertStringToMs(str = '', verb = true, cl = null, strictMode = false)
     str = str.toLowerCase().replace(/[^a-z0-9.]+/gi, '');
     var ms = 0;
     var cycle = 0;
-    while (str.length) {
+    while (str.length)
+    {
 
         cycle++;
         if (cycle > 10) break;
 
         var sepArg = str.match(/[a-zæ]+|[0-9.\-]+/gi);
         if (!sepArg) return null;
-        if (sepArg.length == 1) {
+        if (sepArg.length == 1)
+        {
             if (strictMode) return null;
 
-            if (sepArg[0].toString().match(/[a-zæ]+/gi)) {
+            if (sepArg[0].toString().match(/[a-zæ]+/gi))
+            {
                 sepArg[1] = sepArg[0];
                 sepArg[0] = "1";
-            } else {
+            } else
+            {
                 sepArg[1] = "m";
             };
         };
         if (sepArg[1].match(/[^a-zæ]/gi) || sepArg[0].match(/[^0-9.\-]/g)) continue;
 
         var from = units.find(u => u.name == sepArg[1]) || units.find((u) => u.aliases.includes(sepArg[1]));
-        if (!from) {
+        if (!from)
+        {
             let uNames = [];
-            units.forEach(u => {
+            units.forEach(u =>
+            {
                 uNames.push(...[u.name, ...u.aliases]);
             });
             var matches = matchSorter(uNames, sepArg[1]);
@@ -141,7 +157,8 @@ function convertStringToMs(str = '', verb = true, cl = null, strictMode = false)
  * 
  * @return {Time} the time object, read the .str property for a string
  */
-var time = function (ms, verb = true, cl) {
+var time = function (ms, verb = true, cl)
+{
     let verbose = !!verb
     let relevant = cl || 2;
     var opts = {
@@ -152,6 +169,7 @@ var time = function (ms, verb = true, cl) {
 }
 var Obj = Object.create(Function.prototype);
 Obj.fromString = convertStringToMs;
+Obj.Class = Time;
 Object.setPrototypeOf(time, Obj);
 
 module.exports = time;

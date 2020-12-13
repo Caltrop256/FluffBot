@@ -5,7 +5,8 @@ channel        Channel         The channel the user started typing in
 user           User            The user that started typing    */
 
 module.exports = {
-    execute(client, channel, user) {
+    execute(client, channel, user)
+    {
         client.lastSeen(user, `Started typing in #${channel.name}`)
     }
 }

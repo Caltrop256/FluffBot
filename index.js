@@ -11,7 +11,8 @@ var main = new (forever.Monitor)('main.js', {
     minUptime: 2000,
     spinSleepTime: 1000
 });
-main.on('exit:code', function (code) {
+main.on('exit:code', function (code)
+{
     if (!code)
         return console.error('[Forever-Monitor] Main module restarting.');
     console.error('[Forever-Monitor] Main module forcefully shutting down.');
@@ -19,7 +20,8 @@ main.on('exit:code', function (code) {
 });
 main.start();
 var cleanExit = function () { main.stop(); };
-try {
+try
+{
     ['SIGTERM', 'SIGINT', 'SIGQUIT', 'SIGKILL', 'SIGHUP'].forEach((signal) => process.on(signal, cleanExit));
 }
 catch

@@ -13,7 +13,8 @@ module.exports = {
     },
     perms: ['DEV'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         if (!client.repl) client.repl = repl;
         if (client.replEnabled)
             return message.channel.send('REPL session already started.');
@@ -22,7 +23,8 @@ module.exports = {
             prompt: "TropBot>",
         });
         client.replServer.context.client = client;
-        client.replServer.on('exit', () => {
+        client.replServer.on('exit', () =>
+        {
             client.replEnabled = false;
             message.channel.send('REPL session ended.');
         });

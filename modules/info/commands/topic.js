@@ -13,7 +13,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var channel = client.getChannel(args[0], message.channel)
         if (!channel) channel = message.channel
 

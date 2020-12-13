@@ -13,15 +13,18 @@ module.exports = {
         duration: 120,
         maxUsers: 2
     },
-    perms: ['DEV'],
+    perms: ['ADMINISTRATOR'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         message.channel.send(new Discord.RichEmbed().setAuthor("Restarting...").setDescription("See you soon!").setFooter(new Date()).setColor(embedRed))
-            .then(function (message) {
+            .then(function (message)
+            {
                 message.react(":ralsleep:562354429093740544")
             }).then(msg => client.destroy())
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             console.log("--------------------\n[!] Restarting down TropBot (force restart) [!]")
             process.exit(0);
         }, 1000)

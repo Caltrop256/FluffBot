@@ -17,7 +17,8 @@ module.exports = {
    perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-   execute(client, args, message) {
+   execute(client, args, message)
+   {
       var connection = client.scripts.getSQL(false);
       var user = client.getMember(args.join(" "), message.guild, message.member)
       if (!user) return message.reply("Couldn't find that user.")
@@ -25,31 +26,39 @@ module.exports = {
       let arr = message.guild.members.array()
       arr.sort((a, b) => a.joinedAt - b.joinedAt);
 
-      for (let i = 0; i < arr.length; i++) {
-         if (arr[i].id == user.id) {
+      for (let i = 0; i < arr.length; i++)
+      {
+         if (arr[i].id == user.id)
+         {
             var joinPos = i + 1
 
             var userRoles = [];
-            user.roles.forEach(r => {
-               if (r.name !== "@everyone") {
+            user.roles.forEach(r =>
+            {
+               if (r.name !== "@everyone")
+               {
                   userRoles.push(r.toString())
                }
             });
 
             var DevicesArray = []
 
-            if (user.presence.clientStatus) {
+            if (user.presence.clientStatus)
+            {
                if (user.presence.clientStatus.web) DevicesArray.push(`\`Browser\``);
                if (user.presence.clientStatus.mobile) DevicesArray.push(`\`Mobile\``);
                if (user.presence.clientStatus.desktop) DevicesArray.push(`\`Desktop\``);
             } else DevicesArray.push(`\`Unknown\``)
 
-            connection.query(`SELECT * FROM coins WHERE id = '${user.id}'`, (err, rows) => {
+            connection.query(`SELECT * FROM coins WHERE id = '${user.id}'`, (err, rows) =>
+            {
                if (err) throw err;
                let sql;
-               if (rows.length < 1) {
+               if (rows.length < 1)
+               {
                   var uCoins = 0;
-               } else {
+               } else
+               {
                   var uCoins = rows[0].coins;
                }
                var userinfo = client.scripts.getEmbed()

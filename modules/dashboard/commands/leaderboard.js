@@ -24,7 +24,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
         /*var emojis = {
             upvote = client.emojis.get('562330233315917843'),
             downvote = client.emojis.get('562330227322388485'),
@@ -49,7 +50,7 @@ module.exports = {
         console.log(pgsTypes.indexOf(pgsType));
         var boardInfo = await client.getBoard(validArgs.indexOf(boardType), message.guild, pgsTypes.indexOf(pgsType));
         if (!boardInfo)
-            return message.channel.send(`The \`${type ? 'Economy' : 'Karma'}\` module is currently disabled`);
+            return message.channel.send(`The \`${boardIndex ? 'Karma' : 'Economy'}\` module is currently disabled`);
 
         var iconExt = message.guild.iconURL.includes('a_') ? 'gif' : 'png';
         var leaderboardEmbed = client.scripts.getEmbed()
@@ -60,7 +61,8 @@ module.exports = {
             .setThumbnail(message.guild.iconURL.replace(/jpg$/, iconExt));
 
         var leaderboardArray = [];
-        for (var entry of boardInfo.entries) {
+        for (var entry of boardInfo.entries)
+        {
             //var rowMember = message.guild.members.get(entry.entryObj.id);
 
             leaderboardArray.push(entry.toString());

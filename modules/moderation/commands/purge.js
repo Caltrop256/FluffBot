@@ -14,7 +14,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         if (!args.length)
             return message.channel.send(
                 client.scripts.getEmbed()
@@ -29,15 +30,18 @@ module.exports = {
 
         lots_of_messages_getter(message.channel, limit)
 
-        async function lots_of_messages_getter(channel, limit) {
+        async function lots_of_messages_getter(channel, limit)
+        {
             var hrstart = process.hrtime()
 
             var sum_messages = [];
             let last_id;
 
-            while (true) {
+            while (true)
+            {
                 const options = { limit: 100 };
-                if (last_id) {
+                if (last_id)
+                {
                     options.before = last_id;
                 } else options.before = message.id
 
@@ -45,10 +49,12 @@ module.exports = {
                 sum_messages.push(...messages.array());
                 last_id = messages.last().id;
 
-                if (messages.size != 100) {
+                if (messages.size != 100)
+                {
                     break;
                 }
-                if (sum_messages.length >= limit) {
+                if (sum_messages.length >= limit)
+                {
                     break;
                 }
             }
@@ -61,11 +67,14 @@ module.exports = {
 
             var mentionIndex = 0
             var mentionFilterInput = ''
-            message.mentions.users.forEach(u => {
-                if (mentionIndex == 0) {
+            message.mentions.users.forEach(u =>
+            {
+                if (mentionIndex == 0)
+                {
                     mentionFilterInput += `msg.author.id == ${u.id}`;
                     params = params + `Messages must be sent by user ${u}\n`
-                } else {
+                } else
+                {
                     mentionFilterInput += ` || msg.author.id == ${u.id}`;
                     params = params + `or by user ${u}\n`
                 }
@@ -73,34 +82,41 @@ module.exports = {
             })
             if (message.mentions.users.size > 0) eval(`toBeFiltered = toBeFiltered.filter(msg => ${mentionFilterInput})`)
             //if(message.mentions.users.size >= 1) {toBeFiltered = toBeFiltered.filter(msg => msg.author.id == message.mentions.users.first().id); params = params + `Only messages sent by ${message.mentions.users.first()}\n`}
-            if (message.content.includes("-h")) {
+            if (message.content.includes("-h"))
+            {
                 toBeFiltered = toBeFiltered.filter(msg => !msg.author.bot);
                 params = params + `Only Human messages\n`
             }
-            if (message.content.includes("-b")) {
+            if (message.content.includes("-b"))
+            {
                 toBeFiltered = toBeFiltered.filter(msg => msg.author.bot);
                 params = params + `Only Bot messages\n`
             }
-            if (message.content.includes("-a")) {
+            if (message.content.includes("-a"))
+            {
                 toBeFiltered = toBeFiltered.filter(msg => msg.attachments.array().length > 0);
                 params = params + `Only messages including attachments\n`
             }
-            if (message.content.includes("-e")) {
+            if (message.content.includes("-e"))
+            {
                 toBeFiltered = toBeFiltered.filter(msg => msg.embeds.length > 0);
                 params = params + `Only messages including embeds\n`
             }
-            if (message.content.includes("-t")) {
+            if (message.content.includes("-t"))
+            {
                 toBeFiltered = toBeFiltered.filter(msg => msg.content.length > 0);
                 params = params + `Only messages including text (ignores embeds or attachments)\n`
             }
 
             var includesFilter = message.content.toString().match(new RegExp(/(?<=").*(?=")/ig));
-            if (includesFilter !== null) {
+            if (includesFilter !== null)
+            {
                 toBeFiltered = toBeFiltered.filter(msg => msg.content.toLowerCase().includes(includesFilter[0].toLowerCase()));
                 params = params + `Only messages including "\`${includesFilter[0]}\`" \n`
             }
 
-            if (message.content.includes("-l")) {
+            if (message.content.includes("-l"))
+            {
                 toBeFiltered = toBeFiltered.filter(msg => msg.content.match(/(?:(?:https?|ftp|file):\/\/|www\.|ftp\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])/ig));
                 params = params + `Only messages including links\n`
             }
@@ -112,12 +128,15 @@ module.exports = {
 
             var step = 0
 
-            while (filteredMessages.length > 0) {
+            while (filteredMessages.length > 0)
+            {
                 let chunk = filteredMessages.splice(0, 100)
 
-                if (chunk.length >= 2 && chunk.length <= 100) {
+                if (chunk.length >= 2 && chunk.length <= 100)
+                {
                     step = step + 1
-                    message.channel.bulkDelete(chunk).then(messages => {
+                    message.channel.bulkDelete(chunk).then(messages =>
+                    {
                         console.log(messages.size + ' Deleted');
                     })
                 }
@@ -132,9 +151,11 @@ module.exports = {
 
             message.author.send({ embed: purgeEmbed })
 
-            if (filteredMessagesLength > 10) {
+            if (filteredMessagesLength > 10)
+            {
                 message.channel.setRateLimitPerUser(10)
-                setTimeout(() => {
+                setTimeout(() =>
+                {
                     message.channel.setRateLimitPerUser(0)
                 }, filteredMessagesLength * 1000);
             }

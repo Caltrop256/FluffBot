@@ -13,7 +13,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var debug = (args[0] == '-d');
 

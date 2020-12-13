@@ -16,7 +16,8 @@ module.exports = {
    perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-   execute(client, args, message) {
+   execute(client, args, message)
+   {
       var connection = client.scripts.getSQL(false);
 
       var guild = message.guild
@@ -25,7 +26,8 @@ module.exports = {
 
       var BoosterArray = []
 
-      BoosterRole.members.forEach(m => {
+      BoosterRole.members.forEach(m =>
+      {
          BoosterArray.push(m)
       })
 
@@ -45,8 +47,10 @@ module.exports = {
       var Browser = 0
       var Desktop = 0
 
-      guild.members.forEach(m => {
-         if (!m.user.bot) {
+      guild.members.forEach(m =>
+      {
+         if (!m.user.bot)
+         {
             Humans.push(m)
             JoinedAt.push(m.joinedTimestamp)
             AccountCreated.push(m.user.createdTimestamp)
@@ -57,12 +61,14 @@ module.exports = {
             if (m.presence.status == "offline") Offline.push(m)
             if (m.presence.status == "dnd") DND.push(m)
 
-            if (m.presence.clientStatus) {
+            if (m.presence.clientStatus)
+            {
                if (m.presence.clientStatus.web) Browser = Browser + 1
                if (m.presence.clientStatus.mobile) Mobile = Mobile + 1
                if (m.presence.clientStatus.desktop) Desktop = Desktop + 1
             }
-         } else {
+         } else
+         {
             Bots.push(m)
          }
       })
@@ -70,14 +76,16 @@ module.exports = {
       var VoiceChannels = [];
       var membersinVoice = 0
       var Categories = [];
-      guild.channels.forEach(c => {
+      guild.channels.forEach(c =>
+      {
          if (c.type == "text") TextChannels.push(c)
          if (c.type == "voice") { VoiceChannels.push(c); membersinVoice = membersinVoice + 1 }
          if (c.type == "category") Categories.push(c)
       })
 
       var CatText = ``
-      Categories.forEach(c => {
+      Categories.forEach(c =>
+      {
          CatText = CatText + `${c.name.replace(/[^A-Za-z0-9]+/g, '').toLowerCase()} - \`${c.children.size}\`\n`
       })
 
@@ -86,10 +94,17 @@ module.exports = {
 
       var GuildAgeString = client.time(now - guild.createdTimestamp, true).str;
 
-      connection.query(`SELECT SUM(coins) total FROM coins;`, (err, rows) => {
+      connection.query(`SELECT SUM(coins) total FROM coins;`, (err, rows) =>
+      {
          if (err) throw err;
 
          var TotalSum = rows[0].total
+
+         let ServerFeatures = guild.features;
+         let BoosterLevel = 0;
+         if (ServerFeatures.includes('VANITY_URL')) BoosterLevel = 3;
+         else if (ServerFeatures.includes('BANNER')) BoosterLevel = 2;
+         else if (ServerFeatures.includes('ANIMATED_ICON')) BoosterLevel = 1;
 
          var infoEmbed = client.scripts.getEmbed()
             .setAuthor(guild.name, guild.iconURL.replace(/jpg$/g, "gif"), guild.iconURL.replace(/jpg$/g, "gif"))
@@ -104,7 +119,7 @@ module.exports = {
             .addField(`Connection`, `**Appearance**:\nOnline: \`${Online.length}\`\nIdle: \`${Idle.length}\`\n Do not Disturb: \`${DND.length}\`\nInvisible: \`${Offline.length}\`\n**Connected Via**:\nDesktop: \`${Desktop}\`\nMobile: \`${Mobile}\`\nBrowser: \`${Browser}\``, true)
             .addField(`Channels`, `Textchannels: \`${TextChannels.length}\`\nVoicechannels: \`${VoiceChannels.length}\`\nCategories: \`${Categories.length}\`\nPeople in Voice: \`${membersinVoice}\``, true)
             .addField("Economy", `Money in Circulation: \`${numAbbr.abbreviate(TotalSum, 2)} ${client.cfg.curName}\``, true)
-            .addField(`Nitro Boosts`, `Boost Level: \`Level ${guild.verificationLevel - 1}\`\nFeatures: \`${guild.features.join(", ").replace(/, ([^,]*)$/, ' and $1')}\`\n**Boosters**: ${BoosterArray.join(", ").replace(/, ([^,]*)$/, ' and $1')}`, true)
+            .addField(`Nitro Boosts`, `Boost Level: \`Level ${BoosterLevel}\`\nFeatures: \`${ServerFeatures.join(", ").replace(/, ([^,]*)$/, ' and $1')}\`\n**Boosters**: ${BoosterArray.join(", ").replace(/, ([^,]*)$/, ' and $1')}`, true)
          message.channel.send({ embed: infoEmbed })
       })
 

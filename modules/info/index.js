@@ -5,12 +5,14 @@ module.exports.Info({
     name: 'info',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function (client) {
+module.exports.ModuleSpecificCode = function (client)
+{
     /**
      * @param  {User} user
      * @param  {String} activity
      */
-    function lastSeen(user, activity) {
+    function lastSeen(user, activity)
+    {
         if (!user) return
         if (user.user) user = user.user;
         var userOBJ = {
@@ -30,13 +32,16 @@ module.exports.ModuleSpecificCode = function (client) {
      * @param  {String} color
      * @param  {Boolean} priority
      */
-    function createLogEntry(client, target, title, additional, id, color, priority) {
+    function createLogEntry(client, target, title, additional, id, color, priority)
+    {
         var logChannel = client.channels.get(client.constants.miscLogs);
         var priorityLogChannel = client.channels.get(client.constants.modLogs);
 
         var info = '';
-        if (Array.isArray(additional)) {
-            additional.forEach(a => {
+        if (Array.isArray(additional))
+        {
+            additional.forEach(a =>
+            {
                 info += `-${a}\n`
             });
         };
@@ -48,24 +53,30 @@ module.exports.ModuleSpecificCode = function (client) {
             .setFooter(`ID: ${id}`)
             .setColor(color);
 
-        if (priority) {
+        if (priority)
+        {
             priorityLogChannel.send({ embed });
         } else logChannel.send({ embed });
     }
 
-    function lastSeenUpdate() {
+    function lastSeenUpdate()
+    {
         var connection = client.scripts.getSQL(true);
-        connection.query(`SELECT * FROM lastseen`, (err, rows) => {
+        connection.query(`SELECT * FROM lastseen`, (err, rows) =>
+        {
             if (err) throw err;
             var sql = ``;
             var escapeArr = [];
-            client.lastSeenCollec.forEach(user => {
+            client.lastSeenCollec.forEach(user =>
+            {
                 var matchrow = rows.find(r => r.id == user.id)
-                if (!matchrow) {
+                if (!matchrow)
+                {
                     sql += `INSERT INTO lastseen (id, activity, date, tag) VALUES ('${user.id}', ?, ${user.date}, ?); `;
                     escapeArr.push(user.activity);
                     escapeArr.push(user.tag);
-                } else {
+                } else
+                {
                     sql += `UPDATE lastseen SET activity = ?, date = ${user.date}, tag = ? WHERE id = '${user.id}'; `;
                     escapeArr.push(user.activity);
                     escapeArr.push(user.tag);
@@ -75,15 +86,19 @@ module.exports.ModuleSpecificCode = function (client) {
         });
     };
 
-    function inviteUpdate() {
-        client.guilds.forEach(g => {
-            g.fetchInvites().then(guildInvites => {
+    function inviteUpdate()
+    {
+        client.guilds.forEach(g =>
+        {
+            g.fetchInvites().then(guildInvites =>
+            {
                 client.invites[g.id] = guildInvites;
             });
         });
     };
 
-    function botStreamInfoUpdate() {
+    function botStreamInfoUpdate()
+    {
         if (!client.user) return;
         client.user.setStatus('available')
         client.user.setPresence({

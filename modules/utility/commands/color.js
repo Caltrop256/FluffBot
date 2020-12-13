@@ -20,30 +20,35 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
 
         var colormap = {};
         var colorNames = []
-        rawcolorlist.colors.forEach(color => {
+        rawcolorlist.colors.forEach(color =>
+        {
             colormap[color.name] = `${color.hex}`
             colorNames.push(color.name)
         })
         colormap[`Perfect Orange`] = `FF7D00`
         colorNames.push(`Perfect Orange`)
 
-        function color(hex, color_map) {
+        function color(hex, color_map)
+        {
             color_map = color_map;
             var rgb = h2r(hex);
             var min = Infinity;
             var closest = null;
 
-            for (var color in color_map) {
+            for (var color in color_map)
+            {
                 var rgb2 = h2r(color_map[color]);
 
                 var dist = Math.pow((rgb.r - rgb2.r) * .299, 2) +
                     Math.pow((rgb.g - rgb2.g) * .587, 2) +
                     Math.pow((rgb.b - rgb2.b) * .114, 2);
-                if (dist <= min) {
+                if (dist <= min)
+                {
                     closest = color;
                     min = dist;
                 };
@@ -51,7 +56,8 @@ module.exports = {
             return closest;
         };
 
-        function h2r(hex) {
+        function h2r(hex)
+        {
             var h2rs = {};
             hex = '#' == hex[0] ? hex.slice(1) : hex;
             if (h2rs[hex]) return h2rs[hex];
@@ -62,21 +68,27 @@ module.exports = {
             return h2rs[hex] = { r: r, g: g, b: b };
         };
 
-        if (args.length > 0) {
-            if (!args.join(" ").match(/^#/i)) {
+        if (args.length > 0)
+        {
+            if (!args.join(" ").match(/^#/i))
+            {
                 var StringInput = args.join(" ")
                 var Matches = matchSorter(colorNames, StringInput)
-                if (Matches[0]) {
+                if (Matches[0])
+                {
                     var input = colormap[Matches[0]]
-                } else {
+                } else
+                {
                     return message.reply(`Couldn't find \`${StringInput}\``)
                 }
-            } else {
+            } else
+            {
                 var input = args[0];
             }
         } else input = '#' + client.scripts.randomColor();
         var preparedCode = input;
-        while (preparedCode.length < 7) {
+        while (preparedCode.length < 7)
+        {
             preparedCode += `f`
         }
         preparedCode = preparedCode.substring(0, 7).toUpperCase()
@@ -90,10 +102,12 @@ module.exports = {
                 targetColor: '#BE1931',
                 replaceColor: preparedCode
             }
-        }, (err, jimpObject) => {
+        }, (err, jimpObject) =>
+        {
             if (err) return console.error(err)
             var ID = Math.round(Math.random() * 10000)
-            jimpObject.write(process.env.tropbot + `/assets/heart${ID}.png`, (err) => {
+            jimpObject.write(process.env.tropbot + `/assets/heart${ID}.png`, (err) =>
+            {
                 if (err) return console.error(err);
                 const attachment = new Discord.Attachment(process.env.tropbot + `/assets/heart${ID}.png`, `heart${ID}.png`);
 
@@ -104,8 +118,10 @@ module.exports = {
                     .attachFile(attachment)
                     .setImage(`attachment://heart${ID}.png`);
 
-                message.channel.send({ embed: colorEmbed }).then(() => {
-                    fs.unlink(process.env.tropbot + `/assets/heart${ID}.png`, (err) => {
+                message.channel.send({ embed: colorEmbed }).then(() =>
+                {
+                    fs.unlink(process.env.tropbot + `/assets/heart${ID}.png`, (err) =>
+                    {
                         if (err) return console.error(err);
                         console.log(`heart${ID}.png was deleted`);
                     });

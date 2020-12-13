@@ -7,8 +7,10 @@ module.exports.Info({
     desc: ''
 });
 
-class warn {
-    constructor(id, user, reason, active, mod, expiry, start, guild, level) {
+class warn
+{
+    constructor(id, user, reason, active, mod, expiry, start, guild, level)
+    {
         this.id = id;
         this.userId = user;
         this.reason = reason;
@@ -21,10 +23,13 @@ class warn {
     };
 };
 
-class warnInfo {
-    constructor(rows) {
+class warnInfo
+{
+    constructor(rows)
+    {
         this.warns = [];
-        for (let i = 0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++)
+        {
             this.warns.push(new warn(
                 rows[i].warnid,
                 rows[i].userid,
@@ -43,25 +48,33 @@ class warnInfo {
     };
 };
 
-module.exports.ModuleSpecificCode = function (client) {
-    function getWarnEntries(userId, onlyActive) {
-        return new Promise((resolve, reject) => {
+module.exports.ModuleSpecificCode = function (client)
+{
+    function getWarnEntries(userId, onlyActive)
+    {
+        return new Promise((resolve, reject) =>
+        {
             var connection = client.scripts.getSQL(false);
-            connection.query(`SELECT * FROM warn WHERE userid = '${userId}'${!!onlyActive ? ` AND active = 1` : ''};`, (err, rows) => {
+            connection.query(`SELECT * FROM warn WHERE userid = '${userId}'${!!onlyActive ? ` AND active = 1` : ''};`, (err, rows) =>
+            {
                 if (err) return reject(err);
                 return resolve(new warnInfo(rows));
             });
         });
     };
-    function warnUser(userId, modId, guildId, reason = 'No reason provided', start = Date.now()) {
-        return new Promise((resolve, reject) => {
+    function warnUser(userId, modId, guildId, reason = 'No reason provided', start = Date.now())
+    {
+        return new Promise((resolve, reject) =>
+        {
             const ExpireConstant = 1209600000
             var connection = client.scripts.getSQL(false);
-            client.getWarnEntries(userId, false).then(w => {
+            client.getWarnEntries(userId, false).then(w =>
+            {
                 let idArr = [];
                 w.warns.forEach(warn => idArr.push(Math.abs(warn.id)));
                 var randomNumber = Math.floor(Math.random() * 10000);
-                while (idArr.includes(randomNumber)) {
+                while (idArr.includes(randomNumber))
+                {
                     randomNumber = Math.floor(Math.random() * 10000);
                 };
 
@@ -69,7 +82,8 @@ module.exports.ModuleSpecificCode = function (client) {
                 VALUES ('${userId}', ?, ${1}, '${modId}',\
                 ${start + ExpireConstant}, ${start}, '${guildId}', ${w.warnLevel + 1})`
 
-                connection.query(sql, [reason], async (err, rows) => {
+                connection.query(sql, [reason], async (err, rows) =>
+                {
                     if (err) return reject(err);
                     var uInfo = await client.getWarnEntries(userId, false);
 
@@ -90,18 +104,23 @@ module.exports.ModuleSpecificCode = function (client) {
                         .setTimestamp()
                         .setColor(client.constants.red.hex);
 
-                    if (uInfo.warnLevel <= 2) {
+                    if (uInfo.warnLevel <= 2)
+                    {
                         //
-                    } else if (uInfo.warnLevel == 3) {
+                    } else if (uInfo.warnLevel == 3)
+                    {
                         embed.addField('Additional Punishment', '1 hour mute', true);
                         client.muteUser(client, userId, modId, Date.now() + 3600000, Date.now(), guild);
-                    } else if (uInfo.warnlevel == 4) {
+                    } else if (uInfo.warnlevel == 4)
+                    {
                         embed.addField('Additional Punishment', '1 day mute', true);
                         client.muteUser(client, userId, modId, Date.now() + 86400000, Date.now(), guild);
-                    } else if (uInfo.warnLevel == 5) {
+                    } else if (uInfo.warnLevel == 5)
+                    {
                         embed.addField('Additional Punishment', '1 week mute', true);
                         client.muteUser(client, userId, modId, Date.now() + 604800000, Date.now(), guild);
-                    } else if (uInfo.warnLevel >= 6) {
+                    } else if (uInfo.warnLevel >= 6)
+                    {
                         embed.addField('Additional Punishment', 'Permanent ban', true);
                         client.guilds.get(guild).member(user).ban()
                     };
@@ -117,17 +136,25 @@ module.exports.ModuleSpecificCode = function (client) {
             });
         });
     };
-    function warnCooldownCheck() {
+    function warnCooldownCheck()
+    {
         var connection = client.scripts.getSQL(false);
-        connection.query(`SELECT * FROM warn WHERE active = 1`, (err, rows) => {
+        connection.query(`SELECT * FROM warn WHERE active = 1`, (err, rows) =>
+        {
             if (err) console.error(err);
-            if (!rows) {
+            if (!rows)
+            {
                 return
-            } else {
-                rows.forEach(row => {
-                    if (Date.now() > row.expiry && client.status === Discord.Constants.Status.READY) {
-                        connection.query(`UPDATE warn SET warnid = ${-Math.abs(row.warnid)}, active = ${0} WHERE warnid = ${row.warnid} AND userid = '${row.userid}'`, () => {
-                            client.getWarnEntries(row.userid, false).then(async w => {
+            } else
+            {
+                rows.forEach(row =>
+                {
+                    if (Date.now() > row.expiry && client.status === Discord.Constants.Status.READY)
+                    {
+                        connection.query(`UPDATE warn SET warnid = ${-Math.abs(row.warnid)}, active = ${0} WHERE warnid = ${row.warnid} AND userid = '${row.userid}'`, () =>
+                        {
+                            client.getWarnEntries(row.userid, false).then(async w =>
+                            {
                                 var user = await client.fetchUser(row.userid, true);
                                 var embed = client.scripts.getEmbed()
                                     .setAuthor(`A warn has expired`)

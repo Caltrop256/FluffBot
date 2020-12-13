@@ -5,7 +5,8 @@ oldChannel       Channel     The channel before the update
 newChannel       Channel     The channel after the update    */
 
 module.exports = {
-    async execute(client, oldChannel, newChannel) {
+    async execute(client, oldChannel, newChannel)
+    {
         if (!newChannel.guild) return;
         const entry = await newChannel.guild.fetchAuditLogs({ type: 'CHANNEL_UPDATE' }).then(audit => audit.entries.first());
 

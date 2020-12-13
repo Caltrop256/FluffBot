@@ -2,8 +2,10 @@ const stringify = require('json-stringify-safe');
 const util = require("util");
 const WebSocket = require('ws');
 const Module = require('module');
-class Packet {
-    constructor(jsonString) {
+class Packet
+{
+    constructor(jsonString)
+    {
         var obj = JSON.parse(jsonString);
         this.type = obj.type;
         this.data = obj.data;
@@ -14,25 +16,31 @@ module.exports = {
     hideParent: true,
     hideClient: true,
     maxCollection: 250,
-    init(client) {
+    init(client)
+    {
         this.client = client;
 
         this.wss = new WebSocket.Server({ port: 6969 });
-        this.wss.on('connection', function connection(ws) {
+        this.wss.on('connection', function connection(ws)
+        {
             if (this.isReady)
                 this.send(ws, 'info', 'ready');
-            ws.on('message', function incoming(message) {
+            ws.on('message', function incoming(message)
+            {
                 if (!this.isReady)
                     return send(ws, 'info', 'not ready');
-                try {
+                try
+                {
                     var packetObj = new Packet(message);
-                    switch (packetObj.type) {
+                    switch (packetObj.type)
+                    {
                         case 'eval':
                             {
 
                                 var objList = client.scripts.getCollection();
                                 console.log('test2');
-                                var stringifyReplace = function (key, value) {
+                                var stringifyReplace = function (key, value)
+                                {
                                     if (value === null)
                                         return value;
                                     else if (value === undefined)
@@ -50,18 +58,21 @@ module.exports = {
 
                                     if (typeof value === 'function')
                                         return (value.name || key || result.name) ? `[Function: ${value.name || key || result.name}]` : '[Anonymous Function]';
-                                    else if (typeof value == 'number') {
+                                    else if (typeof value == 'number')
+                                    {
                                         if (isNaN(value))
                                             return 'NaN';
                                         else if (value === Infinity)
                                             return 'Infinity';
-                                    } else {
+                                    } else
+                                    {
                                         if (fixedVal !== value)
                                             return fixedVal;
                                     }
                                     return value;
                                 }.bind(this);
-                                var replaceSpecial = function (value) {
+                                var replaceSpecial = function (value)
+                                {
                                     if (value instanceof Map)
                                         if ((result === value) || (Object.values(result).includes(value) && (value.size <= this.maxCollection)))
                                             return Array.from(value).reduce((acc, [key, val]) => Object.assign(acc, {
@@ -73,7 +84,8 @@ module.exports = {
                                         return util.inspect(value)
                                     else if (value instanceof Set)
                                         return Array.from(value);
-                                    else if (value instanceof Module) {
+                                    else if (value instanceof Module)
+                                    {
                                         var modValue = { ...value };
                                         modValue.parent = !!value.parent;
                                         modValue.children = value.children.length;
@@ -83,21 +95,26 @@ module.exports = {
                                     else
                                         return value;
                                 }.bind(this);
-                                var checkParent = function (key, value) {
+                                var checkParent = function (key, value)
+                                {
                                     if (!Object.entries(result).some(arr => ((arr[0] == key) && (arr[1] == value)))) return false;
                                     return Object.values(value).includes(result)
                                     //return Object.values(value).some(val => ((val !== null) && (typeof val == 'object')) && Object.values(val).includes(result))
                                 }
-                                var stringifyCircular = function (key, value) {
+                                var stringifyCircular = function (key, value)
+                                {
                                     return `[(${key})]`;
                                 };
-                                var log = function () {
+                                var log = function ()
+                                {
                                     var args = arguments.length ? ((arguments.length === 1) ? arguments[0] : arguments) : undefined
                                     result = args;
                                     this.send(ws, 'log', stringify(args, stringifyReplace, 2, stringifyCircular));
                                 }.bind(this);
-                                var setCommandMessage = function (url) {
-                                    client.scripts.getMessageFromLink(client, url).then(msg => {
+                                var setCommandMessage = function (url)
+                                {
+                                    client.scripts.getMessageFromLink(client, url).then(msg =>
+                                    {
                                         log(msg);
                                         msg.delete = () => { log('Tried to delete command message') };
                                         client.commandMessage = msg;
@@ -105,7 +122,8 @@ module.exports = {
                                         log(err)
                                     );
                                 }
-                                var runCommand = function (commandName, args) {
+                                var runCommand = function (commandName, args)
+                                {
                                     if (!client.commandMessage) return false;
                                     if (typeof commandName !== 'string') return false;
                                     if (!(args instanceof Array))
@@ -116,7 +134,8 @@ module.exports = {
                                         else
                                             return false
 
-                                    for ([name, mod] of client.modules) {
+                                    for ([name, mod] of client.modules)
+                                    {
                                         if ((command = mod.GetComOrEv(commandName)) && command.name)
                                             return command.execute(client, args, client.commandMessage);
                                     }
@@ -130,7 +149,8 @@ module.exports = {
                             break;
                         case 'command':
                             {
-                                switch (packetObj.data) {
+                                switch (packetObj.data)
+                                {
                                     case 'restart':
                                         {
                                             this.broadcast('restart', { hideClient: this.hideClient, hideParent: this.hideParent, maxCollection: this.maxCollection })
@@ -155,11 +175,14 @@ module.exports = {
                             break;
                         case 'intellisense':
                             {
-                                function getObj(baseObj, objStr) {
-                                    try {
+                                function getObj(baseObj, objStr)
+                                {
+                                    try
+                                    {
                                         var objSplit = objStr.split('.')
                                         var currentObj = baseObj;
-                                        for (i = 0; i < objSplit.length; i++) {
+                                        for (i = 0; i < objSplit.length; i++)
+                                        {
                                             currentObj = currentObj[objSplit[i]];
                                         }
                                         return currentObj;
@@ -189,7 +212,8 @@ module.exports = {
                             }
                             break;
                     }
-                } catch (err) {
+                } catch (err)
+                {
                     if (err)
                         console.error(err.stack || err);
                     this.send(ws, 'error', JSON.stringify(err.toString()));
@@ -198,25 +222,32 @@ module.exports = {
 
         }.bind(this));
     },
-    stop(cb = (err) => { }) {
-        this.wss.clients.forEach((client) => {
+    stop(cb = (err) => { })
+    {
+        this.wss.clients.forEach((client) =>
+        {
             client.close(1012);
         })
         this.wss.close(cb);
     },
-    restart(client) {
-        this.stop((err) => {
+    restart(client)
+    {
+        this.stop((err) =>
+        {
             if (err)
                 console.log(`[socket] ${err}`);
             client.startREPLServer();
         });
     },
-    broadcast(type, info) {
-        this.wss.clients.forEach((client) => {
+    broadcast(type, info)
+    {
+        this.wss.clients.forEach((client) =>
+        {
             this.send(client, type, info);
         })
     },
-    send(ws, type, data) {
+    send(ws, type, data)
+    {
         ws.send(JSON.stringify({ type: type, data: data }));
     }
 }

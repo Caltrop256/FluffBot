@@ -13,11 +13,13 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_ROLES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var role = client.getRole(client, args.join(" "), message.guild);
         if (!role) return message.reply("Couldn't find role.");
 
-        if (role.mentionable == false) {
+        if (role.mentionable == false)
+        {
             role.setMentionable(true, `Command by ${message.author.username}`)
             var enabledEmbed = client.scripts.getEmbed()
                 .setAuthor(`Mentioning enabled`, message.author.avatarURL, message.author.avatarURL)
@@ -26,7 +28,8 @@ module.exports = {
                 .setTimestamp();
             return message.channel.send({ embed: enabledEmbed })
         }
-        if (role.mentionable == true) {
+        if (role.mentionable == true)
+        {
             role.setMentionable(false, `Command by ${message.author.username}`)
             var DisabledEmbed = client.scripts.getEmbed()
                 .setAuthor(`Mentioning disabled`, message.author.avatarURL, message.author.avatarURL)

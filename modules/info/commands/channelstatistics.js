@@ -13,7 +13,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var specifiedChannel = client.getChannel(args[0], message.channel)
         if (!specifiedChannel) return message.reply("Couldn't locate that channel.")
@@ -24,7 +25,8 @@ module.exports = {
 
         messageFetcher3000(specifiedChannel, limit)
 
-        async function messageFetcher3000(specifiedChannel, limit) {
+        async function messageFetcher3000(specifiedChannel, limit)
+        {
             var hrstart = process.hrtime()
 
             var waitpls = client.scripts.getEmbed()
@@ -38,9 +40,11 @@ module.exports = {
             const sum_messages = [];
             let last_id;
 
-            while (true) {
+            while (true)
+            {
                 const options = { limit: 100, before: message.id };
-                if (last_id) {
+                if (last_id)
+                {
                     options.before = last_id;
                 }
 
@@ -48,10 +52,12 @@ module.exports = {
                 sum_messages.push(...messages.array());
                 last_id = messages.last().id;
 
-                if (messages.size != 100) {
+                if (messages.size != 100)
+                {
                     break;
                 }
-                if (sum_messages.length > limit) {
+                if (sum_messages.length > limit)
+                {
                     break;
                 }
             }
@@ -69,13 +75,15 @@ module.exports = {
 
             var uncleanImagesArray = []
 
-            sum_messages.forEach(m => {
+            sum_messages.forEach(m =>
+            {
                 timestampArray.push(m.createdTimestamp)
                 timestampArrayB.push(m.createdTimestamp)
 
                 LengthArray.push(m.content.length)
 
-                if (m.member !== null) {
+                if (m.member !== null)
+                {
                     MemberArray.push(m.member)
                     memberAccountAgeArray.push(m.member.user.createdTimestamp)
                     memberjoinedDateArray.push(m.member.joinedTimestamp)
@@ -86,7 +94,8 @@ module.exports = {
 
                     let eURL = ''
 
-                    if (embeds.length > 0) {
+                    if (embeds.length > 0)
+                    {
 
                         if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                             eURL = embeds[0].thumbnail.url;
@@ -95,7 +104,8 @@ module.exports = {
                         else
                             eURL = embeds[0].url;
 
-                    } else if (attachments.array().length > 0) {
+                    } else if (attachments.array().length > 0)
+                    {
                         const attARR = attachments.array();
                         eURL = attARR[0].url;
                     }
@@ -104,18 +114,21 @@ module.exports = {
                 }
             })
 
-            var UniqueMemberArray = MemberArray.filter(function (item, pos, self) {
+            var UniqueMemberArray = MemberArray.filter(function (item, pos, self)
+            {
                 return self.indexOf(item) == pos;
             })
 
-            var ImagesArray = uncleanImagesArray.filter(function (item, pos, self) {
+            var ImagesArray = uncleanImagesArray.filter(function (item, pos, self)
+            {
                 return self.indexOf(item) == pos;
             })
 
             timestampArrayB.shift()
             var timestampArrayReduced = []
 
-            for (var i = 0; i <= timestampArrayB.length - 1; i++) {
+            for (var i = 0; i <= timestampArrayB.length - 1; i++)
+            {
                 timestampArrayReduced.push(timestampArray[i] - timestampArrayB[i]);
             }
 
@@ -155,7 +168,8 @@ module.exports = {
 
             var hrend = process.hrtime(hrstart)
 
-            function numComma(x) {
+            function numComma(x)
+            {
                 var parts = x.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 return parts.join(".");

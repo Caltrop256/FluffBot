@@ -15,7 +15,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         let time = client.time.fromString(args[0]).ms;
         if (!time) return message.reply("No time args received.")
@@ -25,11 +26,13 @@ module.exports = {
         var channelId = channel ? channel.id : null
 
         client.muteUser(client, message.author.id, message.author.id, Date.now() + time, Date.now(), message.guild, true, channelId)
-            .then(() => {
+            .then(() =>
+            {
                 message.react("✅");
                 message.channel.send(`You have been muted for ${client.time(time, true)}\nSee you soon <:neon_pink_heart:608779835090927661>`)
             })
-            .catch(err => {
+            .catch(err =>
+            {
                 message.reply(err);
             });
     }

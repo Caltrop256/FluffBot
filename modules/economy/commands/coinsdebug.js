@@ -33,7 +33,8 @@ module.exports = {
     },
     perms: ['DEV'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
 
         let receivingUser = client.getMember(args[0], message.guild, message.member);

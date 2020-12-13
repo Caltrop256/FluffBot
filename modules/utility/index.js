@@ -7,23 +7,30 @@ module.exports.Info({
 });
 const Discord = require('discord.js')
 
-module.exports.ModuleSpecificCode = function (client) {
+module.exports.ModuleSpecificCode = function (client)
+{
 
-    function reminderCheck() {
+    function reminderCheck()
+    {
         var connection = client.scripts.getSQL(false);
-        connection.query(`SELECT * FROM remindme`, (err, rows) => {
+        connection.query(`SELECT * FROM remindme`, (err, rows) =>
+        {
             if (err) throw err;
             let sql;
-            if (rows.length < 1) {
+            if (rows.length < 1)
+            {
                 return
-            } else {
-                rows.forEach(row => {
-                    if (Date.now() > row.expiry && client.status === Discord.Constants.Status.READY) {
+            } else
+            {
+                rows.forEach(row =>
+                {
+                    if (Date.now() > row.expiry && client.status === Discord.Constants.Status.READY)
+                    {
                         sql = `DELETE FROM remindme WHERE ID = '${row.ID}';`
 
                         var reminderChannel = client.channels.get(row.channelid);
                         var user = client.users.get(row.userid);
-                        if(user && reminderChannel && channel.guild.members.has(user.id))
+                        if (user && reminderChannel && reminderChannel.guild.members.has(user.id))
                         {
                             var reminderEmbed = client.scripts.getEmbed()
                                 .setAuthor(`Reminder!`, user.displayAvatarURL, user.displayAvatarURL)
@@ -34,7 +41,7 @@ module.exports.ModuleSpecificCode = function (client) {
 
                             reminderChannel.send(user, { embed: reminderEmbed })
                         }
-                        
+
                         connection.query(sql, console.log)
 
                     }

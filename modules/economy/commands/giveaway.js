@@ -1,3 +1,8 @@
+const customGiveUnicode = new Map([
+    [413, '<:howHigh:663360611782230016>'],
+    [420, '<:ralGasp:654014647460036619>'],
+    [69, '😏']
+]);
 module.exports = {
     name: 'giveaway',
     aliases: ['distribute', 'share'],
@@ -11,7 +16,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
         var giverID = message.author.id;
 
         var amountArg = parseInt(args[0]);
@@ -35,7 +41,8 @@ module.exports = {
         var randUsers = new Array(amountArg);
         var arr = filteredUsers.array().slice();
         var uniqueUsers = [];
-        for (let i = 0; i < amountArg; i++) {
+        for (let i = 0; i < amountArg; i++)
+        {
             if (uniqueUsers.length === userLimit)
                 var arrItem = uniqueUsers[Math.floor(Math.random() * uniqueUsers.length)];
             else
@@ -47,44 +54,47 @@ module.exports = {
         //smh
         var beforeCoins = client.scripts.getCollection();
         var userCoins = client.scripts.getCollection();
-        for (var member of randUsers) {
+        for (var member of randUsers)
+        {
             var coins = userCoins.get(member.user.id);
-            if (coins === undefined) {
+            if (coins === undefined)
+            {
                 coins = (await client.getMoney(member.user.id)).coins || 0;
                 beforeCoins.set(member.user.id, coins);
             }
             userCoins.set(member.user.id, ++coins);
         }
+        await client.createConfirmation(message, {
+            title: 'Are you sure',
+            description: `You are about to give ${client.scripts.numComma(parseInt(amountArg))}${client.cfg.curName} to  ${userCoins.size} users!`,//`Are you sure you want to give away  **${amountArg} gaybux** to these ${userCoins.size} pps?`,
+            timeout: client.time(60000), // can be Number|String|client.time
+            color: client.constants.perfectOrange, // can be Number|String|client.constants.Color
+            deleteMessage: false
+        }).then(async (hasConfirmed) =>
+        {
+            if (!hasConfirmed)
+                return;
+            await client.updateMoney(giverID, userMoni, true);
+            for (var [userID, moneyInfo] of userCoins)
+            {
+                await client.updateMoney(userID, moneyInfo, true);
+                console.log(`${client.users.get(userID).tag}: ${beforeCoins.get(userID)}-${userCoins.get(userID)}`);
+            }
+            var giveUnicode = customGiveUnicode.get(amountArg) || '💸';
+            var GiveEmbed = client.scripts.getEmbed()
+                .setAuthor(message.member.displayName, message.author.avatarURL, message.author.avatarURL)
+                .addField(giveUnicode, `Gave \`${client.scripts.numComma(parseInt(amountArg))}${((amountArg !== 69) || '') && client.cfg.curName}\` to **${userCoins.size}** users`)
+                .setColor("#00FF00")
 
-        var msg = await message.channel.send(client.scripts.getEmbed().setAuthor('ai mate u sur?', message.author.displayAvatarURL).setDescription(`yo, you sure u wanna give your **${amountArg} gaybux** to these ${userCoins.size} pps?`).setColor(client.constants.perfectOrange.hex).setTimestamp())
-        var emojis = ['✅', '❎']
-        await msg.react(emojis[0]);
-        await msg.react(emojis[1]);
-        const filter = (reaction, user) => {
-            return user.id != msg.author.id;
-        };
-        var collector = msg.createReactionCollector(filter, { time: 60000 });
-        collector.on('collect', async reaction => {
-            if (!emojis.includes(reaction.emoji.name)) return msg.reactions.last().remove(reaction.users.first().id);
-            for (var u of reaction.users) {
-                if ((u[0] != giverID) && (u[0] != msg.author.id)) {
-                    return reaction.remove(u[0]);
-                };
-            };
-            collector.stop();
-            if (reaction.emoji.name == emojis[0]) {
-                await client.updateMoney(giverID, userMoni, true);
-                for (var [userID, moneyInfo] of userCoins) {
-                    await client.updateMoney(userID, moneyInfo, true);
-                    console.log(`${client.users.get(userID).tag}: ${beforeCoins.get(userID)}-${userCoins.get(userID)}`);
-                }
-                message.channel.send('ay epic money gibeaway c:');
-            } else {
-                return message.channel.send('aw :c');
-            };
-        });
-        collector.on('end', () => {
-            msg.delete();
+            message.channel.send({ embed: GiveEmbed })
+        }).catch((err) =>
+        {
+            if (!err)
+                return;
+            message.channel.send("An Error Has Occured. Please DM a developer to look into this");
+            client.lastErr.push(err);
+            console.log(err);
+
         });
     }
 }

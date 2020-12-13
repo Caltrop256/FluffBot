@@ -13,13 +13,16 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
-        if (args.length >= 3) {
+        if (args.length >= 3)
+        {
             var amt = parseFloat(args[0]);
             var cur1 = (args[1]) ? toCurrency(args[1]) : void 0;
             var cur2 = (args[2]) ? toCurrency(args[2]) : void 0;
-        } else {
+        } else
+        {
             var sepArg1 = args[0].match(/[0-9]+|[^0-9]+/gi)
             var amt = (sepArg1 && sepArg1[0]) ? parseFloat(sepArg1[0]) : 1;
             var cur1 = (sepArg1 && sepArg1[1]) ? toCurrency(sepArg1[1]) : void 0;
@@ -30,7 +33,8 @@ module.exports = {
 
         if (!cur1 || !cur2) return message.reply('Missing arguments');
 
-        function toCurrency(s) {
+        function toCurrency(s)
+        {
             return s
                 .replace(/^(C|CAN)\$$/i, 'CAD')
                 .replace(/^(HK\$)$/i, 'HKD')
@@ -64,8 +68,10 @@ module.exports = {
                 .replace(/^(Złoty)$/i, 'PLN')
                 .toUpperCase();
         }
-        if (![cur1, cur2].includes('D$')) {
-            client.https.GETJson(`https://api.exchangeratesapi.io/latest?base=${cur1}&symbols=${cur2}`).then((c) => {
+        if (![cur1, cur2].includes('D$'))
+        {
+            client.https.GETJson(`https://api.exchangeratesapi.io/latest?base=${cur1}&symbols=${cur2}`).then((c) =>
+            {
                 if (c.error) return message.reply('You used an invalid currency type, apologies.')
 
                 var embed = client.scripts.getEmbed()
@@ -77,7 +83,8 @@ module.exports = {
                     .setTimestamp(c.date);
 
                 message.channel.send({ embed })
-            }).catch((err) => {
+            }).catch((err) =>
+            {
                 console.log(err);
                 message.reply(`An Error occured while trying to fetch currency data.`);
             })
@@ -85,17 +92,17 @@ module.exports = {
         else
         {
             var worth;
-            if(cur1 == 'D$')
+            if (cur1 == 'D$')
                 worth = 0;
             else
                 worth = Infinity
             var embed = client.scripts.getEmbed()
-                    .setAuthor('Currency Conversion')
-                    .setColor(client.constants.green.hex)
-                    .setFooter('Last updated')
-                    .addField('Input', `\`${amt} ${cur1}\``, true)
-                    .addField('Output', `\`${worth} ${cur2}\``, true)
-                    .setTimestamp();
+                .setAuthor('Currency Conversion')
+                .setColor(client.constants.green.hex)
+                .setFooter('Last updated')
+                .addField('Input', `\`${amt} ${cur1}\``, true)
+                .addField('Output', `\`${worth} ${cur2}\``, true)
+                .setTimestamp();
             message.channel.send({ embed })
         }
     }

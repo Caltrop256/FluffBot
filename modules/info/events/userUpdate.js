@@ -5,7 +5,8 @@ oldUser        User        The user before the update
 newUser        User        The user after the update    */
 
 module.exports = {
-    execute(client, oldUser, newUser) {
+    execute(client, oldUser, newUser)
+    {
         client.lastSeen(newUser, 'Updated their account details');
     }
 }

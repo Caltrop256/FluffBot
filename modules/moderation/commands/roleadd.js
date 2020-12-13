@@ -14,7 +14,8 @@ module.exports = {
    perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_ROLES'],
 
 
-   execute(client, args, message) {
+   execute(client, args, message)
+   {
       var user = client.getMember(args[0], message.guild, null);
       if (!user) return message.reply("Couldn't find User.")
       var role = client.getRole(client, args[1], message.guild)

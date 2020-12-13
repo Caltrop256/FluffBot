@@ -101,7 +101,7 @@
             console.error(evt.data);
         }
         function connect(){
-            websocket = new WebSocket('ws://localhost:6969/');
+            websocket = new WebSocket(`ws://${(new URL(location.href).hostname)}:6969/`);
             websocket.onopen = onOpen;
             websocket.onclose = onClose;
             websocket.onmessage = onMessage;

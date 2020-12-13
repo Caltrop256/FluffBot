@@ -8,12 +8,14 @@ user                   User                   The user that applied the emoji or
 
 
 module.exports = {
-    execute(client, reaction, user) {
+    execute(client, reaction, user)
+    {
         var guild = reaction.message.guild;
         if (!guild) return;
         var member = guild.member(user);
 
-        if (reaction.emoji.name == "‼" || reaction.emoji.id == "619961652472840217") {
+        if (reaction.emoji.name == "‼" || reaction.emoji.id == "619961652472840217")
+        {
             reaction.remove(user);
             client.reportFunc(reaction.message, user, member);
         };

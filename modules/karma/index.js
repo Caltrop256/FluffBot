@@ -10,22 +10,28 @@ module.exports.Info({
     name: 'karma',
     desc: ''
 });
-class KarmaInfo {
-    constructor(upvotes = 0, downvotes = 0, platinum = 0, gold = 0, silver = 0) {
+class KarmaInfo
+{
+    constructor(upvotes = 0, downvotes = 0, platinum = 0, gold = 0, silver = 0)
+    {
         this.upvotes = isNaN(upvotes) ? 0 : parseInt(upvotes);
         this.downvotes = isNaN(downvotes) ? 0 : parseInt(downvotes);
         this.platinum = isNaN(platinum) ? 0 : parseInt(platinum);
         this.gold = isNaN(gold) ? 0 : parseInt(gold);
         this.silver = isNaN(silver) ? 0 : parseInt(silver);
-        this.valueOf = function () {
+        this.valueOf = function ()
+        {
             return this.karma;
         }
     };
-    get karma() {
+    get karma()
+    {
         return this.upvotes - this.downvotes;
     }
-    update(emojiID, added) {
-        switch (emojiID) {
+    update(emojiID, added)
+    {
+        switch (emojiID)
+        {
             case "562330233315917843": //upvotes
                 this.upvotes += added ? 1 : -1;
                 break;
@@ -48,7 +54,8 @@ class KarmaInfo {
         };
         return this;
     }
-    subtract(other) {
+    subtract(other)
+    {
         return new KarmaInfo(this.upvotes - other.upvotes,
             this.downvotes - other.downvotes,
             Math.max(this.platinum - other.platinum, 0),
@@ -56,7 +63,8 @@ class KarmaInfo {
             Math.max(this.silver - other.silver, 0)
         );
     }
-    add(other) {
+    add(other)
+    {
         return new KarmaInfo(this.upvotes + other.upvotes,
             this.downvotes + other.downvotes,
             Math.max(this.platinum + other.platinum, 0),
@@ -67,8 +75,10 @@ class KarmaInfo {
 };
 var request = require("request");
 
-function uploadVoteBuffer(buffer, upvotes, downvotes) {
-    return new Promise((resolve, reject) => {
+function uploadVoteBuffer(buffer, upvotes, downvotes)
+{
+    return new Promise((resolve, reject) =>
+    {
         var url = 'https://tropbot.cheeseboye.com/getThumbnail.php';
         var fileName = `${upvotes}_${downvotes}.png`;
         var options = {
@@ -78,7 +88,8 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
                 Authorization: config.voteToken
             }
         };
-        request(options, function (err, resp, json) {
+        request(options, function (err, resp, json)
+        {
             if (err)
                 return reject(err);
             if (JSON.parse(json))
@@ -94,10 +105,12 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
                 }
             };
             console.log(options);
-            request(options, function (error, response, json) {
+            request(options, function (error, response, json)
+            {
                 if (error)
                     return reject(error);
-                try {
+                try
+                {
                     var body = JSON.parse(json);
                     if (!body.success)
                         return reject(body);
@@ -109,9 +122,11 @@ function uploadVoteBuffer(buffer, upvotes, downvotes) {
         });
     });
 }
-module.exports.ModuleSpecificCode = function (client) {
+module.exports.ModuleSpecificCode = function (client)
+{
 
-    async function getVoteBuffer(upvotes, downvotes) {
+    async function getVoteBuffer(upvotes, downvotes)
+    {
         //return new Promise((resolve, reject) => {
         //client.getUserKarma(userId).then(async k => {
 
@@ -121,9 +136,11 @@ module.exports.ModuleSpecificCode = function (client) {
         const canvas = Canvas.createCanvas(300, 300);
         const ctx = canvas.getContext('2d');
 
-        const applyText = (canvas, text) => {
+        const applyText = (canvas, text) =>
+        {
             let fontSize = 120;
-            do {
+            do
+            {
                 ctx.font = `${fontSize -= 10}px sans-serif`;
             } while (ctx.measureText(text).width > canvas.width / 1.7 && fontSize > 10);
             return ctx.font;
@@ -147,15 +164,18 @@ module.exports.ModuleSpecificCode = function (client) {
     };
     client.userKarma = client.scripts.getCollection();
 
-    function setCache(userId, karmaInfo) {
+    function setCache(userId, karmaInfo)
+    {
         client.userKarma.set(userId, karmaInfo);
     }
 
     function getTotalKarma() //TODO CACHE TOTAL KARMA OWO UWU PENIS
     {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) =>
+        {
             var connection = client.scripts.getSQL();
-            connection.query('SELECT sum(upvotes) upvotes, SUM(downvotes) downvotes, SUM(platinum) platinum, SUM(gold) gold, SUM(silver) silver FROM karma', (err, rows) => {
+            connection.query('SELECT sum(upvotes) upvotes, SUM(downvotes) downvotes, SUM(platinum) platinum, SUM(gold) gold, SUM(silver) silver FROM karma', (err, rows) =>
+            {
                 if (err) return reject(err);
                 var info = rows[0];
                 resolve(new KarmaInfo(
@@ -170,13 +190,16 @@ module.exports.ModuleSpecificCode = function (client) {
         });
     }
 
-    function getUserKarma(userId) {
-        return new Promise((resolve, reject) => {
+    function getUserKarma(userId)
+    {
+        return new Promise((resolve, reject) =>
+        {
             var cached = client.userKarma.get(userId);
             if (cached)
                 return resolve(cached);
             var connection = client.scripts.getSQL(false);
-            connection.query(`select * from karma WHERE id = '${userId}'`, (err, rows) => {
+            connection.query(`select * from karma WHERE id = '${userId}'`, (err, rows) =>
+            {
                 if (err) return reject(err);
                 if (!rows.length) return setUserKarma(userId, new KarmaInfo()).then(karmaInfo => resolve(karmaInfo)).catch(err => reject(err));
                 var info = rows[0];
@@ -194,13 +217,16 @@ module.exports.ModuleSpecificCode = function (client) {
     };
     var botRemovedReacts = client.scripts.getCollection();
 
-    function removeReact(react, userID) {
+    function removeReact(react, userID)
+    {
         react.remove(userID);
         botRemovedReacts.set(userID, react.emoji.id)
     }
 
-    function setUserKarma(userId, karmaInfo) {
-        return new Promise((resolve, reject) => {
+    function setUserKarma(userId, karmaInfo)
+    {
+        return new Promise((resolve, reject) =>
+        {
             var { upvotes, downvotes, platinum, gold, silver } = karmaInfo;
             var connection = client.scripts.getSQL();
 
@@ -213,7 +239,8 @@ module.exports.ModuleSpecificCode = function (client) {
                     platinum = ${platinum},
                     gold = ${gold},
                     silver = ${silver};
-            `, (err, rows) => {
+            `, (err, rows) =>
+            {
                 if (err) return reject(err);
                 if (rows.affectedRows == 0) return reject(new Error('0 rows affected'));
                 setCache(userId, karmaInfo);
@@ -221,7 +248,8 @@ module.exports.ModuleSpecificCode = function (client) {
             });
         });
     }
-    async function handleAwards(reaction, user) {
+    async function handleAwards(reaction, user)
+    {
 
         var platinum, gold, silver;
         platinum = gold = silver = 0;
@@ -232,19 +260,24 @@ module.exports.ModuleSpecificCode = function (client) {
         var receivingUser = reaction.message.member;
         if (!name.startsWith('reddit') || (name.length < 7)) return;
 
-        if (id == '586161821338042379') {
+        if (id == '586161821338042379')
+        {
             cost = client.cfg.platinum
             platinum++;
-        } else if (id == '586161821551951882') {
+        } else if (id == '586161821551951882')
+        {
             cost = client.cfg.gold;
             gold++;
-        } else if (id == '586161821044441088') {
+        } else if (id == '586161821044441088')
+        {
             cost = client.cfg.silver;
             silver++;
-        } else {
+        } else
+        {
             return;
         }
-        if (!client.modules.get('economy').enabled) {
+        if (!client.modules.get('economy').enabled)
+        {
             removeReact(reaction, user.id);
             user.send(`The \`economy\` module is currently disabled so features using it are also disabled`);
             return false;
@@ -257,7 +290,8 @@ module.exports.ModuleSpecificCode = function (client) {
 
         var money = await client.getMoney(user.id);
 
-        if (money.coins < cost) {
+        if (money.coins < cost)
+        {
             user.send(`You do not have enough ${client.cfg.curName} to give **${emote}** (${money.coins}/${cost})`);
             if (!money.hasEntry) client.updateMoney(user.id, 0);
             return false;
@@ -273,7 +307,8 @@ module.exports.ModuleSpecificCode = function (client) {
     };
 
 
-    async function handleReactRemoveAll(message) {
+    async function handleReactRemoveAll(message)
+    {
         var userID = message.author.id;
         var messageID = message.id;
         var cachedReacts = client.messageReactCache.get(messageID);
@@ -281,7 +316,8 @@ module.exports.ModuleSpecificCode = function (client) {
             return;
 
         var karmaInfo = await getUserKarma(userID);
-        for (var [cachedID, cachedReact] of cachedReacts) {
+        for (var [cachedID, cachedReact] of cachedReacts)
+        {
             for (var i = 0; i < cachedReact.count; i++)
                 karmaInfo.update(cachedReact.emoji.id, false);
         }
@@ -297,12 +333,14 @@ module.exports.ModuleSpecificCode = function (client) {
     }
     var starboardArrayQueue = [];
 
-    function checkForRateLimit(reaction, userID) {
+    function checkForRateLimit(reaction, userID)
+    {
         var result = !rateLimitHandler(userID);
         console.log(result);
         return result;
     }
-    async function handleReactUpdate(user, reaction, added) {
+    async function handleReactUpdate(user, reaction, added)
+    {
         if (!emojiIDs.includes(reaction.emoji.id)) return;
 
 
@@ -332,9 +370,11 @@ module.exports.ModuleSpecificCode = function (client) {
         //if(msgKarma.up >= client.cfg.minStarboardScore) client.starboardMessage(client, reaction.message);
     };
 
-    async function reactionMaster3000() {
+    async function reactionMaster3000()
+    {
         var post = client.starboard.get(reaction.message.id)
-        if (post) {
+        if (post)
+        {
             var type = ""
             var msg = reaction.message
             var up = 0;
@@ -342,8 +382,10 @@ module.exports.ModuleSpecificCode = function (client) {
             var plat = 0;
             var gold = 0;
             var silver = 0;
-            msg.reactions.forEach(r => {
-                switch (r.emoji.id) {
+            msg.reactions.forEach(r =>
+            {
+                switch (r.emoji.id)
+                {
                     case "562330233315917843":
                         up = r.users.size
                         type = "up"
@@ -378,7 +420,8 @@ module.exports.ModuleSpecificCode = function (client) {
             client.handleKarmaObj(type, reaction.message.author.id, 1)
 
             var starboardChannel = client.channels.get(client.cfg.starboardChannel)
-            if (up - down >= client.cfg.minStarboardScore) {
+            if (up - down >= client.cfg.minStarboardScore)
+            {
                 var upvoteEmoji = client.emojis.get("562330233315917843")
 
                 const embeds = msg.embeds;
@@ -386,7 +429,8 @@ module.exports.ModuleSpecificCode = function (client) {
 
                 let eURL = ''
 
-                if (embeds.length > 0) {
+                if (embeds.length > 0)
+                {
 
                     if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                         eURL = embeds[0].thumbnail.url;
@@ -395,21 +439,25 @@ module.exports.ModuleSpecificCode = function (client) {
                     else
                         eURL = embeds[0].url;
 
-                } else if (attachments.array().length > 0) {
+                } else if (attachments.array().length > 0)
+                {
                     const attARR = attachments.array();
                     eURL = attARR[0].url;
                 }
 
                 var Awards = ``
-                if (obj.plat > 0) {
+                if (obj.plat > 0)
+                {
                     var platemoji = client.emojis.get("586161821338042379");
                     Awards += `${platemoji}x${obj.plat}\n`
                 }
-                if (obj.gold > 0) {
+                if (obj.gold > 0)
+                {
                     var goldemoji = client.emojis.get("586161821551951882");
                     Awards += `${goldemoji}x${obj.gold}\n`
                 }
-                if (obj.silver > 0) {
+                if (obj.silver > 0)
+                {
                     var silveremoji = client.emojis.get("586161821044441088");
                     Awards += `${silveremoji}x${obj.silver}\n`
                 }
@@ -447,41 +495,51 @@ module.exports.ModuleSpecificCode = function (client) {
                     url: `attachment://votes${randID}.png`
                 }
 
-                if (post.starboardid) {
+                if (post.starboardid)
+                {
                     console.log("edit post")
                     starboardChannel = client.channels.get(client.cfg.starboardChannel)
-                    starboardChannel.fetchMessage(post.starboardid).then(message => {
+                    starboardChannel.fetchMessage(post.starboardid).then(message =>
+                    {
                         message.delete(100)
-                        starboardChannel.send({ embed: starboardembed, files: [{ attachment: canvas.toBuffer(), name: `votes${randID}.png` }] }).then(message => {
+                        starboardChannel.send({ embed: starboardembed, files: [{ attachment: canvas.toBuffer(), name: `votes${randID}.png` }] }).then(message =>
+                        {
                             obj.starboardid = message.id
                             client.starboard.set(msg.id, obj)
                         });
                     })
-                } else {
+                } else
+                {
                     console.log("new post")
                     starboardChannel = client.channels.get(client.cfg.starboardChannel)
-                    starboardChannel.send({ embed: starboardembed, files: [{ attachment: canvas.toBuffer(), name: `votes${randID}.png` }] }).then(message => {
+                    starboardChannel.send({ embed: starboardembed, files: [{ attachment: canvas.toBuffer(), name: `votes${randID}.png` }] }).then(message =>
+                    {
                         obj.starboardid = message.id
                         client.starboard.set(msg.id, obj)
                     })
                 }
-            } else if (up - down < client.cfg.minStarboardScore && post.starboardid) {
+            } else if (up - down < client.cfg.minStarboardScore && post.starboardid)
+            {
                 starboardChannel = client.channels.get(client.cfg.starboardChannel)
-                starboardChannel.fetchMessage(post.starboardid).then(message => {
+                starboardChannel.fetchMessage(post.starboardid).then(message =>
+                {
                     message.delete(200)
                     obj.starboardid = null
                     client.starboard.set(msg.id, obj)
                 })
             }
-        } else {
+        } else
+        {
             var msg = reaction.message
             var up = 0;
             var down = 0;
             var plat = 0;
             var gold = 0;
             var silver = 0;
-            msg.reactions.forEach(r => {
-                switch (r.emoji.id) {
+            msg.reactions.forEach(r =>
+            {
+                switch (r.emoji.id)
+                {
                     case "562330233315917843":
                         up = r.users.size
                         type = "up"
@@ -518,23 +576,26 @@ module.exports.ModuleSpecificCode = function (client) {
         }
     }
 
-    async function handleStarboard(msg, karmaInfo, starboardEntry = client.starboardCollection.get(msg.id)) {
-        if (karmaInfo >= client.cfg.minStarboardScore) {
+    async function handleStarboard(msg, karmaInfo, starboardEntry = client.starboardCollection.get(msg.id))
+    {
+        if (karmaInfo >= client.cfg.minStarboardScore)
+        {
             var upvoteEmoji = client.emojis.get("562330233315917843");
             let eURL = ''
             const embeds = msg.embeds;
             const attachments = msg.attachments;
-            if (embeds.length > 0) {
+            if (attachments.array().length > 0)
+            {
+                const attARR = attachments.array();
+                eURL = attARR[0].url;
+            } else if (embeds.length > 0)
+            {
                 if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                     eURL = embeds[0].thumbnail.url;
                 else if (embeds[0].image && embeds[0].image.url)
                     eURL = embeds[0].image.url;
                 else
                     eURL = embeds[0].url;
-
-            } else if (attachments.array().length > 0) {
-                const attARR = attachments.array();
-                eURL = attARR[0].url;
             }
             var Awards = ``
             var platinum = client.emojis.get("586161821338042379");
@@ -561,7 +622,8 @@ module.exports.ModuleSpecificCode = function (client) {
             var starboardChannel = client.channels.get('562337386701520897');
             var starboardMessage = await starboardChannel.send({ embed: starboardEmbed });
             client.starboardCollection.set(msg.id, starboardMessage);
-        } else {
+        } else
+        {
             if (!starboardEntry) return;
             client.starboardCollection.delete(msg.id);
             await starboardEntry.delete();
@@ -573,24 +635,28 @@ module.exports.ModuleSpecificCode = function (client) {
     const upvoteRateLimitTime = 2000;
     const upvoteRateLimitCooldown = (upvoteRateLimitTime * (upvoteRateLimitCount * 2));
 
-    function rateLimitHandler(userID) {
+    function rateLimitHandler(userID)
+    {
         console.log('heck');
         if (rateLimitedUsers.includes(userID))
             return;
 
-        if ((userUpvoteCount.get(userID) || {}).count > upvoteRateLimitCount) {
+        if ((userUpvoteCount.get(userID) || {}).count > upvoteRateLimitCount)
+        {
             var msg;
             client.fetchUser(userID).then(user => user.send(`Rate Limited Adding Karma Reactions For ${(upvoteRateLimitCooldown / 1000)} Seconds`).then(message => msg = message));
             console.log(`Rate Limiting ${userID} For ${(upvoteRateLimitCooldown / 1000)} Seconds`);
             var index = rateLimitedUsers.push(userID) - 1;
-            setTimeout(() => {
+            setTimeout(() =>
+            {
                 if (msg)
                     msg.edit(`Rate Limit Ended`);
                 console.log(`Rate Limit Ended For ${userID}`);
                 rateLimitedUsers.splice(index, 1)
             }, upvoteRateLimitCooldown)
             return false;
-        } else {
+        } else
+        {
             //console.log(userUpvoteCount.get(userID));
             var userInfo = userUpvoteCount.get(userID) || { count: 0, timeout: 0 };
             var timeout = Math.max(0, userInfo.timeout - Date.now()) + upvoteRateLimitTime;
@@ -601,7 +667,8 @@ module.exports.ModuleSpecificCode = function (client) {
             //console.log(timeout);
             //console.log(new Date(userInfo.timeout));
             userUpvoteCount.set(userID, userInfo);
-            setTimeout(() => {
+            setTimeout(() =>
+            {
 
                 var uInfo = userUpvoteCount.get(userID);
                 uInfo.count--;
@@ -611,7 +678,8 @@ module.exports.ModuleSpecificCode = function (client) {
             return true;
         }
     }
-    async function getMessageKarma(message) {
+    async function getMessageKarma(message)
+    {
         if (!message.reactions.some(reaction => emojiIDs.includes(reaction.emoji.id))) return new KarmaInfo(0, 0, 0, 0, 0);
 
 
@@ -650,12 +718,15 @@ module.exports.ModuleSpecificCode = function (client) {
     client.handleAwards = handleAwards;
     client.Karma = KarmaInfo;
     client.isStarboardReady = false;
-    (async function starboardQueue() {
+    (async function starboardQueue()
+    {
         if (client.isStarboardReady && starboardArrayQueue.length)
-            try{
-            await starboardArrayQueue.shift()();
+            try
+            {
+                await starboardArrayQueue.shift()();
             }
-            catch(e){
+            catch (e)
+            {
                 console.error('[Starboard Queue Handler] An Error has Occurred, look at client.lastErr for more info');
                 client.lastErr.push(e);
             }

@@ -5,8 +5,10 @@ module.exports.Info({
     name: 'meta',
     desc: ''
 });
-module.exports.ModuleSpecificCode = function (client) {
-    function clean(text) {
+module.exports.ModuleSpecificCode = function (client)
+{
+    function clean(text)
+    {
         if (typeof (text) === "string")
             return text.replace(/`/g, "`" + String.fromCharCode(8203)).replace(/@/g, "@" + String.fromCharCode(8203));
         else

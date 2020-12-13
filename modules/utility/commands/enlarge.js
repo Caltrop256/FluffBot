@@ -23,7 +23,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
         var JimpArray = []
         var operationid = Math.round(Math.random() * 10000)
         var useFactor = true
@@ -39,7 +40,8 @@ module.exports = {
         const attachments = message.attachments;
         let eURL = ''
 
-        if (embeds.length > 0) {
+        if (embeds.length > 0)
+        {
 
             if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                 eURL = embeds[0].thumbnail.url;
@@ -48,28 +50,36 @@ module.exports = {
             else
                 eURL = embeds[0].url;
 
-        } else if (attachments.array().length > 0) {
+        } else if (attachments.array().length > 0)
+        {
             const attARR = attachments.array();
             eURL = attARR[0].url;
         }
 
         var dimensionsArgs = (" " + args.join(" ")).match(/([x ]\d*)/gi)
-        if (dimensionsArgs) {
-            while (dimensionsArgs[0] == " ") {
+        if (dimensionsArgs)
+        {
+            while (dimensionsArgs[0] == " ")
+            {
                 dimensionsArgs.shift()
             }
         }
         var factorArg = args.join(" ").match(/\b(f\d*)/gi)
         var linkArg = args.join(" ").match(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpe?g|gif|png)/gi)
-        if (dimensionsArgs && dimensionsArgs[0] !== " " && dimensionsArgs.length > 0) {
+        if (linkArg && (linkArg[0] == eURL))
+            eURL = '';
+        if (dimensionsArgs && dimensionsArgs[0] !== " " && dimensionsArgs.length > 0)
+        {
             var dim1 = parseInt(dimensionsArgs[0].replace(/[^\d]/gi, ""))
             var dim2 = dimensionsArgs[1] ? parseInt(dimensionsArgs[1].replace(/[^\d]/gi, "")) : Jimp.AUTO
             if (isNaN(dim1) || isNaN(dim2)) return message.reply(`Invalid resize resolution`)
             useFactor = false
-        } else if (factorArg) {
+        } else if (factorArg)
+        {
             var f = parseInt(factorArg[0].replace(/[^\d]/gi, ""))
             if (isNaN(f) || f > 10 || Math.sign(f) < 0) return message.reply(`Invalid factor size`)
-        } else {
+        } else
+        {
             var f = 1
         }
 
@@ -80,102 +90,143 @@ module.exports = {
         var uml = uniMatch ? uniMatch.length : 0
         var lal = linkArg ? linkArg.length : 0
 
-        async function scaleImg(image, factor) {
+        async function scaleImg(image, factor)
+        {
             var resized = image.scale(parseInt(factor), resizeMode.method);
             var extension = resized.getExtension();
             var randID = Math.floor(Math.random() * 10000)
-            resized.write(`./images/resize${randID}.${extension}`, (err) => {
+            resized.write(`./images/resize${randID}.${extension}`, (err) =>
+            {
                 JimpArray.push(`./images/resize${randID}.${extension}`);
             });
         }
-        async function resizeImg(image, dim1, dim2) {
+        async function resizeImg(image, dim1, dim2)
+        {
             var resized = image.resize(parseInt(dim1), parseInt(dim2), resizeMode.method);
             var extension = resized.getExtension();
             var randID = Math.floor(Math.random() * 10000)
-            resized.write(`./images/resize${randID}.${extension}`, (err) => {
+            resized.write(`./images/resize${randID}.${extension}`, (err) =>
+            {
                 JimpArray.push(`./images/resize${randID}.${extension}`);
             });
         }
 
-        if (customMatch) {
-            customMatch.forEach(async cm => {
+        if (customMatch)
+        {
+            customMatch.forEach(async cm =>
+            {
                 await Jimp.read(`https://cdn.discordapp.com/emojis/${cm}.gif`)
-                    .then(animatedImage => {
-                        if (useFactor) {
+                    .then(animatedImage =>
+                    {
+                        if (useFactor)
+                        {
                             scaleImg(image, f)
-                        } else {
+                        } else
+                        {
                             resizeImg(animatedImage, dim1, dim2)
                         }
                     })
-                    .catch(async err => {
+                    .catch(async err =>
+                    {
                         await Jimp.read(`https://cdn.discordapp.com/emojis/${cm}.png`)
-                            .then(image => {
-                                if (useFactor) {
+                            .then(image =>
+                            {
+                                if (useFactor)
+                                {
                                     scaleImg(image, f)
-                                } else {
+                                } else
+                                {
                                     resizeImg(image, dim1, dim2)
                                 }
                             })
-                            .catch(err => {
+                            .catch(err =>
+                            {
                                 return message.reply('Couldn`t resolve the image from your Emote.')
                             });
                     });
             })
         }
-        if (uniMatch) {
-            uniMatch.forEach(async um => {
+        if (uniMatch)
+        {
+            uniMatch.forEach(async um =>
+            {
                 var m = um
                 var tempObj = emoji.find(m)
                 var emote = emoteList.emojis.find(e => e.name.toLowerCase() == tempObj.key.toLowerCase())
                 if (!emote) return;
-                await svg2img(emote.url, async function (error, buffer) {
+                await svg2img(emote.url, async function (error, buffer)
+                {
                     await Jimp.read(buffer)
-                        .then(image => {
-                            if (useFactor) {
+                        .then(image =>
+                        {
+                            if (useFactor)
+                            {
                                 scaleImg(image, f)
-                            } else {
+                            } else
+                            {
                                 resizeImg(image, dim1, dim2)
                             }
                         })
-                        .catch(err => {
+                        .catch(err =>
+                        {
                             return message.reply('Couldn`t resolve the image from your Emote.')
                         });
                 });
             })
         }
-        if (eURL) {
+        if (eURL)
+        {
             await Jimp.read(eURL)
-                .then(image => {
-                    if (useFactor) {
+                .then(image =>
+                {
+                    if (useFactor)
+                    {
                         scaleImg(image, f)
-                    } else {
+                    } else
+                    {
                         resizeImg(image, dim1, dim2)
                     }
-                }).catch((err) => {
+                }).catch((err) =>
+                {
                     return message.reply('Couldn`t resolve the image from your Attachment.')
                 })
         }
-        if (linkArg) {
+        if (linkArg)
+        {
             await Jimp.read(linkArg[0])
-                .then(image => {
-                    if (useFactor) {
+                .then(image =>
+                {
+                    if (useFactor)
+                    {
                         scaleImg(image, f)
-                    } else {
+                    } else
+                    {
                         resizeImg(image, dim1, dim2)
                     }
-                }).catch((err) => {
+                }).catch((err) =>
+                {
                     return message.reply('Couldn`t resolve the image from your Link.')
                 })
         }
-        setTimeout(() => {
-            setTimeout(() => {
-                if (JimpArray.length > 1) {
-                    if (!useFactor && !isNaN(dim2)) {
-                        if (dim1 / dim2 > 1) { mergedir = true } else mergedir = false
-                    } else mergedir = false
+        setTimeout(() =>
+        {
+            setTimeout(() =>
+            {
+                if (JimpArray.length > 1)
+                {
+                    let mergedir = false;
+                    if (!useFactor && !isNaN(dim2))
+                    {
+                        if (dim1 / dim2 > 1)
+                        {
+                            mergedir = true
+                        }
+                    }
                     mergeImg(JimpArray, { direction: mergedir })
-                        .then((image) => {
-                            image.write(`./images/merge${operationid}.png`, (err) => {
+                        .then((image) =>
+                        {
+                            image.write(`./images/merge${operationid}.png`, (err) =>
+                            {
                                 if (err) throw err
                                 const attachment = new Discord.Attachment(`./images/merge${operationid}.png`, `merge${operationid}.png`);
                                 var resizeEmbed = new Discord.RichEmbed()
@@ -186,12 +237,16 @@ module.exports = {
                                 if (useFactor) { resizeEmbed.setAuthor(`Image scaled`, message.author.avatarURL) } else resizeEmbed.setAuthor(`Image resized`, message.author.avatarURL)
                                 if (useFactor) { resizeEmbed.setFooter(`Scaled with a factor of f${f} using ${resizeMode.name}`) } else resizeEmbed.setFooter(`resized to ${dim1}x${dim2} using ${resizeMode.name}`)
 
-                                message.channel.send({ embed: resizeEmbed }).then(() => {
-                                    fs.unlink(`./images/merge${operationid}.png`, (err) => {
+                                message.channel.send({ embed: resizeEmbed }).then(() =>
+                                {
+                                    fs.unlink(`./images/merge${operationid}.png`, (err) =>
+                                    {
                                         if (err) throw err;
                                         console.log(`merge${operationid}.png was deleted`);
-                                        JimpArray.forEach(img => {
-                                            fs.unlink(img, (err) => {
+                                        JimpArray.forEach(img =>
+                                        {
+                                            fs.unlink(img, (err) =>
+                                            {
                                                 if (err) throw err;
                                                 console.log(`${img} was deleted`);
                                             })
@@ -201,7 +256,8 @@ module.exports = {
                             })
                         })
 
-                } else if (JimpArray.length == 1) {
+                } else if (JimpArray.length == 1)
+                {
                     const attachment = new Discord.Attachment(JimpArray[0], JimpArray[0].replace(`./images/`, ""));
                     var resizeEmbed = new Discord.RichEmbed()
                         .setTimestamp()
@@ -211,9 +267,12 @@ module.exports = {
                     if (useFactor) { resizeEmbed.setAuthor(`Image scaled`, message.author.avatarURL) } else resizeEmbed.setAuthor(`Image resized`, message.author.avatarURL)
                     if (useFactor) { resizeEmbed.setFooter(`Scaled with a factor of f${f} using ${resizeMode.name}`) } else resizeEmbed.setFooter(`resized to ${dim1}x${dim2} using ${resizeMode.name}`)
 
-                    message.channel.send({ embed: resizeEmbed }).then(() => {
-                        JimpArray.forEach(img => {
-                            fs.unlink(img, (err) => {
+                    message.channel.send({ embed: resizeEmbed }).then(() =>
+                    {
+                        JimpArray.forEach(img =>
+                        {
+                            fs.unlink(img, (err) =>
+                            {
                                 if (err) throw err;
                                 console.log(`${img} was deleted`);
                             })

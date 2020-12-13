@@ -13,19 +13,24 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'ADMINISTRATOR'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var connection = client.scripts.getSQL(false)
-        if (args.length) {
+        if (args.length)
+        {
             var raw = args.join(" ")
             var strings = raw.split("|")
             var key = strings[0]
             var value = strings[1]
 
-            connection.query(`SELECT * FROM config WHERE \`key\` = '${key}'`, (err, rows) => {
+            connection.query(`SELECT * FROM config WHERE \`key\` = '${key}'`, (err, rows) =>
+            {
                 if (err) throw err;
-                if (rows.length < 1) {
+                if (rows.length < 1)
+                {
                     return message.channel.send(`\`${key}\`, no such key.`)
-                } else {
+                } else
+                {
                     var ogKey = rows[0].key
                     var ogValue = rows[0].value
                     connection.query(`UPDATE config SET \`value\` = '${value}' WHERE \`key\` = '${key}'`)
@@ -39,11 +44,14 @@ module.exports = {
                     console.log(client.cfg)
                 }
             })
-        } else {
-            connection.query(`SELECT * FROM config`, (err, rows) => {
+        } else
+        {
+            connection.query(`SELECT * FROM config`, (err, rows) =>
+            {
                 if (err) throw err;
                 var cfgs = ''
-                rows.forEach(row => {
+                rows.forEach(row =>
+                {
                     cfgs = cfgs + `\`${row.key}\` | \`${row.value}\`\n`
                 })
                 message.channel.send("**Key** | **Value**\n" + cfgs)

@@ -4,21 +4,26 @@ PARAMETER    TYPE                              DESCRIPTION
 messages     Collection<Snowflake, Message>    The deleted messages, mapped by their ID    */
 
 module.exports = {
-    async execute(client, messages) {
+    async execute(client, messages)
+    {
         var channel = messages.first().channel;
         var users = client.scripts.getCollection();
         var arr = [];
 
-        messages.forEach(m => {
+        messages.forEach(m =>
+        {
             var u = users.get(m.author.id);
-            if (u) {
+            if (u)
+            {
                 users.set(m.author.id, { u: m.author, count: u.count + 1 })
-            } else {
+            } else
+            {
                 users.set(m.author.id, { u: m.author, count: 1 })
             };
         });
 
-        users.forEach(u => {
+        users.forEach(u =>
+        {
             arr.push(`${u.u.toString()}: \`${u.count}\` message${u.count == 1 ? '' : 's'}`);
         });
 

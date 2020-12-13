@@ -6,48 +6,58 @@ var TropBot = require('./library/TropBot.js')
 const fs = require('fs');
 var originalRequire = Module.prototype.require;
 var lastRequire = null;
-String.prototype.format = function (...args) {
+String.prototype.format = function (...args)
+{
     var toReturn = this.valueOf();
-    for (var i = 0; toReturn.indexOf(`{${i}}`) != -1; i++) {
+    for (var i = 0; toReturn.indexOf(`{${i}}`) != -1; i++)
+    {
         toReturn = toReturn.replace(`{${i}}`, args[i]);
     }
     return toReturn;
 }
 errList = [];
 client = {}
-Module.prototype.require = function () {
+Module.prototype.require = function ()
+{
     result = originalRequire.apply(this, arguments);
-    try {
+    try
+    {
         var requirePath = path.join(this.id, '../', arguments[0]);
         if (!requirePath.includes('node_modules'))
             delete require.cache[fs.existsSync(requirePath) ? requirePath : require.resolve(arguments[0])];
     }
-    catch (err) {
+    catch (err)
+    {
         errList.push(err);
     }
-    finally {
+    finally
+    {
         return result;
     }
 };
-Math.clamp = (value, min, max) => {
+Math.clamp = (value, min, max) =>
+{
     return Math.min(Math.max(value, min), max);
 }
 String.prototype.oldReplace = String.prototype.replace;
-String.prototype.replace = function (searchValue, replaceValue, oldReplace = false) {
+String.prototype.replace = function (searchValue, replaceValue, oldReplace = false)
+{
 
     if (oldReplace || ((typeof (searchValue) != 'string') || (typeof (replaceValue) != 'string'))) return this.oldReplace(searchValue, replaceValue)
     var toReturn = this.valueOf();
-    while (toReturn.indexOf(searchValue) != -1) {
+    while (toReturn.indexOf(searchValue) != -1)
+    {
         toReturn = toReturn.oldReplace(searchValue, replaceValue);
     }
     return toReturn;
 }
 process.env.tropbot = __dirname;
 
-var client = new TropBot(config.useLocal, config.useBeta)
+var client = new TropBot(config.useLocal, config.useBeta, config.startREPL)
 client.Init(config.useBeta ? config.betaToken : config.stableToken);
 client.errList = errList;
-process.on("uncaughtException", (err) => {
+process.on("uncaughtException", (err) =>
+{
     if (err.message === 'Too many connections')
         return console.error(console.color.red(`[META]`), 'SQL Connection limit reached\n    ', err.stack.match(/\)\n( +?)at (.+?)\n/)[0].substring(1, 1000).trim());
     const errorMsg = err.stack; //.replace(new RegExp(`${__dirname}/`, "g"), "./");
@@ -58,16 +68,20 @@ process.on("uncaughtException", (err) => {
         logger.setLevel('fatal');
         logger.fatal(errorMsg);
     };*/
-    setTimeout(() => {
+    setTimeout(() =>
+    {
         process.exit(0);
     }, 1000);
 });
-process.on("unhandledRejection", err => {
+process.on("unhandledRejection", err =>
+{
     console.log(console.color.red(`[META]`), console.color.red(`[Uncaught Promise Error]`), err.message);
     client.lastErr.push(err);
 });
-if (client.useBeta) {
-    process.on('exit', () => {
+if (client.startREPL)
+{
+    process.on('exit', () =>
+    {
         client.destroy();
         client.replClient.close();
         client.REPLServer.stop();

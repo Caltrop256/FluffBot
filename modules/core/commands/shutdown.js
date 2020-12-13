@@ -15,13 +15,16 @@ module.exports = {
     },
     perms: ['DEV'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         message.channel.send('Shutting down...')
-            .then(function (message) {
+            .then(function (message)
+            {
                 message.react(":ralsleep:562354429093740544")
             }).then(msg => client.destroy())
-        setTimeout(() => {
+        setTimeout(() =>
+        {
             console.log("--------------------\n[!] Shutting down TropBot (force shutdown) [!]")
             process.exit(1)
         }, 1000)

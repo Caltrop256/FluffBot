@@ -12,10 +12,12 @@ module.exports = Object.assign(new EventEmitter(), {
     commands: new Discord.Collection(),
     events: new Discord.Collection(),
     timedFunctions: new Discord.Collection(),
-    Info(moduleInfo) {
+    Info(moduleInfo)
+    {
         module.exports = Object.assign(this, moduleInfo);
     },
-    async Init(client) {
+    async Init(client)
+    {
 
         if (this.hasInit || !this.name) return this.Warn(this.hasInit ? 'Module already initialized' : 'Module name not specified');
         console.log('initializing ' + this.name);
@@ -30,7 +32,8 @@ module.exports = Object.assign(new EventEmitter(), {
         this.hasInit = true; //Mark that the module has been initialized
         return true; //Return true to signal a successful initialization 
     },
-    async Enable(client, comOrEvName = null) {
+    async Enable(client, comOrEvName = null)
+    {
         if ((this.enabled && !comOrEvName) || (!this.enabled && !!comOrEvName) || !this.hasInit) return this.Warn(!this.hasInit ? 'Module not initialized yet' : this.enabled ? 'Module already Enabled' : 'Module is Disabled'); //If module is already enabled and a file isn't specified or module has not initialized yet, return false signalling nothing was changed
         if (comOrEvName) //If file is specified
             return await this.ToggleSingle(client, comOrEvName, this.commands.get(comOrEvName), true, true); //Attempt enabling the file and return the result (overWrite param specified to allow overwriting event enabled value)
@@ -38,7 +41,8 @@ module.exports = Object.assign(new EventEmitter(), {
         return await this.Toggle(client, true); //Attempt enabling all files and return result
 
     },
-    async Disable(client, comOrEvName = null) {
+    async Disable(client, comOrEvName = null)
+    {
         if (!this.enabled || !this.hasInit) return this.Warn(!this.hasInit ? 'Module not initialized yet' : 'Module currently disabled'); //If module is already disabled or module has not initialized yet, return false signalling nothing was changed
         if (comOrEvName) //If file is specified
             return await this.ToggleSingle(client, comOrEvName, this.commands.get(comOrEvName), false, true); //Attempt disabling the file and return the result (overWrite param specified to allow overwriting event enabled value)
@@ -46,7 +50,8 @@ module.exports = Object.assign(new EventEmitter(), {
         this.timedFunctions.forEach((funcInterval, timedFunc) => clearInterval(timedFunc)); //Remove all timed functions, if there are any
         return await this.Toggle(client, false); //Attempt disabling all files and return result
     },
-    async Reload(client, comOrEvName = null) {
+    async Reload(client, comOrEvName = null)
+    {
         if (!this.enabled || !this.hasInit) return this.Warn(!this.hasInit ? 'Module not initialized yet' : 'Module currently disabled'); //If module is disabled or has not initialized yet, return false signalling nothing was changed
         var comOrEv = this.GetComOrEv(comOrEvName) //Try getting the file from commands or events (outside of if statement because single line if statements uwu)
         if (comOrEvName) //If file is specified
@@ -54,7 +59,8 @@ module.exports = Object.assign(new EventEmitter(), {
             else return (await this.LoadFile(client, `/modules/${this.name}/${comOrEv.name ? 'commands' : 'events'}/${comOrEvName}.js`, (await this.SQLGet(client, comOrEv.name ? 'commands' : 'events', comOrEvName))[0].enabled[0])); //Else, attempt reloading the file and return result    
         return await this.LoadFiles(client); //Attempt reloading all files and return result
     },
-    GetComOrEv(comOrEvName) {
+    GetComOrEv(comOrEvName)
+    {
         return this.commands.get(comOrEvName) || this.events.get(comOrEvName);
     },
     async Toggle(client, enable) //Should not be used directly
@@ -90,8 +96,8 @@ module.exports = Object.assign(new EventEmitter(), {
     async LoadFiles(client) //Should not be used directly
     {
         var moduleFolder = root + `/modules/${this.name}`;
-        var commandFiles = fs.existsSync(moduleFolder  + '/commands') ? fs.readdirSync(moduleFolder  + '/commands') : []//Get all command files
-        var eventFiles = fs.existsSync(moduleFolder  + '/events') ? fs.readdirSync(moduleFolder  + '/events') : [] //Get all event files
+        var commandFiles = fs.existsSync(moduleFolder + '/commands') ? fs.readdirSync(moduleFolder + '/commands') : []//Get all command files
+        var eventFiles = fs.existsSync(moduleFolder + '/events') ? fs.readdirSync(moduleFolder + '/events') : [] //Get all event files
         //var results = [] //Stores result of file loading
         var toLoad = []
         var commandSQL = await this.SQLGet(client, 'commands');
@@ -117,7 +123,8 @@ module.exports = Object.assign(new EventEmitter(), {
         var fileNames = fileLocation.substring((root + `/modules/${this.name}/`).length).split('/'); //Splits location into folder and file name(.js) 
         var fileName = fileNames[1].split('.')[0]; //Gets file name without extension
         //var enabled = fileCollection.get(fileName);
-        if (enabled === undefined) {
+        if (enabled === undefined)
+        {
             var Type = fileNames[0];
             var Result = await this.SQLInsert(client, Type, fileName)
             if (!Result) throw new Error(`There was a problem adding the new ${Type.substring(0, Type.length - 1)} '${fileName}' to the ${Type} table`);
@@ -130,12 +137,19 @@ module.exports = Object.assign(new EventEmitter(), {
         {
             file.execute = file.execute.bind(null, client);
             var event = { ...file };
-            event.execute = function () {
-                try {
+            let name = this.name;
+            event.execute = function ()
+            {
+                try
+                {
                     file.execute(...arguments)
                 }
-                catch (err) {
-                    client.guilds.get(client.constants.testingGuild).channels.get(client.constants.errorChannel).send(`\`ERROR\` \`\`\`xl\n${client.clean(err)}\n\`\`\``);
+                catch (error)
+                {
+                    let err = error instanceof Error ? error : new Error(err);
+                    let errDesc = `${err.name}: ${err.message}\n`;
+                    let errStack = err.stack ? (err.stack.startsWith(errDesc) ? err.stack.substring(errDesc.length) : err.stack) : 'No Error Stack Found';
+                    client.guilds.get(client.constants.testingGuild).channels.get(client.constants.errorChannel).send(`\`${name}#${fileName} ERROR\` \`\`\`xl\n${client.clean(`${errDesc}\n${errStack}\n`)}\n\`\`\``);
                     //do the error thing 
                 }
             }
@@ -150,10 +164,12 @@ module.exports = Object.assign(new EventEmitter(), {
     },
     SQLToggle(client, type, name, enabled) //Should not be used directly
     {
-        return new Promise(resolve => {
+        return new Promise(resolve =>
+        {
             var connection = client.scripts.getSQL();
             var SQLQuery = `UPDATE \`${type}\` SET \`enabled\`= ${enabled} WHERE \`name\`= '${name}' ${(type != 'modules') ? `AND \`moduleID\` = ${this.ID}` : ''}`;
-            connection.query(SQLQuery, (err, rows) => {
+            connection.query(SQLQuery, (err, rows) =>
+            {
                 if (err)
                     return reject(err)
                 resolve((rows.affectedRows != 0) ? true : false)
@@ -162,11 +178,13 @@ module.exports = Object.assign(new EventEmitter(), {
     },
     SQLGet(client, type, name) //Should not be used directly
     {
-        return new Promise(resolve => {
+        return new Promise(resolve =>
+        {
             var isModule = type == 'modules';
             var connection = client.scripts.getSQL();
             var SQLQuery = `SELECT * FROM \`${type}\` ${(name || !isModule) ? 'WHERE ' : ''}${name ? `\`name\` = '${name}'` : ''}${(name && !isModule ? ' AND ' : '')}${!isModule ? `\`moduleID\` = ${this.ID}` : ''}`;
-            connection.query(SQLQuery, (err, rows) => {
+            connection.query(SQLQuery, (err, rows) =>
+            {
                 if (err)
                     return reject(err)
                 resolve(rows)
@@ -175,17 +193,20 @@ module.exports = Object.assign(new EventEmitter(), {
     },
     SQLInsert(client, type, comOrEvName) //Should not be used directly
     {
-        return new Promise(resolve => {
+        return new Promise(resolve =>
+        {
             var connection = client.scripts.getSQL();
             var SQLQuery = `INSERT INTO ${type} (\`name\`, \`enabled\`, \`moduleID\`) VALUES ('${comOrEvName}', 1, '${this.ID}')`;
-            connection.query(SQLQuery, (err, rows) => {
+            connection.query(SQLQuery, (err, rows) =>
+            {
                 if (err)
                     return reject(err)
                 resolve((rows.affectedRows != 0) ? true : false)
             });
         });
     },
-    Warn(warnString) {
+    Warn(warnString)
+    {
         this.emit('warn', warnString);
         return false;
     },

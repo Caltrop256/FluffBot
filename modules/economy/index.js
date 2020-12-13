@@ -18,8 +18,10 @@ module.exports.Info({
 const config = require(process.env.tropbot + '/config.json')
 const plotly = require('plotly')(config.pName, config.pToken);
 
-class MoneyInfo {
-    constructor(ID, coins = null, entries = []) {
+class MoneyInfo
+{
+    constructor(ID, coins = null, entries = [])
+    {
         this.ID = ID;
         this.coins = coins ? parseInt(coins) : 0;
         this.entries = entries;
@@ -28,11 +30,15 @@ class MoneyInfo {
     };
 };
 // make sure to check out merch monday I'm taking 25% off all my dope hoodies
-module.exports.ModuleSpecificCode = function (client) {
-    function updateMoney(userID, amount, setMoney = false) {
-        return new Promise((resolve, reject) => {
+module.exports.ModuleSpecificCode = function (client)
+{
+    function updateMoney(userID, amount, setMoney = false)
+    {
+        return new Promise((resolve, reject) =>
+        {
             var connection = client.scripts.getSQL(true);
-            client.getMoney(userID).then(u => {
+            client.getMoney(userID).then(u =>
+            {
                 let DateChanged = new Date(Date.now());
                 //let ID = u.id;
                 let Value = setMoney ? amount : u.coins + amount;
@@ -41,16 +47,19 @@ module.exports.ModuleSpecificCode = function (client) {
                     `UPDATE coins SET coins = ${Value} WHERE id = '${userID}'` :
                     `INSERT INTO coins (id, coins) VALUES ('${userID}', ${Value})`;
 
-                connection.query(sql, (err, rows) => {
+                connection.query(sql, (err, rows) =>
+                {
                     connection.end();
-                    if (err) {
+                    if (err)
+                    {
                         console.log(err, err.stack);
                         return reject(4);
                     }
                     //if(!rows) return reject('No such user'); //what
                     return resolve(rows[1].coins);
                 });
-            }).catch(err => {
+            }).catch(err =>
+            {
                 console.log(err, err.stack);
                 reject(err);
             })
@@ -59,9 +68,11 @@ module.exports.ModuleSpecificCode = function (client) {
 
     function getTotalMoney() //i gotta do more caching, the poor sql server :c
     {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) =>
+        {
             var connection = client.scripts.getSQL();
-            connection.query('SELECT SUM(coins) total FROM coins', (err, rows) => {
+            connection.query('SELECT SUM(coins) total FROM coins', (err, rows) =>
+            {
                 connection.end();
                 if (err) return reject(err);
                 resolve(rows[0].coins);
@@ -69,14 +80,18 @@ module.exports.ModuleSpecificCode = function (client) {
         });
     }
 
-    function getMoney(ID, getEntries = false, afterDate = null) {
+    function getMoney(ID, getEntries = false, afterDate = null)
+    {
         var connection = client.scripts.getSQL(getEntries);
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) =>
+        {
             var SQL = `SELECT * FROM coins WHERE ID = '${ID}';`
             SQL += getEntries ? `SELECT * FROM usercoinchange WHERE UserID = '${ID}'${afterDate ? ` AND DateChanged > '${afterDate.toISOString()}'` : ''}  ORDER BY \`DateChanged\` DESC` : '';
-            connection.query(SQL, (err, rows) => {
+            connection.query(SQL, (err, rows) =>
+            {
                 connection.end();
-                if (err) {
+                if (err)
+                {
                     console.log(err, err.stack);
                     reject(4);
                 }
@@ -87,11 +102,14 @@ module.exports.ModuleSpecificCode = function (client) {
             })
         })
     }
-    function getTrace(ID, name, color, hasBackground, time = null) {
-        return new Promise((resolve, reject) => {
+    function getTrace(ID, name, color, hasBackground, time = null)
+    {
+        return new Promise((resolve, reject) =>
+        {
             var highestAmt = 0
             var lowestAmt = Infinity
-            client.getMoney(ID, true, time ? new Date(Date.now() - time) : null).then((moneyInfo) => {
+            client.getMoney(ID, true, time ? new Date(Date.now() - time) : null).then((moneyInfo) =>
+            {
                 if (!moneyInfo.hasEntry)
                     return reject(1);
                 var ChangeArray = moneyInfo.entries;
@@ -102,7 +120,8 @@ module.exports.ModuleSpecificCode = function (client) {
                 if (ChangeArray.length < 1)
                     return reject(3)
 
-                ChangeArray.forEach(ChangeItem => {
+                ChangeArray.forEach(ChangeItem =>
+                {
                     DatesArray.push(ChangeItem.DateChanged);
                     CoinsArray.push(ChangeItem.Coins);
                 });
@@ -118,22 +137,27 @@ module.exports.ModuleSpecificCode = function (client) {
                     }
                 };
                 resolve(trace);
-            }).catch(err => {
+            }).catch(err =>
+            {
                 console.log(err.stack);
                 reject(4);
             })
 
         });
     };
-    async function getTraces(IDArray, NameArray, ColorArray, time = null) {
+    async function getTraces(IDArray, NameArray, ColorArray, time = null)
+    {
         var UserGraphTraceArray = [];
         var resultCodes = [];
-        for (var i = 0; i < IDArray.length; i++) {
-            try {
+        for (var i = 0; i < IDArray.length; i++)
+        {
+            try
+            {
                 UserGraphTraceArray.push(await getTrace(IDArray[i], NameArray[i], ColorArray[i], false, time));
                 resultCodes.push(6);
             }
-            catch (err) {
+            catch (err)
+            {
                 if (typeof (err) != 'number') throw err;
                 UserGraphTraceArray.push(null);
                 resultCodes.push(err);
@@ -141,42 +165,53 @@ module.exports.ModuleSpecificCode = function (client) {
         }
         return { codes: resultCodes, traces: UserGraphTraceArray };
     }
-    function getGraph(ID, name, color, graphTitle, xNodes, yNodes, hasBackground = false, time = null, padding = -1) {
-        return new Promise((resolve, reject) => {
+    function getGraph(ID, name, color, graphTitle, xNodes, yNodes, hasBackground = false, time = null, padding = -1)
+    {
+        return new Promise((resolve, reject) =>
+        {
             client.getTrace(ID, name, color, hasBackground, time).then(trace =>
                 client.graphTraces([trace], graphTitle, xNodes, yNodes, padding).then(graph =>
                     resolve(graph)
-                ).catch(err => {
+                ).catch(err =>
+                {
                     if (typeof (err) != 'number') console.log(err, err.stack);
                     reject(err);
                 })
-            ).catch(err => {
+            ).catch(err =>
+            {
                 if (typeof (err) != 'number') console.log(err, err.stack);
                 reject(err);
             })
         });
     }
-    function getGraphs(IDArray, NameArray, ColorArray, graphTitle, xNodes, yNodes, time = null, padding = -1) {
-        return new Promise((resolve, reject) => {
-            client.getTraces(IDArray, NameArray, ColorArray, time).then(traceResult => {
+    function getGraphs(IDArray, NameArray, ColorArray, graphTitle, xNodes, yNodes, time = null, padding = -1)
+    {
+        return new Promise((resolve, reject) =>
+        {
+            client.getTraces(IDArray, NameArray, ColorArray, time).then(traceResult =>
+            {
                 var codes = traceResult.codes;
                 var successfulCodes = codes.filter(code => code == 6).length;
                 if (!successfulCodes) reject(codes);
                 var traces = traceResult.traces.filter(trace => trace !== null);
                 client.graphTraces(traces, graphTitle, xNodes, yNodes, padding).then(graph =>
                     resolve({ codes: codes, graph: graph })
-                ).catch(err => {
+                ).catch(err =>
+                {
                     if (typeof (err) != 'number') console.log(err, err.stack);
                     reject(err);
                 })
-            }).catch(err => {
+            }).catch(err =>
+            {
                 console.log(err, err.stack);
                 reject(err);
             })
         });
     }
-    function graphTraces(traceArray, graphTitle, xNodes, yNodes, padding = -1) {
-        return new Promise((resolve, reject) => {
+    function graphTraces(traceArray, graphTitle, xNodes, yNodes, padding = -1)
+    {
+        return new Promise((resolve, reject) =>
+        {
             //if(!traceArray.length) reject('length')
             var genericAxis = {
                 showgrid: true,
@@ -208,12 +243,15 @@ module.exports.ModuleSpecificCode = function (client) {
             var highestAmt = 0;
             var earliestDate = new Date(8640000000000000);
             var latestDate = new Date(-8640000000000000);
-            traceArray.forEach(trace => {
-                trace.x.forEach(date => {
+            traceArray.forEach(trace =>
+            {
+                trace.x.forEach(date =>
+                {
                     if (date > latestDate) latestDate = date;
                     if (date < earliestDate) earliestDate = date;
                 });
-                trace.y.forEach(coins => {
+                trace.y.forEach(coins =>
+                {
                     if (coins > highestAmt) highestAmt = coins;
                     if (coins < lowestAmt) lowestAmt = coins;
                 });
@@ -258,8 +296,10 @@ module.exports.ModuleSpecificCode = function (client) {
                 width: 2000,
                 height: 500,
             };
-            plotly.getImage(figure, imgOpts, (error, imageStream) => {
-                if (error) {
+            plotly.getImage(figure, imgOpts, (error, imageStream) =>
+            {
+                if (error)
+                {
                     console.log(error.stack);
                     reject(5);
                 }

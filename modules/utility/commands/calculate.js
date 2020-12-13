@@ -13,24 +13,30 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
-        var Formal = args.join(" ").replace(/÷/g,"/").replace(/pi/gi, "π").match(/([0-9^ +\-*/%()π.e]+)/gi)
+        var Formal = args.join(" ").replace(/÷/g, "/").replace(/pi/gi, "π").match(/([0-9^ +\-*/%()π.e]+)/gi)
         if (!Formal) return message.reply(`Invalid calculation`)
-        var str = Formal[0]
-        try {
-            var Output = eval(str.replace(/\^/g, "**").replace(/π/g, `Math.PI`).replace(/e/gi, "Math.E"))    
-        } catch (error) {
+        var str = Formal[0].trim()
+        if (!str.length) return message.reply(`Invalid calculation`)
+        try
+        {
+            var Output = eval(str.replace(/\^/g, "**").replace(/π/g, `Math.PI`).replace(/e/gi, "Math.E"))
+        } catch (error)
+        {
             console.error(error);
-            return message.channel.send({ embed: client.scripts.getEmbed()
-                .setAuthor("Calculation Error", message.member.user.avatarURL, message.member.user.avatarURL)
-                .setColor(message.member.displayHexColor)
-                .setDescription("An Error has occured while trying to process your calculation.")
-                .addField("Input", `\`${Formal[0]}\``, true)
-                .setTimestamp() });
+            return message.channel.send({
+                embed: client.scripts.getEmbed()
+                    .setAuthor("Calculation Error", message.member.user.avatarURL, message.member.user.avatarURL)
+                    .setColor(message.member.displayHexColor)
+                    .setDescription("An Error has occured while trying to process your calculation.")
+                    .addField("Input", `\`${Formal[0]}\``, true)
+                    .setTimestamp()
+            });
 
         }
-        
+
 
         var reg = Output.toString().match(new RegExp(/(?<=\b\.\b)0*/im));
         if (reg !== null) { var zeros = reg[0].toString().length }

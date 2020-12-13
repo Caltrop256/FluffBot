@@ -8,20 +8,24 @@ const smartTruncate = require('smart-truncate')
 var distance = require("leven");
 
 module.exports = {
-    async execute(client, oldMessage, newMessage) {
-        if (newMessage.channel.type == 'text' && newMessage.cleanContent != oldMessage.cleanContent) {
+    async execute(client, oldMessage, newMessage)
+    {
+        if (newMessage.channel.type == 'text' && newMessage.cleanContent != oldMessage.cleanContent)
+        {
             client.lastSeen(newMessage.member, `Edited their message in #${newMessage.channel.name}`)
             const embeds = newMessage.embeds;
             const attachments = newMessage.attachments;
             let eURL = ''
-            if (embeds.length > 0) {
+            if (embeds.length > 0)
+            {
                 if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                     eURL = embeds[0].thumbnail.url;
                 else if (embeds[0].image && embeds[0].image.url)
                     eURL = embeds[0].image.url;
                 else
                     eURL = embeds[0].url;
-            } else if (attachments.array().length > 0) {
+            } else if (attachments.array().length > 0)
+            {
                 const attARR = attachments.array();
                 eURL = attARR[0].url;
             }
@@ -33,7 +37,8 @@ module.exports = {
                 .setDescription(`**${newMessage.author} edited their message for the ${client.scripts.ordinalSuffix(newMessage.edits.length - 1)} time**[Jump to Message](${newMessage.url})`)
                 .setFooter(`ID: ${newMessage.author.id}`)
             var edits = newMessage.edits.reverse()
-            edits.forEach((e, index) => {
+            edits.forEach((e, index) =>
+            {
                 if (index == 0) { Embed.addField(`Original Message`, smartTruncate(e.content, 512) || `\`File only\``) }
                 else Embed.addField(`${client.scripts.ordinalSuffix(index)} Edit [${distance(Embed.fields[index - 1].value, e.content)}]`, smartTruncate(e.content, 512) || `\`File only\``)
             })

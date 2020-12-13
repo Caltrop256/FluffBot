@@ -7,7 +7,8 @@ module.exports.Info({
 });
 
 const Discord = require('discord.js')
-module.exports.ModuleSpecificCode = function (client) {
+module.exports.ModuleSpecificCode = function (client)
+{
 
     /**makes an entry in the mute database
      * @param  {TropBot} client
@@ -19,32 +20,41 @@ module.exports.ModuleSpecificCode = function (client) {
      * @param  {Boolean} self
      * @param  {Snowflake} channel
      */
-    function muteUser(client, userId, modId, expiry, start, guild, self = false, channel = null) {
-        return new Promise((resolve, reject) => {
+    function muteUser(client, userId, modId, expiry, start, guild, self = false, channel = null)
+    {
+        return new Promise((resolve, reject) =>
+        {
             if (userId == modId) self = true;
             var connection = client.scripts.getSQL(false);
-            connection.query(`select * from mute WHERE id = ${userId}`, (err, rows) => {
+            connection.query(`select * from mute WHERE id = ${userId}`, (err, rows) =>
+            {
                 if (err) return reject(err);
 
                 var channelsArr = [];
                 var guildWide = 0;
 
-                rows.forEach(r => {
-                    if (r.channel) {
+                rows.forEach(r =>
+                {
+                    if (r.channel)
+                    {
                         channelsArr.push(r.channel);
                     } else if (r.expiry - Date.now() > guildWide) guildWide = r.expiry - Date.now();
                 });
-                if (channel && channelsArr.includes(channel)) {
+                if (channel && channelsArr.includes(channel))
+                {
                     var dontContinue = true;
                     return reject('Already muted in this Channel');
                 };
-                if (guildWide) {
+                if (guildWide)
+                {
                     var dontContinue = true;
                     return reject(`Already muted globally, expires in ${guildWide}`);
                 };
 
-                if (!dontContinue) {
-                    connection.query(`INSERT INTO mute (id, invokinguser, expiry, guild, start, selfmute, channel) VALUES ('${userId}', '${modId}', ${expiry}, '${guild.id}', ${start}, ${Number(self)}, ${channel ? `'${channel}'` : 'NULL'})`, async (err, rows) => {
+                if (!dontContinue)
+                {
+                    connection.query(`INSERT INTO mute (id, invokinguser, expiry, guild, start, selfmute, channel) VALUES ('${userId}', '${modId}', ${expiry}, '${guild.id}', ${start}, ${Number(self)}, ${channel ? `'${channel}'` : 'NULL'})`, async (err, rows) =>
+                    {
                         if (err) return reject(err);
 
                         var user = await client.fetchUser(userId, true);
@@ -62,12 +72,14 @@ module.exports.ModuleSpecificCode = function (client) {
 
                         var muteRole = guild.roles.find(r => r.name.toLowerCase() == 'muted')
 
-                        if (channel) {
+                        if (channel)
+                        {
                             client.channels.get(channel).overwritePermissions(member, {
                                 SEND_MESSAGES: false,
                                 ADD_REACTIONS: false
                             }, `Muted by ${mod.tag}`)
-                        } else {
+                        } else
+                        {
                             member.addRole(muteRole.id, `Muted by ${mod.tag}`)
                         };
 
@@ -84,20 +96,25 @@ module.exports.ModuleSpecificCode = function (client) {
 
                         resolve(true);
                     });
-                } else {
+                } else
+                {
                     reject('an Error occured');
                 }
             });
         });
     };
-    function unmuteUser(client, userId, auto = false, channel = null) {
-        return new Promise((resolve, reject) => {
+    function unmuteUser(client, userId, auto = false, channel = null)
+    {
+        return new Promise((resolve, reject) =>
+        {
             var connection = client.scripts.getSQL(false);
-            connection.query(`select * from mute WHERE id = '${userId}' AND channel ${channel ? `= '${channel}'` : `IS NULL`}`, (err, rows) => {
+            connection.query(`select * from mute WHERE id = '${userId}' AND channel ${channel ? `= '${channel}'` : `IS NULL`}`, (err, rows) =>
+            {
                 if (err) return reject(err);
                 if (!rows.length) return reject(`The user isn't muted in ${channel ? client.channels.get(channel).toString() : `this Guild (globally)`}`);
 
-                connection.query(`DELETE FROM mute WHERE id = '${userId}' AND channel ${channel ? `= '${channel}'` : `IS NULL`}`, async (err, delRows) => {
+                connection.query(`DELETE FROM mute WHERE id = '${userId}' AND channel ${channel ? `= '${channel}'` : `IS NULL`}`, async (err, delRows) =>
+                {
                     if (err) return reject(err);
 
                     var mGuild = client.guilds.get(rows[0].guild) || client.guilds.get('562324876330008576');
@@ -105,12 +122,14 @@ module.exports.ModuleSpecificCode = function (client) {
                     var member = mGuild.member(user);
                     var self = !!rows[0].selfmute;
 
-                    if (channel) {
+                    if (channel)
+                    {
                         client.channels.get(channel).overwritePermissions(member, {
                             SEND_MESSAGES: null,
                             ADD_REACTIONS: null
                         }, `${user.tag} unmuted`);
-                    } else {
+                    } else
+                    {
                         var muteRole = mGuild.roles.find(r => r.name.toLowerCase() == 'muted');
                         member.removeRole(muteRole);
                     };
@@ -137,22 +156,30 @@ module.exports.ModuleSpecificCode = function (client) {
             });
         });
     };
-    function mutecooldownCheck() {
+    function mutecooldownCheck()
+    {
         var connection = client.scripts.getSQL(false);
-        connection.query(`SELECT * FROM mute`, (err, rows) => {
+        connection.query(`SELECT * FROM mute`, (err, rows) =>
+        {
             if (err) console.error(err);
-            if (!rows) {
+            if (!rows)
+            {
                 return
-            } else {
-                rows.forEach(row => {
-                    if (Date.now() > row.expiry && client.status === Discord.Constants.Status.READY) {
+            } else
+            {
+                rows.forEach(row =>
+                {
+                    if (Date.now() > row.expiry && client.status === Discord.Constants.Status.READY)
+                    {
                         console.color.green(`[MUTE]`), `The mute of ${row.id} has expired!`
 
                         client.unmuteUser(client, row.id, true, row.channel)
-                            .then(success => {
+                            .then(success =>
+                            {
                                 if (success) console.log(success);
                             })
-                            .catch(err => {
+                            .catch(err =>
+                            {
                                 throw err;
                             });
                     };

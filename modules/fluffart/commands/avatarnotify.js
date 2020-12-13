@@ -13,16 +13,20 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
         var userID = message.author.id;
         var indexOf = client.subscriptions.avatar.indexOf(userID);
         var toDelete = false;
-        if (indexOf !== -1) {
+        if (indexOf !== -1)
+        {
             client.subscriptions.avatar = client.subscriptions.avatar.filter((userID) => client.subscriptions.avatar.indexOf(userID) != indexOf);
             toDelete = true;
             message.reply('Unsubscribed from avatar notifications');
-        } else {
-            try {
+        } else
+        {
+            try
+            {
                 await message.author.send('Just testing to make sure Direct Messaging is enabled');
                 client.subscriptions.avatar.push(userID);
                 message.reply('Subscribed to avatar notifications');

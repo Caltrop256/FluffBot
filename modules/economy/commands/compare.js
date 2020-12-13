@@ -17,7 +17,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    async execute(client, args, message) {
+    async execute(client, args, message)
+    {
         var connection = client.scripts.getSQL(true);
         var ids = new Array();
         var names = new Array();
@@ -26,9 +27,11 @@ module.exports = {
         var mentions = new Array();
 
         if (args.length < 2) args[1] = `${message.author.id}`
-        for (var i = 0; i < args.length; i++) {
+        for (var i = 0; i < args.length; i++)
+        {
             var member = client.getMember(args[i], message.guild, null);
-            if (member && !ids.includes(member.id)) {
+            if (member && !ids.includes(member.id))
+            {
                 let user = member.user;
                 ids.push(member.id);
                 names.push(user.tag.replace(/[^\x00-\x7F]/gi, ""));
@@ -40,8 +43,10 @@ module.exports = {
 
 
 
-        function mentionsLimit(mentionsArr) {
-            if (mentionsArr.length > 5) {
+        function mentionsLimit(mentionsArr)
+        {
+            if (mentionsArr.length > 5)
+            {
                 mentionsArr[4] = `${mentionsArr.length - 5} others`
                 mentionsArr.length = 5;
             }
@@ -60,14 +65,17 @@ module.exports = {
                6 : successfully got trace (getTraces only)
                [Object object] : unhandled exception
        */
-        function errDesc(errCodes) {
+        function errDesc(errCodes)
+        {
             if (errCodes.every(code => code == 6)) return;
             var descInfo = ''
-            for (i = 0; i < errCodes.length; i++) {
+            for (i = 0; i < errCodes.length; i++)
+            {
                 if (errCodes[i] == 6) continue;
                 descInfo += '\n';
 
-                switch (errCodes[i]) {
+                switch (errCodes[i])
+                {
                     case 1: descInfo += `${mentions[i]} has never received or spent any money, what a Lurker`; break;
                     case 2: descInfo += `No entries found for ${mentions[i]}.`; break;
                     case 3: descInfo += `${mentions[i]} doesn't have enough entries to draw a complete Graph!`; break;
@@ -78,11 +86,13 @@ module.exports = {
             return descInfo.substring(1, descInfo.length);
         }
         var notGraphedCount = 0
-        client.getGraphs(ids, names, colors, 'Wealth Comparison', 7, 7).then(graphInfo => {
+        client.getGraphs(ids, names, colors, 'Wealth Comparison', 7, 7).then(graphInfo =>
+        {
             var graph = graphInfo.graph;
             var codes = graphInfo.codes;
             var mentionGraphed = new Array()
-            for (i = 0; i < mentions.length; i++) {
+            for (i = 0; i < mentions.length; i++)
+            {
                 if (codes[i] == 6) mentionGraphed.push(mentions[i]);
             }
             var attachment = new Discord.Attachment(graph, "graph.png");
@@ -95,9 +105,11 @@ module.exports = {
             notGraphedCount = codes.length - mentionGraphed.length;
             coinEmbed.addField(`\nFailed to graph ${notGraphedCount} user${notGraphedCount != 1 ? 's' : ''}`, errDesc(codes))
 
-        }).catch(errCodes => {
+        }).catch(errCodes =>
+        {
             var descInfo = '';
-            if (errCodes.length) {
+            if (errCodes.length)
+            {
                 descInfo = 'Failed to get graphs for any of the mentioned users for the following reasons:\n';
                 descInfo += errDesc(errCodes);
             }
@@ -106,7 +118,8 @@ module.exports = {
                     descInfo = 'A plot.ly error has occurred. This is most likely due to the service being down. Please try running the command later';
                 else
                     descInfo = 'This should not appear.If it does, please contact one of the developers (Type:errNum)';
-            else {
+            else
+            {
                 if (errCodes.message.includes('RichEmbed field'))
                     coinEmbed.addField('Error', `Unable to display all ${notGraphedCount} user${notGraphedCount != 1 ? 's' : ''} who werens't able to be traced`);
                 else if (errCodes.message == 'Too many connections')
@@ -115,7 +128,8 @@ module.exports = {
                     descInfo = 'An unhandled exception has occurred while getting the graphs. Please contact one of the developers about this'
             }
             if (descInfo.length) coinEmbed.setDescription(descInfo)
-        }).finally(() => {
+        }).finally(() =>
+        {
             message.channel.send({ embed: coinEmbed })
         });
     }

@@ -14,28 +14,37 @@ module.exports = {
     },
     perms: [],
 
-    async execute(client, args, message) {
-        function Get(URL) {
-            return new Promise((resolve, reject) => {
+    async execute(client, args, message)
+    {
+        function Get(URL)
+        {
+            return new Promise((resolve, reject) =>
+            {
                 var Done = false;
-                https.get(URL, (resp) => {
+                https.get(URL, (resp) =>
+                {
                     data = '';
-                    resp.on('data', (chunk) => {
+                    resp.on('data', (chunk) =>
+                    {
                         data += chunk;
                     });
-                    resp.on('end', () => {
+                    resp.on('end', () =>
+                    {
                         resolve(JSON.parse(data))
                     });
-                }).on("error", (err) => {
+                }).on("error", (err) =>
+                {
                     reject(err);
                 });
             })
         }
 
-        while (true) {
+        while (true)
+        {
             var ResultObj = await Get("https://fluffyart.cheeseboye.com/randimage.php?bot")
 
-            if (ResultObj.file.Extension == "png" || ResultObj.file.Extension == "gif" || ResultObj.file.Extension == "jpg") {
+            if (ResultObj.file.Extension == "png" || ResultObj.file.Extension == "gif" || ResultObj.file.Extension == "jpg")
+            {
                 break;
             }
         }
@@ -51,21 +60,24 @@ module.exports = {
             .setFooter(`${ResultObj.file.ID} | Powered by fluffyart.cheeseboye.com`)
             .setTimestamp()
 
-        message.channel.send({ embed: fluffyArtEmbed }).then(async msg => {
+        message.channel.send({ embed: fluffyArtEmbed }).then(async msg =>
+        {
             const VotingTime = 60000
 
             await msg.react("👍")
             await msg.react("❌")
             var reacted = ''
 
-            const Likefilter = (reaction, user) => {
+            const Likefilter = (reaction, user) =>
+            {
                 return reaction.emoji.name === '👍' && user.id === message.author.id;
             };
             msg.awaitReactions(Likefilter, { max: 1, time: VotingTime, errors: ['time'] })
                 .then(collected => likeFunc(collected)).catch((error) => console.log(error))
 
 
-            async function likeFunc(collected) {
+            async function likeFunc(collected)
+            {
                 if (reacted.includes("disabled")) { return }
 
                 var collection = collected.first()
@@ -95,28 +107,33 @@ module.exports = {
 
                 var reactionUsers = [];
 
-                await collection.users.forEach(u => {
+                await collection.users.forEach(u =>
+                {
 
-                    if (!u.bot) {
+                    if (!u.bot)
+                    {
                         reactionUsers.push(u.username)
                     }
                 });
 
                 let reactionUsersClean = reactionUsers.map(function (e) { return "\`" + e + "\`" });
 
-                if (SuccessObj.success == true) {
+                if (SuccessObj.success == true)
+                {
                     message.channel.send(`🎉 ${reactionUsersClean.join(", ").replace(/, ([^,]*)$/, ' and $1')} liked the Image!`)
                 } else { message.reply("Encountered an Error while trying to like the image, please message **Caltrop#0001** if this Error persists.") }
             }
 
 
-            const ReportFilter = (reaction, user) => {
+            const ReportFilter = (reaction, user) =>
+            {
                 return reaction.emoji.name === '❌' && user.id === message.author.id;
             };
             msg.awaitReactions(ReportFilter, { max: 1, time: VotingTime, errors: ['time'] })
                 .then(collected => reportFunc(collected)).catch((error) => console.log(error))
 
-            async function reportFunc(collected) {
+            async function reportFunc(collected)
+            {
                 if (reacted.includes("disabled")) { return }
 
                 var collection = collected.first()
@@ -142,8 +159,10 @@ module.exports = {
 
                 var reactionUsers = [];
 
-                await collection.users.forEach(u => {
-                    if (!u.bot) {
+                await collection.users.forEach(u =>
+                {
+                    if (!u.bot)
+                    {
                         reactionUsers.push(u.username)
                     }
                 });
@@ -152,15 +171,18 @@ module.exports = {
 
 
 
-                if (SuccessObj.success == true) {
+                if (SuccessObj.success == true)
+                {
                     message.channel.send(`${reactionUsersClean.join(", ").replace(/, ([^,]*)$/, ' and $1')} reported the Image!`)
                 } else { message.reply("Encountered an Error while trying to report the image, please message **Caltrop#0001** if this Error persists.") }
             }
 
-            setTimeout(() => {
+            setTimeout(() =>
+            {
                 if (reacted.includes("disabled")) { return }
                 msg.channel.fetchMessage(msg.id)
-                    .then(async function (message) {
+                    .then(async function (message)
+                    {
 
                         var LikeReactions = message.reactions.first()
                         var reportReactions = message.reactions.last()
@@ -176,19 +198,24 @@ module.exports = {
                         var LikeUsers = [];
                         var reportUsers = [];
 
-                        await LikeReactions.users.forEach(u => {
-                            if (!u.bot) {
+                        await LikeReactions.users.forEach(u =>
+                        {
+                            if (!u.bot)
+                            {
                                 LikeUsers.push(u.username)
                             }
                         });
 
-                        await reportReactions.users.forEach(u => {
-                            if (!u.bot) {
+                        await reportReactions.users.forEach(u =>
+                        {
+                            if (!u.bot)
+                            {
                                 reportUsers.push(u.username)
                             }
                         });
 
-                        var duplicateUsers = LikeUsers.filter(function (val) {
+                        var duplicateUsers = LikeUsers.filter(function (val)
+                        {
                             return reportUsers.indexOf(val) != -1;
                         });
 

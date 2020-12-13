@@ -11,7 +11,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         /*client.muteUser(client, message.member.id, client.user.id, Infinity, Date.now(), message.guild, false, null);
         lol i wish*/
@@ -23,14 +24,16 @@ module.exports = {
         var channel = client.getChannel(args[0], message.channel)
         if (!channel) return message.reply("Couldn't find the channel")
 
-        channel.fetchMessages({ limit: 20 }).then(messages => {
+        channel.fetchMessages({ limit: 20 }).then(messages =>
+        {
             if (messages.size < 2) return message.reply("The channel must include at least 2 messages")
             let filteredMessage = messages.filter(msg => !msg.content.toLowerCase().includes("ischatdead")).filter(msg => !msg.author.bot)
 
             var timestampArray = []
             var timestampArrayB = []
 
-            messages.forEach(m => {
+            messages.forEach(m =>
+            {
                 timestampArray.push(m.createdTimestamp)
                 timestampArrayB.push(m.createdTimestamp)
             })
@@ -38,7 +41,8 @@ module.exports = {
             timestampArrayB.shift()
             var timestampArrayReduced = []
 
-            for (var i = 0; i <= timestampArrayB.length - 1; i++) {
+            for (var i = 0; i <= timestampArrayB.length - 1; i++)
+            {
                 timestampArrayReduced.push(timestampArray[i] - timestampArrayB[i]);
             }
 

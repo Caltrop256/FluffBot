@@ -3,7 +3,7 @@ const prettyMs = require('pretty-ms');
 
 module.exports = {
     name: 'peopleinrole',
-    aliases: ['roleusers'],
+    aliases: ['roleusers', 'usersinrole'],
     description: 'Displays all Users in a Role',
     args: true,
     usage: '<role>',
@@ -15,8 +15,9 @@ module.exports = {
     perms: ['MANAGE_GUILD', 'MANAGE_ROLES'],
 
 
-    async execute(client, args, message) {
-        var role = client.getRole(args.join(" "), message.guild)
+    async execute(client, args, message)
+    {
+        var role = client.getRole(client, args.join(" "), message.guild)
         if (!role) return message.reply("Couldn't find role.")
 
         var leaderboardEmbed = client.scripts.getEmbed()
@@ -26,9 +27,10 @@ module.exports = {
 
         var leaderboardArray = [];
 
-        await role.members.forEach(m => {
+        await role.members.forEach(m =>
+        {
             var rowMember = message.guild.members.get(m.id)
-            LeaderboardArray.push(rowMember.toString());
+            leaderboardArray.push(rowMember.toString());
         })
         client.leaderboardSelect(message.channel, message, leaderboardEmbed, leaderboardArray)
     }

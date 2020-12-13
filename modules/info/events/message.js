@@ -4,7 +4,8 @@ PARAMETER      TYPE           DESCRIPTION
 message        Message        The created message    */
 
 module.exports = {
-    execute(client, message) {
+    execute(client, message)
+    {
         client.lastSeen(message.author, `Sent a message in #${message.channel.name}`)
     }
 }

@@ -4,9 +4,11 @@ PARAMETER     TYPE               DESCRIPTION
 member        GuildMember        The member that has joined a guild    */
 
 module.exports = {
-    execute(client, member) {
+    execute(client, member)
+    {
         client.lastSeen(member, `Joined the Guild`)
-        member.guild.fetchInvites().then(guildInvites => {
+        member.guild.fetchInvites().then(guildInvites =>
+        {
             const ei = client.invites[member.guild.id];
             client.invites[member.guild.id] = guildInvites;
             const invite = guildInvites.find(i => ei.get(i.code).uses < i.uses);

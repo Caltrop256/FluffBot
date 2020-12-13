@@ -16,7 +16,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var connection = client.scripts.getSQL(false);
         var member = client.getMember(args.join(" "), message.guild, message.member)
         if (!member) return message.reply(`Couldn't locate that user.`)
@@ -26,7 +27,8 @@ module.exports = {
         if (user.id == message.author.id) return message.reply(`That's you...`)
 
         var collectionOBJ = client.lastSeenCollec.get(user.id)
-        if (collectionOBJ) {
+        if (collectionOBJ)
+        {
             var lastseenembed = client.scripts.getEmbed()
                 .setAuthor(user.tag, user.avatarURL)
                 .setThumbnail(user.avatarURL)
@@ -36,10 +38,13 @@ module.exports = {
                 .setTimestamp();
 
             message.channel.send({ embed: lastseenembed })
-        } else {
-            connection.query(`SELECT * FROM lastseen WHERE id = '${user.id}'`, (err, rows) => {
+        } else
+        {
+            connection.query(`SELECT * FROM lastseen WHERE id = '${user.id}'`, (err, rows) =>
+            {
                 if (err) throw err
-                if (rows.length > 0) {
+                if (rows.length > 0)
+                {
                     var collectionOBJ = rows[0]
                     var lastseenembed = client.scripts.getEmbed()
                         .setAuthor(user.tag)

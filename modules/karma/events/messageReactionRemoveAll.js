@@ -7,7 +7,8 @@ message             	Message             	The message the reactions were removed
 
 
 module.exports = {
-    execute(client, message) {
+    execute(client, message)
+    {
         if (!message.guild) return;
         console.log('messageReactionRemoveAll');
         client.handleReactRemoveAll(message);

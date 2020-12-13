@@ -14,7 +14,8 @@ module.exports = {
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_GUILD'],
 
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
         var member = client.getMember(args[0], message.guild, null);
         if (!member) return message.reply(`Couldn't locate that member!`);
 

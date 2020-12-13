@@ -4,7 +4,8 @@ PARAMETER    TYPE     DESCRIPTION
 error        Error    The encountered error    */
 
 module.exports = {
-    execute(client, error) {
+    execute(client, error)
+    {
         console.error(error);
     }
 };

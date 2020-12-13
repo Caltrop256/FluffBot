@@ -15,7 +15,8 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_CHANNELS', 'GUILD_OWNER'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var specifiedChannel = client.getChannel(args.join(" "), null);
         if (!specifiedChannel) return message.reply(`Couldn't find that Channel`)
@@ -24,22 +25,27 @@ module.exports = {
 
         messageFetcher3000(specifiedChannel)
 
-        async function channelArchiver3000(specifiedChannel) {
-            await message.guild.roles.forEach(r => {
+        async function channelArchiver3000(specifiedChannel)
+        {
+            await message.guild.roles.forEach(r =>
+            {
                 specifiedChannel.overwritePermissions(r, { 'SEND_MESSAGES': false, 'ADD_REACTIONS': false }, "Archiving Channel")
             })
             await specifiedChannel.setParent("562327196660793369", "Archiving Channel")
         }
 
-        async function messageFetcher3000(specifiedChannel) {
+        async function messageFetcher3000(specifiedChannel)
+        {
             var hrstart = process.hrtime()
 
             const sum_messages = [];
             let last_id;
 
-            while (true) {
+            while (true)
+            {
                 const options = { limit: 100, before: message.id };
-                if (last_id) {
+                if (last_id)
+                {
                     options.before = last_id;
                 }
 
@@ -47,7 +53,8 @@ module.exports = {
                 sum_messages.push(...messages.array());
                 last_id = messages.last().id;
 
-                if (messages.size != 100) {
+                if (messages.size != 100)
+                {
                     break;
                 }
             }
@@ -66,13 +73,15 @@ module.exports = {
 
             var uncleanImagesArray = []
 
-            sum_messages.forEach(m => {
+            sum_messages.forEach(m =>
+            {
                 timestampArray.push(m.createdTimestamp)
                 timestampArrayB.push(m.createdTimestamp)
 
                 LengthArray.push(m.content.length)
 
-                if (m.member !== null) {
+                if (m.member !== null)
+                {
                     MemberArray.push(m.member)
                     memberAccountAgeArray.push(m.member.user.createdTimestamp)
                     memberjoinedDateArray.push(m.member.joinedTimestamp)
@@ -83,7 +92,8 @@ module.exports = {
 
                     let eURL = ''
 
-                    if (embeds.length > 0) {
+                    if (embeds.length > 0)
+                    {
 
                         if (embeds[0].thumbnail && embeds[0].thumbnail.url)
                             eURL = embeds[0].thumbnail.url;
@@ -92,7 +102,8 @@ module.exports = {
                         else
                             eURL = embeds[0].url;
 
-                    } else if (attachments.array().length > 0) {
+                    } else if (attachments.array().length > 0)
+                    {
                         const attARR = attachments.array();
                         eURL = attARR[0].url;
                     }
@@ -101,18 +112,21 @@ module.exports = {
                 }
             })
 
-            var UniqueMemberArray = MemberArray.filter(function (item, pos, self) {
+            var UniqueMemberArray = MemberArray.filter(function (item, pos, self)
+            {
                 return self.indexOf(item) == pos;
             })
 
-            var ImagesArray = uncleanImagesArray.filter(function (item, pos, self) {
+            var ImagesArray = uncleanImagesArray.filter(function (item, pos, self)
+            {
                 return self.indexOf(item) == pos;
             })
 
             timestampArrayB.shift()
             var timestampArrayReduced = []
 
-            for (var i = 0; i <= timestampArrayB.length - 1; i++) {
+            for (var i = 0; i <= timestampArrayB.length - 1; i++)
+            {
                 timestampArrayReduced.push(timestampArray[i] - timestampArrayB[i]);
             }
 
@@ -153,7 +167,8 @@ module.exports = {
 
             var hrend = process.hrtime(hrstart)
 
-            function numComma(x) {
+            function numComma(x)
+            {
                 var parts = x.toString().split(".");
                 parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                 return parts.join(".");

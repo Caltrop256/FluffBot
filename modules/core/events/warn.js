@@ -4,7 +4,8 @@ PARAMETER    TYPE       DESCRIPTION
 info         string     The warning   */
 
 module.exports = {
-    execute(client, info) {
+    execute(client, info)
+    {
         console.info(info);
     }
 };

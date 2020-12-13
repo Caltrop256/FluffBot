@@ -13,12 +13,14 @@ module.exports = {
     },
     perms: ['VIEW_CHANNEL', 'READ_MESSAGES', 'SEND_MESSAGES', 'MANAGE_NICKNAMES'],
 
-    execute(client, args, message) {
+    execute(client, args, message)
+    {
 
         var newname = args.join(" ")
         if (newname.length < 2 || newname.length > 32) { return message.reply("Usernames must be between 2 and 32 characters long.") }
 
-        try {
+        try
+        {
             client.user.setUsername(`${newname}`)
 
             var nameUpdateEmbed = new Discord.RichEmbed()
@@ -28,7 +30,8 @@ module.exports = {
 
             message.channel.send({ embed: nameUpdateEmbed })
 
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
         }
     }
