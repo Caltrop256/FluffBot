@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			".git": true,
+			".github": true,
+			"node_modules": true
+		}
+	}
+}
