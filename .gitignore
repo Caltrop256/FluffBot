@@ -10,9 +10,5 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # TypeScript cache
 *.tsbuildinfo
 
-# ESlint
-.eslintrc.json
-.eslintignore
-
 # Source maps
 *.js.map

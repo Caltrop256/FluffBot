@@ -10,6 +10,15 @@
             ],
             "preLaunchTask": "Bot Build",
             "program": "${workspaceFolder}\\dist\\index.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program Without Building",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\dist\\index.js"
         }
     ]
 }
