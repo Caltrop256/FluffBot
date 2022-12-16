@@ -20,9 +20,9 @@ module.exports = {
         var connection = client.scripts.getSQL(false);
 
         let params = message.content.split(" ").slice(1);
-        let time = parseInt(client.time.fromString(params[0]));
+        let time = client.time.fromString(params[0]);
         if (!time) return message.reply("Expected first argument to be a time; for example, 1m, 2h, 3d.");
-        let time_ms = time.ms;
+        let time_ms = parseInt(time.ms);
         if (time_ms < 60000 * 5 || isNaN(time_ms)) return message.reply("Reminders must be set more than 5 minutes in the Future.")
         var reminder = args.join(" ").slice(args[0].length)
         if (!reminder) reminder = "No reason."
@@ -55,3 +55,4 @@ module.exports = {
         })
     }
 }
+
